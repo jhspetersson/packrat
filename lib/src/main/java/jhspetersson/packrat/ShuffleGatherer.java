@@ -8,6 +8,20 @@ import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+/**
+ * Shuffles the element stream.
+ * <p>
+ *
+ * <pre>
+ *   var randomlyOrdered = IntStream.range(0, 10).boxed().gather(shuffle()).toList();
+ *   System.out.println(randomlyOrdered);
+ *
+ *   [2, 7, 6, 9, 8, 5, 1, 3, 0, 4]
+ * </pre>
+ *
+ * @param <T> element type
+ * @author jhspetersson
+ */
 @SuppressWarnings("preview")
 public class ShuffleGatherer<T> implements Gatherer<T, List<T>, T> {
     @Override
