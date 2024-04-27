@@ -1,0 +1,36 @@
+plugins {
+    id 'java-library'
+}
+
+group = 'jhspetersson'
+version = '0.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    jvmArgs(['--enable-preview'])
+    useJUnitPlatform()
+}
+
+tasks.named('jar') {
+    archiveBaseName = rootProject.name
+    manifest {
+        attributes('Implementation-Title': rootProject.name,
+                   'Implementation-Version': project.version)
+    }
+}
+
+compileJava {
+    options.compilerArgs += "--enable-preview"
+}
+
+compileTestJava {
+    options.compilerArgs += "--enable-preview"
+}
