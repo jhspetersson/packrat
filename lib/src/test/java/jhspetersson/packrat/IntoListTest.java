@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("preview")
-public class PackratTest {
+public class IntoListTest {
     @Test
     void shuffleTest() {
         var before = new ArrayList<Integer>();

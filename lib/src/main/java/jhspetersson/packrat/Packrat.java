@@ -1,5 +1,6 @@
 package jhspetersson.packrat;
 
+import java.util.Collections;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.stream.Gatherer;
@@ -25,7 +26,7 @@ public final class Packrat {
     }
 
     /**
-     * Provides instance of {@link FilteringGatherer} that tests mapped element against the specific value with some predicate
+     * Provides instance of {@link FilteringGatherer} that tests mapped element against the specific value with some predicate.
      * Passed elements unmodified go down the stream.
      *
      * @param mapper mapping function
@@ -52,7 +53,7 @@ public final class Packrat {
     }
 
     /**
-     * Provides instance of {@link FilteringGatherer} that tests mapped element against the specific value with some predicate
+     * Provides instance of {@link FilteringGatherer} that tests mapped element against the specific value with some predicate.
      * Passed elements do NOT go down the stream.
      *
      * @param mapper mapping function
@@ -66,23 +67,39 @@ public final class Packrat {
     }
 
     /**
-     * Provides {@link ReverseGatherer} instance
+     * Reverses the element stream.
+     * <p>
+     *
+     * <pre>
+     *   var reverseOrdered = IntStream.range(0, 10).boxed().gather(reverse()).toList();
+     *   System.out.println(reverseOrdered);
+     *
+     *   [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+     * </pre>
      *
      * @return reverse gatherer
      * @param <T> element type
      */
-    public static <T> ReverseGatherer<T> reverse() {
-        return new ReverseGatherer<>();
+    public static <T> Gatherer<T, ?, T> reverse() {
+        return new IntoListGatherer<>(Collections::reverse);
     }
 
     /**
-     * Provides {@link ShuffleGatherer} instance
+     * Shuffles the element stream.
+     * <p>
+     *
+     * <pre>
+     *   var randomlyOrdered = IntStream.range(0, 10).boxed().gather(shuffle()).toList();
+     *   System.out.println(randomlyOrdered);
+     *
+     *   [2, 7, 6, 9, 8, 5, 1, 3, 0, 4]
+     * </pre>
      *
      * @return shuffle gatherer
      * @param <T> element type
      */
-    public static <T> ShuffleGatherer<T> shuffle() {
-        return new ShuffleGatherer<>();
+    public static <T> Gatherer<T, ?, T> shuffle() {
+        return new IntoListGatherer<>(Collections::shuffle);
     }
 
     private Packrat() {}
