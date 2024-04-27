@@ -28,8 +28,8 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 **filterBy(_mapper_, _value_, _predicate_)** - filters mapped elements based on the predicate test against the value, stream continues with original elements
 
 ```java
-        var ffValue = IntStream.range(0, 1000).boxed().gather(filterBy(Integer::toHexString, "ff", String::equalsIgnoreCase)).toList();
-        System.out.println(ffValue);
+  var ffValue = IntStream.range(0, 1000).boxed().gather(filterBy(Integer::toHexString, "ff", String::equalsIgnoreCase)).toList();
+  System.out.println(ffValue);
 ```
 > [255]
         
