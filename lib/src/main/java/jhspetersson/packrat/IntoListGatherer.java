@@ -8,6 +8,12 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+/**
+ * Collects the entire stream into a list, applies some consumer to this list and then passes all the elements down the stream.
+ *
+ * @param <T> element type
+ * @author jhspetersson
+ */
 @SuppressWarnings("preview")
 class IntoListGatherer<T> implements Gatherer<T, List<T>, T> {
     private final Consumer<List<T>> consumer;
