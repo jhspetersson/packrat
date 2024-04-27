@@ -16,6 +16,16 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 ### Gatherers
 ---
 
+**ReverseGatherer** - reverses the elements
+
+```java
+  import static jhspetersson.packrat.Packrat.reverse;
+  var reverseOrdered = IntStream.range(0, 10).boxed().gather(reverse()).toList();
+  System.out.println(reverseOrdered);
+```
+> [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+
+
 **ShuffleGatherer** - shuffle the elements
 
 ```java

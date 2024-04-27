@@ -7,6 +7,16 @@ package jhspetersson.packrat;
  */
 public final class Packrat {
     /**
+     * Provides {@link ReverseGatherer} instance
+     *
+     * @return reverse gatherer
+     * @param <T> element type
+     */
+    public static <T> ReverseGatherer<T> reverse() {
+        return new ReverseGatherer<>();
+    }
+
+    /**
      * Provides {@link ShuffleGatherer} instance
      *
      * @return shuffle gatherer
