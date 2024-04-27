@@ -13,7 +13,7 @@ import java.util.stream.Gatherer;
 public final class Packrat {
     /**
      * Provides instance of {@link FilteringGatherer} that checks equality of the mapped element with the specific value.
-     * Passed elements go down the stream.
+     * Passed elements unmodified go down the stream.
      *
      * @param mapper mapping function
      * @param value specific value
@@ -26,7 +26,7 @@ public final class Packrat {
 
     /**
      * Provides instance of {@link FilteringGatherer} that tests mapped element against the specific value with some predicate
-     * Passed elements go down the stream.
+     * Passed elements unmodified go down the stream.
      *
      * @param mapper mapping function
      * @param value specific value
