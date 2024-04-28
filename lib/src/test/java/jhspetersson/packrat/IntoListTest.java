@@ -34,6 +34,22 @@ public class IntoListTest {
         assertTrue(isReverseOrdered(after));
     }
 
+    @Test
+    void rotateTest() {
+        var before = new ArrayList<Integer>();
+        IntStream.range(0, 10).forEach(before::add);
+
+        assertTrue(isOrdered(before));
+
+        var after = before.stream().gather(Packrat.rotate(3)).toList();
+
+        assertEquals(List.of(7, 8, 9, 0, 1, 2, 3, 4, 5, 6), after);
+
+        var after2 = before.stream().gather(Packrat.rotate(-4)).toList();
+
+        assertEquals(List.of(4, 5, 6, 7, 8, 9, 0, 1, 2, 3), after2);
+    }
+
     private static boolean isOrdered(List<Integer> list) {
         for (var i = 0; i < list.size() - 1; i++) {
             if (i != list.get(i)) {

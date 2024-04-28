@@ -85,6 +85,33 @@ public final class Packrat {
     }
 
     /**
+     * Rotates the element stream.
+     * <p>
+     *
+     * <pre>
+     *   var positiveRotation = IntStream.range(0, 10).boxed().gather(Packrat.rotate(3)).toList();
+     *   System.out.println(positiveRotation);
+     *
+     *   [7, 8, 9, 0, 1, 2, 3, 4, 5, 6]
+     * </pre>
+     *
+     * <pre>
+     *   var negativeRotation = IntStream.range(0, 10).boxed().gather(Packrat.rotate(-4)).toList();
+     *   System.out.println(negativeRotation);
+     *
+     *   [4, 5, 6, 7, 8, 9, 0, 1, 2, 3]
+     * </pre>
+     *
+     * @see java.util.Collections#rotate
+     * @param distance rotation distance, any number
+     * @return rotation gatherer
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> rotate(int distance) {
+        return new IntoListGatherer<>(list -> Collections.rotate(list, distance));
+    }
+
+    /**
      * Shuffles the element stream.
      * <p>
      *

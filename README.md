@@ -61,6 +61,18 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 ```
 > [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
 
+**rotate(_distance_)** - rotates the elements
+
+```java
+  import static jhspetersson.packrat.Packrat.rotate;
+  var positiveRotation = IntStream.range(0, 10).boxed().gather(Packrat.rotate(3)).toList();
+  System.out.println(positiveRotation);
+  var negativeRotation = IntStream.range(0, 10).boxed().gather(Packrat.rotate(-4)).toList();
+  System.out.println(negativeRotation);
+```
+> [7, 8, 9, 0, 1, 2, 3, 4, 5, 6]
+
+> [4, 5, 6, 7, 8, 9, 0, 1, 2, 3]
 
 **shuffle()** - shuffle the elements
 
