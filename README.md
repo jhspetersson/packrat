@@ -65,9 +65,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 ```java
   import static jhspetersson.packrat.Packrat.rotate;
-  var positiveRotation = IntStream.range(0, 10).boxed().gather(Packrat.rotate(3)).toList();
+  var positiveRotation = IntStream.range(0, 10).boxed().gather(rotate(3)).toList();
   System.out.println(positiveRotation);
-  var negativeRotation = IntStream.range(0, 10).boxed().gather(Packrat.rotate(-4)).toList();
+  var negativeRotation = IntStream.range(0, 10).boxed().gather(rotate(-4)).toList();
   System.out.println(negativeRotation);
 ```
 > [7, 8, 9, 0, 1, 2, 3, 4, 5, 6]
@@ -82,3 +82,11 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
   System.out.println(randomlyOrdered);
 ```
 > [2, 7, 6, 9, 8, 5, 1, 3, 0, 4]
+
+### License
+---
+
+Apache-2.0
+
+---
+Supported by [JetBrains IDEA](https://jb.gg/OpenSourceSupport) open source license.
