@@ -16,6 +16,15 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 ### Gatherers
 ---
 
+**distinctBy(_mapper_)** - returns elements with distinct values that result from a mapping by the supplied function
+
+```java
+  import static jhspetersson.packrat.Packrat.distinctBy;
+  var oneOddOneEven = IntStream.range(1, 10).boxed().gather(distinctBy(i -> i % 2)).toList();
+  System.out.println(oneOddOneEven);
+```
+> [1, 2]
+
 **filterBy(_mapper_, _value_)** - filters mapped elements based on the equality to the value, stream continues with original elements
 
 ```java

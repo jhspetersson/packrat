@@ -13,6 +13,17 @@ import java.util.stream.Gatherer;
 @SuppressWarnings("preview")
 public final class Packrat {
     /**
+     * Returns elements with distinct values that result from a mapping by the supplied function.
+     *
+     * @param mapper mapping function
+     * @param <T> element type
+     * @param <U> mapped element type
+     */
+    public static <T, U> Gatherer<T, ?, T> distinctBy(Function<T, U> mapper) {
+        return new DistinctByGatherer<>(mapper);
+    }
+
+    /**
      * Provides instance of {@link FilteringGatherer} that checks equality of the mapped element with the specific value.
      * Passed elements unmodified go down the stream.
      *
