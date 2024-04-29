@@ -1,6 +1,8 @@
 package jhspetersson.packrat;
 
+import java.text.BreakIterator;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.stream.Gatherer;
@@ -48,6 +50,58 @@ public final class Packrat {
      */
     public static <T, U> Gatherer<T, ?, T> filterBy(Function<T, U> mapper, U value, BiPredicate<U, U> predicate) {
         return new FilteringGatherer<>(mapper, value, predicate);
+    }
+
+    /**
+     * Returns characters as strings parsed from the stream elements.
+     *
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, String> chars() {
+        return new BreakingGatherer<>(BreakIterator.getCharacterInstance());
+    }
+
+    public static <T> Gatherer<T, ?, String> chars(Locale locale) {
+        return new BreakingGatherer<>(BreakIterator.getCharacterInstance(locale));
+    }
+
+    /**
+     * Returns words as strings parsed from the stream elements.
+     *
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, String> words() {
+        return new BreakingGatherer<>(BreakIterator.getWordInstance(), true);
+    }
+
+    public static <T> Gatherer<T, ?, String> words(Locale locale) {
+        return new BreakingGatherer<>(BreakIterator.getWordInstance(locale), true);
+    }
+
+    /**
+     * Returns sentences as strings parsed from the stream elements.
+     *
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, String> sentences() {
+        return new BreakingGatherer<>(BreakIterator.getSentenceInstance());
+    }
+
+    public static <T> Gatherer<T, ?, String> sentences(Locale locale) {
+        return new BreakingGatherer<>(BreakIterator.getSentenceInstance(locale));
+    }
+
+    /**
+     * Returns lines as strings parsed from the stream elements.
+     *
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, String> lines() {
+        return new BreakingGatherer<>(BreakIterator.getLineInstance());
+    }
+
+    public static <T> Gatherer<T, ?, String> lines(Locale locale) {
+        return new BreakingGatherer<>(BreakIterator.getLineInstance(locale));
     }
 
     /**
