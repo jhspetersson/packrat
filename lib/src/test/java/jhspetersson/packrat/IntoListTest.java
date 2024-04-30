@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,6 +23,22 @@ public class IntoListTest {
         var after = before.stream().gather(Packrat.shuffle()).toList();
 
         assertFalse(isOrdered(after));
+    }
+
+    @Test
+    void parallelShuffleTest() {
+        var size = 100000;
+        var before = new ArrayList<Integer>();
+        IntStream.range(0, size).forEach(before::add);
+
+        assertTrue(isOrdered(before));
+        assertEquals(size, before.size());
+
+        var after = before.parallelStream().gather(Packrat.shuffle()).toList();
+
+        assertFalse(isOrdered(after));
+        assertEquals(size, after.size());
+        assertEquals(size, Set.copyOf(after).size());
     }
 
     @Test
