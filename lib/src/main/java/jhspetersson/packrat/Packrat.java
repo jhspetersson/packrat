@@ -92,19 +92,6 @@ public final class Packrat {
     }
 
     /**
-     * Returns lines as strings parsed from the stream elements.
-     *
-     * @param <T> element type
-     */
-    public static <T> Gatherer<T, ?, String> lines() {
-        return new BreakingGatherer<>(BreakIterator.getLineInstance());
-    }
-
-    public static <T> Gatherer<T, ?, String> lines(Locale locale) {
-        return new BreakingGatherer<>(BreakIterator.getLineInstance(locale));
-    }
-
-    /**
      * Provides instance of {@link FilteringGatherer} that checks equality of the mapped element with the specific value.
      * Passed elements do NOT go down the stream.
      *

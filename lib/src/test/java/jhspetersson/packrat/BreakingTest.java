@@ -13,7 +13,6 @@ public class BreakingTest {
     @Test
     public void charsTest() {
         var chars = Stream.of(TEST_STRING).gather(Packrat.chars()).toList();
-
         assertEquals(20, chars.size());
     }
 
@@ -22,5 +21,12 @@ public class BreakingTest {
         var words = Stream.of("Another test").gather(Packrat.words()).toList();
 
         assertEquals(2, words.size());
+    }
+
+    @Test
+    public void sentencesTest() {
+        var sentences = Stream.of("What a sentence! Another test...\nI can't handle this, what is your proposition?").gather(Packrat.sentences()).toList();
+
+        assertEquals(3, sentences.size());
     }
 }

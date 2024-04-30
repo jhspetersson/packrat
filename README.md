@@ -92,6 +92,36 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 ```
 > [2, 7, 6, 9, 8, 5, 1, 3, 0, 4]
 
+**chars()** - returns characters as strings parsed from the stream elements
+  
+```java
+  import static jhspetersson.packrat.Packrat.chars;
+  var charStrings = Stream.of("Hello, \uD83D\uDC22!").gather(chars()).toList();
+  System.out.println(charStrings);
+```
+
+> [H, e, l, l, o, ,,  , 🐢, !]
+
+**words()** - returns words as strings parsed from the stream elements
+
+```java
+  import static jhspetersson.packrat.Packrat.words;
+  var wordStrings = Stream.of("Another test!").gather(words()).toList();
+  System.out.println(wordStrings);
+```
+
+> [Another, test, !]
+
+**sentences()** - returns sentences as strings parsed from the stream elements
+
+```java
+  import static jhspetersson.packrat.Packrat.sentences;
+  var sentenceStrings = Stream.of("And another one. How many left?").gather(sentences()).toList();
+  System.out.println(sentenceStrings);
+```
+
+> [And another one. , How many left?]
+
 ### License
 ---
 
