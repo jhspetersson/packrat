@@ -53,6 +53,16 @@ public final class Packrat {
     }
 
     /**
+     * Returns n copies of every element.
+     *
+     * @param n how many copies, value less than or equal to zero effectively empties the stream.
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> nCopies(long n) {
+        return new NCopiesGatherer<>(n);
+    }
+
+    /**
      * Returns characters as strings parsed from the stream elements.
      *
      * @param <T> element type

@@ -122,6 +122,16 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [And another one. , How many left?]
 
+**nCopies(__n__)** - returns __n__ copies of every element, __n__ less than or equal to zero effectively empties the stream
+
+```java
+  import static jhspetersson.packrat.Packrat.nCopies;
+  var numbers = IntStream.of(5).boxed().gather(nCopies(10)).toList();
+  System.out.println(numbers);
+```
+
+> [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+
 ### License
 ---
 
