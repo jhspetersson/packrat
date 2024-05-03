@@ -63,6 +63,46 @@ public final class Packrat {
     }
 
     /**
+     * Returns all elements, the first element is mapped with the supplied mapping function.
+     *
+     * @param mapper mapping function
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> mapFirst(Function<? super T, ? extends T> mapper) {
+        return new MappingGatherer<>(0L, 1L, mapper);
+    }
+
+    /**
+     * Returns all elements, the first mapN elements are mapped with the supplied mapping function.
+     *
+     * @param mapper mapping function
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> mapN(long mapN, Function<? super T, ? extends T> mapper) {
+        return new MappingGatherer<>(0L, mapN, mapper);
+    }
+
+    /**
+     * Returns all elements that after the first skipN are mapped with the supplied mapping function.
+     *
+     * @param mapper mapping function
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> skipAndMap(long skipN, Function<? super T, ? extends T> mapper) {
+        return new MappingGatherer<>(skipN, -1L, mapper);
+    }
+
+    /**
+     * Returns all elements, after skipN elements the first mapN elements are mapped with the supplied mapping function.
+     *
+     * @param mapper mapping function
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> skipAndMapN(long skipN, long mapN, Function<? super T, ? extends T> mapper) {
+        return new MappingGatherer<>(skipN, mapN, mapper);
+    }
+
+    /**
      * Returns characters as strings parsed from the stream elements.
      *
      * @param <T> element type

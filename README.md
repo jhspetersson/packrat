@@ -3,7 +3,6 @@
 Packrat is a Java library that provides various [Gatherer](https://docs.oracle.com/en/java/javase/22/docs/api/java.base/java/util/stream/Gatherer.html) implementations for the Stream API. Gatherers can enhance streams with custom intermediate operations.
 
 ### Availability
----
 
 > [!IMPORTANT]
 > You will need a very fresh JDK version with preview features enabled to actually use Gatherers.
@@ -14,7 +13,6 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 |[473](https://openjdk.org/jeps/473)|23|Second Preview|
 
 ### Gatherers
----
 
 **distinctBy(_mapper_)** - returns elements with distinct values that result from a mapping by the supplied function
 
@@ -132,8 +130,48 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 
+**mapFirst(__mapper__)** - returns all elements, the first element is mapped with the supplied mapping function
+
+```java
+  import static jhspetersson.packrat.Packrat.mapFirst;
+  var mapped = IntStream.rangeClosed(1, 10).boxed().gather(mapFirst(n -> n * 10)).toList();
+  System.out.println(mapped);
+```
+
+> [10, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+**mapN(__mapN__, __mapper__)** - returns all elements, the first __mapN__ elements are mapped with the supplied mapping function
+
+```java
+  import static jhspetersson.packrat.Packrat.mapN;
+  var mapped = IntStream.rangeClosed(1, 10).boxed().gather(mapN(5, n -> n * 10)).toList();
+  System.out.println(mapped);
+```
+
+> [10, 20, 30, 40, 50, 6, 7, 8, 9, 10]
+
+**skipAndMap(__skipN__, __mapper__)** - returns all elements that after the first __skipN__ are mapped with the supplied mapping function
+
+```java
+  import static jhspetersson.packrat.Packrat.skipAndMap;
+  var mapped = IntStream.rangeClosed(1, 10).boxed().gather(skipAndMap(3, n -> n * 10)).toList();
+  System.out.println(mapped);
+```
+
+> [1, 2, 3, 40, 50, 60, 70, 80, 90, 100]
+
+**skipAndMapN(__skipN__, __mapN__, __mapper__)** - returns all elements, after skipN elements the first mapN elements are mapped with the supplied mapping function
+
+```java
+  import static jhspetersson.packrat.Packrat.skipAndMapN;
+  var mapped = IntStream.rangeClosed(1, 10).boxed().gather(skipAndMapN(3, 5, n -> n * 10)).toList();
+  System.out.println(mapped);
+```
+
+> [1, 2, 3, 40, 50, 60, 70, 80, 9, 10]
+
+
 ### License
----
 
 Apache-2.0
 
