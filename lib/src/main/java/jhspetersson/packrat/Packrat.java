@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Gatherer;
 
 /**
@@ -100,6 +101,14 @@ public final class Packrat {
      */
     public static <T> Gatherer<T, ?, T> skipAndMapN(long skipN, long mapN, Function<? super T, ? extends T> mapper) {
         return new MappingGatherer<>(skipN, mapN, mapper);
+    }
+
+    public static <T> Gatherer<T, ?, T> mapWhihle(Function<? super T, ? extends T> mapper, Predicate<? super T> predicate) {
+        return new MapWhileUntilGatherer<>(mapper, predicate);
+    }
+
+    public static <T> Gatherer<T, ?, T> mapUntil(Function<? super T, ? extends T> mapper, Predicate<? super T> predicate) {
+        return new MapWhileUntilGatherer<>(mapper, null, predicate);
     }
 
     /**
