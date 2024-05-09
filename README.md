@@ -170,6 +170,17 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [1, 2, 3, 40, 50, 60, 70, 80, 9, 10]
 
+**zip(__input__, __mapper__)** - returns elements mapped ("zipped") with the values from some other stream or iterable
+
+```java
+  import static jhspetersson.packrat.Packrat.zip;
+  var names = List.of("Anna", "Mike", "Sandra");
+  var ages = Stream.of(20, 30, 40, 50, 60, 70, 80, 90);
+  var users = names.stream().gather(zip(ages, User::new)).toList();
+  System.out.println(users);
+```
+
+> [User[name=Anna, age=20], User[name=Mike, age=30], User[name=Sandra, age=40]]
 
 ### License
 

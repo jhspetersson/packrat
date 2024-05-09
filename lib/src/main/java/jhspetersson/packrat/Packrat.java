@@ -3,10 +3,12 @@ package jhspetersson.packrat;
 import java.text.BreakIterator;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Gatherer;
+import java.util.stream.Stream;
 
 /**
  * Provides Gatherer instances from its fabric methods.
@@ -109,6 +111,32 @@ public final class Packrat {
 
     public static <T> Gatherer<T, ?, T> mapUntil(Function<? super T, ? extends T> mapper, Predicate<? super T> predicate) {
         return new MapWhileUntilGatherer<>(mapper, null, predicate);
+    }
+
+    /**
+     * Returns elements mapped ("zipped") with the values from some other iterable.
+     *
+     * @param input iterable
+     * @param mapper zipping function
+     * @param <T> element type
+     * @param <U> supplied iterable element type
+     * @param <V> result ("zipped") type
+     */
+    public static <T, U, V> Gatherer<T, ?, V> zip(Iterable<? extends U> input, BiFunction<? super T, ? super U, ? extends V> mapper) {
+        return new ZipGatherer<>(input, mapper);
+    }
+
+    /**
+     * Returns elements mapped ("zipped") with the values from some other stream.
+     *
+     * @param input stream
+     * @param mapper zipping function
+     * @param <T> element type
+     * @param <U> supplied stream element type
+     * @param <V> result ("zipped") type
+     */
+    public static <T, U, V> Gatherer<T, ?, V> zip(Stream<? extends U> input, BiFunction<? super T, ? super U, ? extends V> mapper) {
+        return new ZipGatherer<>(input, mapper);
     }
 
     /**
