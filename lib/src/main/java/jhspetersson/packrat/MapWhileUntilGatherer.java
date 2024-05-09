@@ -35,8 +35,6 @@ class MapWhileUntilGatherer<T> implements Gatherer<T, boolean[], T> {
     @Override
     public Integrator<boolean[], T, T> integrator() {
         return Integrator.of((state, element, downstream) -> {
-            var doMapping = false;
-
             if (state[0] && whilePredicate != null) {
                 var testWhile = whilePredicate.test(element);
                 if (!testWhile) {
@@ -54,9 +52,7 @@ class MapWhileUntilGatherer<T> implements Gatherer<T, boolean[], T> {
             var value = state[0] && !state[1]
                     ? mapper.apply(element)
                     : element;
-            downstream.push(value);
-
-            return true;
+            return downstream.push(value);
         });
     }
 }

@@ -14,24 +14,24 @@ import java.util.stream.Gatherer;
  */
 @SuppressWarnings("preview")
 class FilteringGatherer<T, U> implements Gatherer<T, Object, T> {
-    private final Function<T, U> mapper;
+    private final Function<? super T, ? extends U> mapper;
     private final U value;
-    private final BiPredicate<U, U> predicate;
+    private final BiPredicate<? super U, ? super U> predicate;
     private final boolean invert;
 
-    FilteringGatherer(Function<T, U> mapper, U value) {
+    FilteringGatherer(Function<? super T, ? extends U> mapper, U value) {
         this(mapper, value, Objects::equals, false);
     }
 
-    FilteringGatherer(Function<T, U> mapper, U value, boolean invert) {
+    FilteringGatherer(Function<? super T, ? extends U> mapper, U value, boolean invert) {
         this(mapper, value, Objects::equals, invert);
     }
 
-    FilteringGatherer(Function<T, U> mapper, U value, BiPredicate<U, U> predicate) {
+    FilteringGatherer(Function<? super T, ? extends U> mapper, U value, BiPredicate<? super U, ? super U> predicate) {
         this(mapper, value, predicate, false);
     }
 
-    FilteringGatherer(Function<T, U> mapper, U value, BiPredicate<U, U> predicate, boolean invert) {
+    FilteringGatherer(Function<? super T, ? extends U> mapper, U value, BiPredicate<? super U, ? super U> predicate, boolean invert) {
         this.mapper = mapper;
         this.value = value;
         this.predicate = predicate;

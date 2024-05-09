@@ -24,7 +24,7 @@ public final class Packrat {
      * @param <T> element type
      * @param <U> mapped element type
      */
-    public static <T, U> Gatherer<T, ?, T> distinctBy(Function<T, U> mapper) {
+    public static <T, U> Gatherer<T, ?, T> distinctBy(Function<? super T, ? extends U> mapper) {
         return new DistinctByGatherer<>(mapper);
     }
 
@@ -37,7 +37,7 @@ public final class Packrat {
      * @param <T> element type
      * @param <U> mapped element type
      */
-    public static <T, U> Gatherer<T, ?, T> filterBy(Function<T, U> mapper, U value) {
+    public static <T, U> Gatherer<T, ?, T> filterBy(Function<? super T, ? extends U> mapper, U value) {
         return new FilteringGatherer<>(mapper, value);
     }
 
@@ -51,7 +51,7 @@ public final class Packrat {
      * @param <T> element type
      * @param <U> mapped element type
      */
-    public static <T, U> Gatherer<T, ?, T> filterBy(Function<T, U> mapper, U value, BiPredicate<U, U> predicate) {
+    public static <T, U> Gatherer<T, ?, T> filterBy(Function<? super T, ? extends U> mapper, U value, BiPredicate<? super U, ? super U> predicate) {
         return new FilteringGatherer<>(mapper, value, predicate);
     }
 
@@ -187,7 +187,7 @@ public final class Packrat {
      * @param <T> element type
      * @param <U> mapped element type
      */
-    public static <T, U> Gatherer<T, ?, T> removeBy(Function<T, U> mapper, U value) {
+    public static <T, U> Gatherer<T, ?, T> removeBy(Function<? super T, ? extends U> mapper, U value) {
         return new FilteringGatherer<>(mapper, value, true);
     }
 
@@ -201,7 +201,7 @@ public final class Packrat {
      * @param <T> element type
      * @param <U> mapped element type
      */
-    public static <T, U> Gatherer<T, ?, T> removeBy(Function<T, U> mapper, U value, BiPredicate<U, U> predicate) {
+    public static <T, U> Gatherer<T, ?, T> removeBy(Function<? super T, ? extends U> mapper, U value, BiPredicate<? super U, ? super U> predicate) {
         return new FilteringGatherer<>(mapper, value, predicate, true);
     }
 
