@@ -73,7 +73,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 > [1, 2, 5, 6, 9, 11, 20]
 
 **increasingOrEqual()** - returns elements in an increasing sequence, repeating values are preserved, elements out of the sequence are dropped
+
 **decreasing()** - returns elements in a decreasing sequence, elements out of the sequence, as well as repeating values, are dropped
+
 **decreasingOrEqual()** - returns elements in a decreasing sequence, repeating values are preserved, elements out of the sequence are dropped
 
 **reverse()** - reverses the elements
