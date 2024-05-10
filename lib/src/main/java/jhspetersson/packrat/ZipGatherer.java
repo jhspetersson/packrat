@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * @author jhspetersson
  */
 @SuppressWarnings("preview")
-class ZipGatherer<T, U, V> implements Gatherer<T, Object, V> {
+class ZipGatherer<T, U, V> implements Gatherer<T, Void, V> {
     private final Iterator<? extends U> iterator;
     private final BiFunction<? super T, ? super U, ? extends V> mapper;
 
@@ -29,7 +29,7 @@ class ZipGatherer<T, U, V> implements Gatherer<T, Object, V> {
     }
 
     @Override
-    public Integrator<Object, T, V> integrator() {
+    public Integrator<Void, T, V> integrator() {
         return Integrator.ofGreedy((_, element, downstream) -> {
             if (iterator.hasNext()) {
                 var mappedValue = mapper.apply(element, iterator.next());

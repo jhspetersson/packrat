@@ -13,7 +13,7 @@ import java.util.stream.Gatherer;
  * @author jhspetersson
  */
 @SuppressWarnings("preview")
-class FilteringGatherer<T, U> implements Gatherer<T, Object, T> {
+class FilteringGatherer<T, U> implements Gatherer<T, Void, T> {
     private final Function<? super T, ? extends U> mapper;
     private final U value;
     private final BiPredicate<? super U, ? super U> predicate;
@@ -39,7 +39,7 @@ class FilteringGatherer<T, U> implements Gatherer<T, Object, T> {
     }
 
     @Override
-    public Integrator<Object, T, T> integrator() {
+    public Integrator<Void, T, T> integrator() {
         return Integrator.of((_, element, downstream) -> {
             var mappedValue = mapper.apply(element);
             var testResult = predicate.test(mappedValue, value);

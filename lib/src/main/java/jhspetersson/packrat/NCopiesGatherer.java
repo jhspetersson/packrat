@@ -9,7 +9,7 @@ import java.util.stream.Gatherer;
  * @author jhspetersson
  */
 @SuppressWarnings("preview")
-class NCopiesGatherer<T> implements Gatherer<T, Object, T> {
+class NCopiesGatherer<T> implements Gatherer<T, Void, T> {
     private final long n;
 
     NCopiesGatherer(long n) {
@@ -17,7 +17,7 @@ class NCopiesGatherer<T> implements Gatherer<T, Object, T> {
     }
 
     @Override
-    public Integrator<Object, T, T> integrator() {
+    public Integrator<Void, T, T> integrator() {
         return Integrator.of((_, element, downstream) -> {
             for (var i = 1L; i <= n; i++) {
                 downstream.push(element);

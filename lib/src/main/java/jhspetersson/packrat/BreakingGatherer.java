@@ -7,11 +7,10 @@ import java.util.stream.Gatherer;
  * Returns strings such as graphemes, words, lines or sentences parsed from the stream elements.
  *
  * @param <T> element type
- * @param <U> mapped element type
  * @author jhspetersson
  */
 @SuppressWarnings("preview")
-class BreakingGatherer<T, U> implements Gatherer<T, Object, String> {
+class BreakingGatherer<T> implements Gatherer<T, Void, String> {
     private final BreakIterator breakIterator;
     private final boolean skipBlanks;
 
@@ -25,7 +24,7 @@ class BreakingGatherer<T, U> implements Gatherer<T, Object, String> {
     }
 
     @Override
-    public Integrator<Object, T, String> integrator() {
+    public Integrator<Void, T, String> integrator() {
         return Integrator.of((_, element, downstream) -> {
             if (element == null) {
                 downstream.push(null);
