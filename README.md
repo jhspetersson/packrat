@@ -60,7 +60,22 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
   System.out.println(ageDivisibleByThree);
 ```
 > [Employee[name=Mark Bloom, age=21], Employee[name=Rebecca Schneider, age=24]]
-  
+
+**increasing()** - returns elements in an increasing sequence, elements out of the sequence, as well as repeating values, are dropped
+
+```java
+  import static jhspetersson.packrat.Packrat.increasing;
+  var numbers = Stream.of(1, 2, 2, 5, 4, 2, 6, 9, 3, 11, 0, 1, 20);
+  var increasingNumbers = numbers.gather(increasing()).toList();
+  System.out.println(increasingNumbers);
+```
+
+> [1, 2, 5, 6, 9, 11, 20]
+
+**increasingOrEqual()** - returns elements in an increasing sequence, repeating values are preserved, elements out of the sequence are dropped
+**decreasing()** - returns elements in a decreasing sequence, elements out of the sequence, as well as repeating values, are dropped
+**decreasingOrEqual()** - returns elements in a decreasing sequence, repeating values are preserved, elements out of the sequence are dropped
+
 **reverse()** - reverses the elements
 
 ```java

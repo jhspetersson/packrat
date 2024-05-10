@@ -2,6 +2,7 @@ package jhspetersson.packrat;
 
 import java.text.BreakIterator;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -53,6 +54,86 @@ public final class Packrat {
      */
     public static <T, U> Gatherer<T, ?, T> filterBy(Function<? super T, ? extends U> mapper, U value, BiPredicate<? super U, ? super U> predicate) {
         return new FilteringGatherer<>(mapper, value, predicate);
+    }
+
+    /**
+     * Returns elements in an increasing sequence using natural order comparator.
+     * Elements out of the sequence, as well as repeating values, are dropped.
+     *
+     * @param <T> element type
+     */
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> increasing() {
+        return increasing(Comparator.naturalOrder());
+    }
+
+    /**
+     * Returns elements in an increasing sequence using provided comparator.
+     * Elements out of the sequence, as well as repeating values, are dropped.
+     *
+     * @param <T> element type
+     */
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> increasing(Comparator<? super T> comparator) {
+        return new IncreasingDecreasingGatherer<>(comparator, cmp -> cmp < 0);
+    }
+
+    /**
+     * Returns elements in an increasing sequence using natural order comparator.
+     * Repeating values are preserved. Elements out of the sequence are dropped.
+     *
+     * @param <T> element type
+     */
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> increasingOrEqual() {
+        return increasingOrEqual(Comparator.naturalOrder());
+    }
+
+    /**
+     * Returns elements in an increasing sequence using provided comparator.
+     * Repeating values are preserved. Elements out of the sequence are dropped.
+     *
+     * @param <T> element type
+     */
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> increasingOrEqual(Comparator<? super T> comparator) {
+        return new IncreasingDecreasingGatherer<>(comparator, cmp -> cmp <= 0);
+    }
+
+    /**
+     * Returns elements in a decreasing sequence using natural order comparator.
+     * Elements out of the sequence, as well as repeating values, are dropped.
+     *
+     * @param <T> element type
+     */
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> decreasing() {
+        return decreasing(Comparator.naturalOrder());
+    }
+
+    /**
+     * Returns elements in a decreasing sequence using provided comparator.
+     * Elements out of the sequence, as well as repeating values, are dropped.
+     *
+     * @param <T> element type
+     */
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> decreasing(Comparator<? super T> comparator) {
+        return new IncreasingDecreasingGatherer<>(comparator, cmp -> cmp > 0);
+    }
+
+    /**
+     * Returns elements in a decreasing sequence using natural order comparator.
+     * Repeating values are preserved. Elements out of the sequence are dropped.
+     *
+     * @param <T> element type
+     */
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> decreasingOrEqual() {
+        return decreasingOrEqual(Comparator.naturalOrder());
+    }
+
+    /**
+     * Returns elements in a decreasing sequence using provided comparator.
+     * Repeating values are preserved. Elements out of the sequence are dropped.
+     *
+     * @param <T> element type
+     */
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> decreasingOrEqual(Comparator<? super T> comparator) {
+        return new IncreasingDecreasingGatherer<>(comparator, cmp -> cmp >= 0);
     }
 
     /**
