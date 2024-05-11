@@ -201,6 +201,17 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [User[name=Anna, age=20], User[name=Mike, age=30], User[name=Sandra, age=40]]
 
+**asGatherer(__collector__)** - provides the result of the supplied collector as a single element into the stream, effectively converts any Collector into a Gatherer
+
+```java
+  import static jhspetersson.packrat.Packrat.asGatherer;
+  var numbers = Stream.of(1, 2, 3, 4, 5);
+  var listOfCollectedList = numbers.gather(asGatherer(Collectors.toList())).toList();
+  System.out.println(listOfCollectedList);
+```
+
+> [[1, 2, 3, 4, 5]]
+
 ### License
 
 Apache-2.0

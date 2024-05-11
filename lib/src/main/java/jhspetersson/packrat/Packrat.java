@@ -8,6 +8,7 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
 import java.util.stream.Gatherer;
 import java.util.stream.Stream;
 
@@ -347,6 +348,19 @@ public final class Packrat {
      */
     public static <T> Gatherer<T, ?, T> shuffle() {
         return new IntoListGatherer<>(Collections::shuffle);
+    }
+
+    /**
+     * Provides the result of the supplied collector as a single element into the stream.
+     * Effectively converts any Collector into a Gatherer.
+     *
+     * @param collector Collector
+     * @param <T> element type
+     * @param <U> state type
+     * @param <V> result type
+     */
+    public static <T, U, V> Gatherer<T, U, V> asGatherer(Collector<? super T, U, ? extends V> collector) {
+        return new CollectingGatherer<>(collector);
     }
 
     private Packrat() {}
