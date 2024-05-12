@@ -3,6 +3,7 @@ package jhspetersson.packrat;
 import java.text.BreakIterator;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -135,6 +136,38 @@ public final class Packrat {
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> decreasingOrEqual(Comparator<? super T> comparator) {
         return new IncreasingDecreasingGatherer<>(comparator, cmp -> cmp >= 0);
+    }
+
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingChunks() {
+        return increasingChunks(Comparator.naturalOrder());
+    }
+
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingChunks(Comparator<? super T> comparator) {
+        return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp < 0);
+    }
+
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingOrEqualChunks() {
+        return increasingOrEqualChunks(Comparator.naturalOrder());
+    }
+
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingOrEqualChunks(Comparator<? super T> comparator) {
+        return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp <= 0);
+    }
+
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingChunks() {
+        return decreasingChunks(Comparator.naturalOrder());
+    }
+
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingChunks(Comparator<? super T> comparator) {
+        return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp > 0);
+    }
+
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingOrEqualChunks() {
+        return decreasingOrEqualChunks(Comparator.naturalOrder());
+    }
+
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingOrEqualChunks(Comparator<? super T> comparator) {
+        return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp >= 0);
     }
 
     /**
