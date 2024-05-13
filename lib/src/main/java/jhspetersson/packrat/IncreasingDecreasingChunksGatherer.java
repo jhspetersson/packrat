@@ -9,7 +9,8 @@ import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
 /**
- * Filters all the elements going in some order specified by the supplied comparator.
+ * Returns lists ("chunks") of elements, where each next element is less/greater and, optionally equal than the previous one.
+ * Comparison is done with the supplied comparator.
  *
  * @param <T> element type
  * @author jhspetersson

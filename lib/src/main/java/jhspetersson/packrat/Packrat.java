@@ -138,34 +138,82 @@ public final class Packrat {
         return new IncreasingDecreasingGatherer<>(comparator, cmp -> cmp >= 0);
     }
 
+    /**
+     * Returns lists ("chunks") of elements, where each next element is greater than the previous one.
+     * Comparison is done with the natural order comparator.
+     *
+     * @param <T> element type
+     */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingChunks() {
         return increasingChunks(Comparator.naturalOrder());
     }
 
+    /**
+     * Returns lists ("chunks") of elements, where each next element is greater than the previous one.
+     * Comparison is done with the supplied comparator.
+     *
+     * @param <T> element type
+     */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingChunks(Comparator<? super T> comparator) {
         return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp < 0);
     }
 
+    /**
+     * Returns lists ("chunks") of elements, where each next element is greater or equal than the previous one.
+     * Comparison is done with the natural order comparator.
+     *
+     * @param <T> element type
+     */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingOrEqualChunks() {
         return increasingOrEqualChunks(Comparator.naturalOrder());
     }
 
+    /**
+     * Returns lists ("chunks") of elements, where each next element is greater than the previous one.
+     * Comparison is done with the supplied comparator.
+     *
+     * @param <T> element type
+     */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingOrEqualChunks(Comparator<? super T> comparator) {
         return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp <= 0);
     }
 
+    /**
+     * Returns lists ("chunks") of elements, where each next element is less than the previous one.
+     * Comparison is done with the natural order comparator.
+     *
+     * @param <T> element type
+     */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingChunks() {
         return decreasingChunks(Comparator.naturalOrder());
     }
 
+    /**
+     * Returns lists ("chunks") of elements, where each next element is less than the previous one.
+     * Comparison is done with the supplied comparator.
+     *
+     * @param <T> element type
+     */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingChunks(Comparator<? super T> comparator) {
         return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp > 0);
     }
 
+    /**
+     * Returns lists ("chunks") of elements, where each next element is less or equal than the previous one.
+     * Comparison is done with the natural order comparator.
+     *
+     * @param <T> element type
+     */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingOrEqualChunks() {
         return decreasingOrEqualChunks(Comparator.naturalOrder());
     }
 
+    /**
+     * Returns lists ("chunks") of elements, where each next element is less or equal than the previous one.
+     * Comparison is done with the supplied comparator.
+     *
+     * @param <T> element type
+     */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingOrEqualChunks(Comparator<? super T> comparator) {
         return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp >= 0);
     }

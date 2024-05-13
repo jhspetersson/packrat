@@ -78,6 +78,33 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 **decreasingOrEqual()** - returns elements in a decreasing sequence, repeating values are preserved, elements out of the sequence are dropped
 
+**increasingChunks()** - returns lists ("chunks") of elements, where each next element is greater than the previous one
+
+```java
+  import static jhspetersson.packrat.Packrat.increasingChunks;
+  var numbers = Stream.of(1, 2, 2, 5, 4, 2, 6, 9, 3, 11, 0, 1, 20);
+  var result = numbers.gather(increasingChunks()).toList();
+  System.out.println(result);
+```
+
+> [[1, 2], [2, 5], [4], [2, 6, 9], [3, 11], [0, 1, 20]]
+
+**increasingOrEqualChunks()** - returns lists ("chunks") of elements, where each next element is greater or equal than the previous one
+
+```java
+  import static jhspetersson.packrat.Packrat.increasingOrEqualChunks;
+  var numbers = Stream.of(1, 2, 2, 5, 4, 2, 6, 9, 3, 11, 0, 1, 20);
+  var result = numbers.gather(increasingOrEqualChunks()).toList();
+  System.out.println(result);
+```
+
+> [[1, 2, 2, 5], [4], [2, 6, 9], [3, 11], [0, 1, 20]]
+
+
+**decreasingChunks()** - returns lists ("chunks") of elements, where each next element is less than the previous one
+
+**decreasingOrEqualChunks()** - returns lists ("chunks") of elements, where each next element is less or equal than the previous one
+
 **reverse()** - reverses the elements
 
 ```java
