@@ -44,7 +44,7 @@ class FilteringGatherer<T, U> implements Gatherer<T, Void, T> {
             var mappedValue = mapper.apply(element);
             var testResult = predicate.test(mappedValue, value);
             if (testResult ^ invert) {
-                downstream.push(element);
+                return downstream.push(element);
             }
             return true;
         });

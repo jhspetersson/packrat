@@ -32,7 +32,7 @@ class DistinctByGatherer<T, U> implements Gatherer<T, Set<? super U>, T> {
             var mappedValue = mapper.apply(element);
             if (!state.contains(mappedValue)) {
                 state.add(mappedValue);
-                downstream.push(element);
+                return downstream.push(element);
             }
             return true;
         });

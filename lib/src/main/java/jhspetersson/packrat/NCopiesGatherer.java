@@ -20,7 +20,9 @@ class NCopiesGatherer<T> implements Gatherer<T, Void, T> {
     public Integrator<Void, T, T> integrator() {
         return Integrator.of((_, element, downstream) -> {
             for (var i = 1L; i <= n; i++) {
-                downstream.push(element);
+                if (!downstream.push(element)) {
+                    return false;
+                }
             }
             return true;
         });

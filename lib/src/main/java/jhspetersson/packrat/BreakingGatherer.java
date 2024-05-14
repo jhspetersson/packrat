@@ -27,7 +27,7 @@ class BreakingGatherer<T> implements Gatherer<T, Void, String> {
     public Integrator<Void, T, String> integrator() {
         return Integrator.of((_, element, downstream) -> {
             if (element == null) {
-                downstream.push(null);
+                return downstream.push(null);
             } else {
                 var str = element.toString();
                 breakIterator.setText(str);
@@ -38,7 +38,10 @@ class BreakingGatherer<T> implements Gatherer<T, Void, String> {
                     if (prevIdx != -1) {
                         var part = str.substring(prevIdx, idx);
                         if (!skipBlanks || !part.isBlank()) {
-                            downstream.push(part);
+                            var res = downstream.push(part);
+                            if (!res) {
+                                return false;
+                            }
                         }
                     }
 

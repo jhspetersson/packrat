@@ -47,7 +47,11 @@ class IntoListGatherer<T> implements Gatherer<T, List<T>, T> {
     public BiConsumer<List<T>, Downstream<? super T>> finisher() {
         return (state, downstream) -> {
             consumer.accept(state);
-            state.forEach(downstream::push);
+            for (var element : state) {
+                if (!downstream.push(element)) {
+                    break;
+                }
+            }
         };
     }
 }
