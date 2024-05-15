@@ -216,6 +216,17 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [1, 2, 3, 40, 50, 60, 70, 80, 9, 10]
 
+**flatMapIf(__mapper__, __predicate__)** - optionally flattens elements mapped to streams depending on the supplied predicate
+
+```java
+  import static jhspetersson.packrat.Packrat.flatMapIf;
+  var strings = Stream.of("A", "B", "CDE");
+  var result = strings.gather(flatMapIf(s -> Arrays.stream(s.split("")), s -> s.length() > 1)).toList();
+  System.out.println(result);
+```
+
+> [A, B, C, D, E]
+
 **zip(__input__, __mapper__)** - returns elements mapped ("zipped") with the values from some other stream or iterable
 
 ```java

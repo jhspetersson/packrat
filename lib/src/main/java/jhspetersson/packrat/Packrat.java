@@ -277,6 +277,17 @@ public final class Packrat {
     }
 
     /**
+     * Optionally flattens elements mapped to streams depending on the supplied predicate.
+     *
+     * @param mapper mapping function, usually calls <code>element::stream</code> method
+     * @param predicate deciding predicate when to call the mapping function
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, ?> flatMapIf(Function<? super T, Stream<? extends T>> mapper, Predicate<? super T> predicate) {
+        return new FlatMapGatherer<>(mapper, predicate);
+    }
+
+    /**
      * Returns elements mapped ("zipped") with the values from some other iterable.
      *
      * @param input iterable
