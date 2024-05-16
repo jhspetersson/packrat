@@ -176,6 +176,16 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 
+**atLeast**(__n__) - returns distinct elements that appear at least __n__ times in the stream
+
+```java
+  import static jhspetersson.packrat.Packrat.atLeast;
+  var numbers = Stream.of(1, 2, 3, 3, 3, 4, 5, 5, 6, 7, 8, 8, 8, 8, 9, 10);
+  var atLeastThree = numbers.gather(atLeast(3)).toList();
+  System.out.println(atLeastThree);
+```
+> [3, 3, 3, 8, 8, 8, 8]
+
 **mapFirst(__mapper__)** - returns all elements, the first element is mapped with the supplied mapping function
 
 ```java

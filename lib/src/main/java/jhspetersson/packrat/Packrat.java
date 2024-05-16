@@ -32,6 +32,26 @@ public final class Packrat {
     }
 
     /**
+     * Returns distinct elements that appear at least <code>n</code> times in the stream.
+     *
+     * @param n how many times the element has to appear in the stream
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> atLeast(long n) {
+        return new AtLeastGatherer<>(n, Function.identity());
+    }
+
+    /**
+     * Returns distinct elements mapped by the supplied function that appear at least <code>n</code> times in the stream.
+     *
+     * @param n how many times the element has to appear in the stream
+     * @param <T> element type
+     */
+    public static <T, U> Gatherer<T, ?, T> atLeastBy(long n, Function<? super T, ? extends U> mapper) {
+        return new AtLeastGatherer<>(n, mapper);
+    }
+
+    /**
      * Provides instance of {@link FilteringGatherer} that checks equality of the mapped element with the specific value.
      * Passed elements unmodified go down the stream.
      *
