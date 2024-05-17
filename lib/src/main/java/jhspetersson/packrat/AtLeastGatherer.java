@@ -1,6 +1,8 @@
 package jhspetersson.packrat;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -14,7 +16,7 @@ import java.util.stream.Gatherer;
  * @author jhspetersson
  */
 @SuppressWarnings("preview")
-class AtLeastGatherer<T, U> implements Gatherer<T, Map<? super U, Long>, T> {
+class AtLeastGatherer<T, U> implements Gatherer<T, Map<? super U, List<T>>, T> {
     private final long atLeast;
     private final Function<? super T, ? extends U> mapper;
 
@@ -24,27 +26,29 @@ class AtLeastGatherer<T, U> implements Gatherer<T, Map<? super U, Long>, T> {
     }
 
     @Override
-    public Supplier<Map<? super U, Long>> initializer() {
+    public Supplier<Map<? super U, List<T>>> initializer() {
         return HashMap::new;
     }
 
     @Override
-    public Integrator<Map<? super U, Long>, T, T> integrator() {
+    public Integrator<Map<? super U, List<T>>, T, T> integrator() {
         return Integrator.of((state, element, downstream) -> {
             var mappedValue = mapper.apply(element);
-            var count = state.getOrDefault(mappedValue, 0L);
+            var elementList = state.computeIfAbsent(mappedValue, _ -> new ArrayList<>());
+            var count = elementList.size();
             if (count + 1 == atLeast) {
-                for (var i = 0; i < count + 1; i++) {
-                    var res = downstream.push(element);
+                for (var t : elementList) {
+                    var res = downstream.push(t);
                     if (!res) {
                         return false;
                     }
                 }
-                state.put(mappedValue, count + 1);
+                elementList.add(element);
+                return downstream.push(element);
             } else if (count + 1 >= atLeast) {
                 return downstream.push(element);
             } else {
-                state.put(mappedValue, count + 1);
+                elementList.add(element);
             }
             return true;
         });
