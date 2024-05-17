@@ -45,7 +45,7 @@ class AtLeastGatherer<T, U> implements Gatherer<T, Map<? super U, List<T>>, T> {
                 }
                 elementList.add(element);
                 return downstream.push(element);
-            } else if (count + 1 >= atLeast) {
+            } else if (count + 1 > atLeast) {
                 return downstream.push(element);
             } else {
                 elementList.add(element);
