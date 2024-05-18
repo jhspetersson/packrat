@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -38,7 +39,7 @@ public final class Packrat {
      * @param <T> element type
      */
     public static <T> Gatherer<T, ?, T> atLeast(long n) {
-        return new AtLeastGatherer<>(n, Function.identity());
+        return atLeastBy(n, Function.identity());
     }
 
     /**
@@ -61,7 +62,7 @@ public final class Packrat {
      * @param <U> mapped element type
      */
     public static <T, U> Gatherer<T, ?, T> filterBy(Function<? super T, ? extends U> mapper, U value) {
-        return new FilteringGatherer<>(mapper, value);
+        return filterBy(mapper, value, Objects::equals);
     }
 
     /**
@@ -255,7 +256,7 @@ public final class Packrat {
      * @param <T> element type
      */
     public static <T> Gatherer<T, ?, T> mapFirst(Function<? super T, ? extends T> mapper) {
-        return new MappingGatherer<>(0L, 1L, mapper);
+        return skipAndMapN(0L, 1L, mapper);
     }
 
     /**
@@ -265,7 +266,7 @@ public final class Packrat {
      * @param <T> element type
      */
     public static <T> Gatherer<T, ?, T> mapN(long mapN, Function<? super T, ? extends T> mapper) {
-        return new MappingGatherer<>(0L, mapN, mapper);
+        return skipAndMapN(0L, mapN, mapper);
     }
 
     /**
@@ -275,7 +276,7 @@ public final class Packrat {
      * @param <T> element type
      */
     public static <T> Gatherer<T, ?, T> skipAndMap(long skipN, Function<? super T, ? extends T> mapper) {
-        return new MappingGatherer<>(skipN, -1L, mapper);
+        return skipAndMapN(skipN, -1L, mapper);
     }
 
     /**
@@ -382,7 +383,7 @@ public final class Packrat {
      * @param <U> mapped element type
      */
     public static <T, U> Gatherer<T, ?, T> removeBy(Function<? super T, ? extends U> mapper, U value) {
-        return new FilteringGatherer<>(mapper, value, true);
+        return removeBy(mapper, value, Objects::equals);
     }
 
     /**

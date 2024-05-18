@@ -1,6 +1,5 @@
 package jhspetersson.packrat;
 
-import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.stream.Gatherer;
@@ -18,14 +17,6 @@ class FilteringGatherer<T, U> implements Gatherer<T, Void, T> {
     private final U value;
     private final BiPredicate<? super U, ? super U> predicate;
     private final boolean invert;
-
-    FilteringGatherer(Function<? super T, ? extends U> mapper, U value) {
-        this(mapper, value, Objects::equals, false);
-    }
-
-    FilteringGatherer(Function<? super T, ? extends U> mapper, U value, boolean invert) {
-        this(mapper, value, Objects::equals, invert);
-    }
 
     FilteringGatherer(Function<? super T, ? extends U> mapper, U value, BiPredicate<? super U, ? super U> predicate) {
         this(mapper, value, predicate, false);

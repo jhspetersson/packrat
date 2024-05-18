@@ -33,14 +33,12 @@ class MappingGatherer<T> implements Gatherer<T, Long[], T> {
             if (skipN > 0 && state[0] < skipN) {
                 state[0] += 1;
                 return downstream.push(element);
+            } else if (mapN < 0 || state[1] < mapN) {
+                state[1] += 1;
+                var mappedValue = mapper.apply(element);
+                return downstream.push(mappedValue);
             } else {
-                if (mapN < 0 || state[1] < mapN) {
-                    state[1] += 1;
-                    var mappedValue = mapper.apply(element);
-                    return downstream.push(mappedValue);
-                } else {
-                    return downstream.push(element);
-                }
+                return downstream.push(element);
             }
         });
     }
