@@ -17,7 +17,35 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 ### Gatherers
 
-**distinctBy(_mapper_)** - returns elements with distinct values that result from a mapping by the supplied function
+- [distinctBy](#distinctby)
+- [filterBy](#filterby)
+- [removeBy](#removeby)
+- [increasing](#increasing)
+- [increasingOrEqual](#increasingorequal)
+- [decreasing](#decreasing)
+- [increasingChunks](#increasingchunks)
+- [increasingOrEqualChunks](#increasingorequalchunks)
+- [decreasingChunks](#decreasingchunks)
+- [decreasingOrEqualChunks](#decreasingorequalchunks)
+- [reverse](#reverse)
+- [rotate](#rotate)
+- [shuffle](#shuffle)
+- [chars](#chars)
+- [words](#words)
+- [sentences](#sentences)
+- [nCopies](#ncopies)
+- [atLeast](#atleast)
+- [mapFirst](#mapfirst)
+- [mapN](#mapn)
+- [skipAndMap](#skipandmap)
+- [skipAndMapN](#skipandmapn)
+- [flatMapIf](#flatmapif)
+- [zip](#zip)
+- [asGatherer](#asgatherer)
+
+#### distinctBy
+
+`distinctBy(mapper)` - returns elements with distinct values that result from a mapping by the supplied function
 
 ```java
   import static jhspetersson.packrat.Packrat.distinctBy;
@@ -26,7 +54,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 ```
 > [1, 2]
 
-**filterBy(_mapper_, _value_)** - filters mapped elements based on the equality to the value, stream continues with original elements
+#### filterBy
+
+`filterBy(mapper, value)` - filters mapped elements based on the equality to the value, stream continues with original elements
 
 ```java
   import static jhspetersson.packrat.Packrat.filterBy;
@@ -35,7 +65,7 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 ```
 > [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-**filterBy(_mapper_, _value_, _predicate_)** - filters mapped elements based on the predicate test against the value, stream continues with original elements
+`filterBy(mapper, value, predicate)` - filters mapped elements based on the predicate test against the value, stream continues with original elements
 
 ```java
   import static jhspetersson.packrat.Packrat.filterBy;
@@ -43,8 +73,10 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
   System.out.println(ffValue);
 ```
 > [255]
-        
-**removeBy(_mapper_, _value_)** - removes mapped elements based on the equality to the value, stream continues with original elements
+
+#### removeBy
+
+`removeBy(mapper, value)` - removes mapped elements based on the equality to the value, stream continues with original elements
 
 ```java
   import static jhspetersson.packrat.Packrat.removeBy;
@@ -53,7 +85,7 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 ```
 > [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-**removeBy(_mapper_, _value_, _predicate_)** - removes mapped elements based on the predicate test against the value, stream continues with original elements
+`removeBy(mapper, value, predicate)` - removes mapped elements based on the predicate test against the value, stream continues with original elements
 
 ```java
   import static jhspetersson.packrat.Packrat.removeBy;
@@ -62,7 +94,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 ```
 > [Employee[name=Mark Bloom, age=21], Employee[name=Rebecca Schneider, age=24]]
 
-**increasing()** - returns elements in an increasing sequence, elements out of the sequence, as well as repeating values, are dropped
+#### increasing
+
+`increasing()` - returns elements in an increasing sequence, elements out of the sequence, as well as repeating values, are dropped
 
 ```java
   import static jhspetersson.packrat.Packrat.increasing;
@@ -73,13 +107,21 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [1, 2, 5, 6, 9, 11, 20]
 
-**increasingOrEqual()** - returns elements in an increasing sequence, repeating values are preserved, elements out of the sequence are dropped
+#### increasingOrEqual
 
-**decreasing()** - returns elements in a decreasing sequence, elements out of the sequence, as well as repeating values, are dropped
+`increasingOrEqual()` - returns elements in an increasing sequence, repeating values are preserved, elements out of the sequence are dropped
 
-**decreasingOrEqual()** - returns elements in a decreasing sequence, repeating values are preserved, elements out of the sequence are dropped
+#### decreasing
 
-**increasingChunks()** - returns lists ("chunks") of elements, where each next element is greater than the previous one
+`decreasing()` - returns elements in a decreasing sequence, elements out of the sequence, as well as repeating values, are dropped
+
+#### decreasingOrEqual
+
+`decreasingOrEqual()` - returns elements in a decreasing sequence, repeating values are preserved, elements out of the sequence are dropped
+
+#### increasingChunks
+
+`increasingChunks()` - returns lists ("chunks") of elements, where each next element is greater than the previous one
 
 ```java
   import static jhspetersson.packrat.Packrat.increasingChunks;
@@ -90,7 +132,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [[1, 2], [2, 5], [4], [2, 6, 9], [3, 11], [0, 1, 20]]
 
-**increasingOrEqualChunks()** - returns lists ("chunks") of elements, where each next element is greater or equal than the previous one
+#### increasingOrEqualChunks
+
+`increasingOrEqualChunks()` - returns lists ("chunks") of elements, where each next element is greater or equal than the previous one
 
 ```java
   import static jhspetersson.packrat.Packrat.increasingOrEqualChunks;
@@ -101,12 +145,17 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [[1, 2, 2, 5], [4], [2, 6, 9], [3, 11], [0, 1, 20]]
 
+#### decreasingChunks
 
-**decreasingChunks()** - returns lists ("chunks") of elements, where each next element is less than the previous one
+`decreasingChunks()` - returns lists ("chunks") of elements, where each next element is less than the previous one
 
-**decreasingOrEqualChunks()** - returns lists ("chunks") of elements, where each next element is less or equal than the previous one
+#### decreasingOrEqualChunks
 
-**reverse()** - reverses the elements
+`decreasingOrEqualChunks()` - returns lists ("chunks") of elements, where each next element is less or equal than the previous one
+
+#### reverse
+
+`reverse()` - reverses the elements
 
 ```java
   import static jhspetersson.packrat.Packrat.reverse;
@@ -115,7 +164,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 ```
 > [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
 
-**rotate(_distance_)** - rotates the elements
+#### rotate
+
+`rotate(distance)` - rotates the elements
 
 ```java
   import static jhspetersson.packrat.Packrat.rotate;
@@ -128,7 +179,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [4, 5, 6, 7, 8, 9, 0, 1, 2, 3]
 
-**shuffle()** - shuffle the elements
+#### shuffle
+
+`shuffle()` - shuffle the elements
 
 ```java
   import static jhspetersson.packrat.Packrat.shuffle;
@@ -137,7 +190,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 ```
 > [2, 7, 6, 9, 8, 5, 1, 3, 0, 4]
 
-**chars()** - returns characters as strings parsed from the stream elements
+#### chars
+
+`chars()` - returns characters as strings parsed from the stream elements
   
 ```java
   import static jhspetersson.packrat.Packrat.chars;
@@ -147,7 +202,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [H, e, l, l, o, ,,  , 🐢, !]
 
-**words()** - returns words as strings parsed from the stream elements
+#### words
+
+`words()` - returns words as strings parsed from the stream elements
 
 ```java
   import static jhspetersson.packrat.Packrat.words;
@@ -157,7 +214,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [Another, test, !]
 
-**sentences()** - returns sentences as strings parsed from the stream elements
+#### sentences
+
+`sentences()` - returns sentences as strings parsed from the stream elements
 
 ```java
   import static jhspetersson.packrat.Packrat.sentences;
@@ -167,7 +226,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [And another one. , How many left?]
 
-**nCopies(__n__)** - returns __n__ copies of every element, __n__ less than or equal to zero effectively empties the stream
+#### nCopies
+
+`nCopies(n)` - returns __n__ copies of every element, __n__ less than or equal to zero effectively empties the stream
 
 ```java
   import static jhspetersson.packrat.Packrat.nCopies;
@@ -177,7 +238,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 
-**atLeast**(__n__) - returns distinct elements that appear at least __n__ times in the stream
+#### atLeast
+
+`atLeast(n)` - returns distinct elements that appear at least __n__ times in the stream
 
 ```java
   import static jhspetersson.packrat.Packrat.atLeast;
@@ -187,7 +250,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 ```
 > [3, 3, 3, 8, 8, 8, 8]
 
-**mapFirst(__mapper__)** - returns all elements, the first element is mapped with the supplied mapping function
+#### mapFirst
+
+`mapFirst(mapper)` - returns all elements, the first element is mapped with the supplied mapping function
 
 ```java
   import static jhspetersson.packrat.Packrat.mapFirst;
@@ -197,7 +262,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [10, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-**mapN(__mapN__, __mapper__)** - returns all elements, the first __mapN__ elements are mapped with the supplied mapping function
+#### mapN
+
+`mapN(n, mapper)` - returns all elements, the first __n__ elements are mapped with the supplied mapping function
 
 ```java
   import static jhspetersson.packrat.Packrat.mapN;
@@ -207,7 +274,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [10, 20, 30, 40, 50, 6, 7, 8, 9, 10]
 
-**skipAndMap(__skipN__, __mapper__)** - returns all elements that after the first __skipN__ are mapped with the supplied mapping function
+#### skipAndMap
+
+`skipAndMap(n, mapper)` - returns all elements that after the first __n__ are mapped with the supplied mapping function
 
 ```java
   import static jhspetersson.packrat.Packrat.skipAndMap;
@@ -217,7 +286,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [1, 2, 3, 40, 50, 60, 70, 80, 90, 100]
 
-**skipAndMapN(__skipN__, __mapN__, __mapper__)** - returns all elements, after skipN elements the first mapN elements are mapped with the supplied mapping function
+#### skipAndMapN
+
+`skipAndMapN(skipN, mapN, mapper)` - returns all elements, after __skipN__ elements the first __mapN__ elements are mapped with the supplied mapping function
 
 ```java
   import static jhspetersson.packrat.Packrat.skipAndMapN;
@@ -227,7 +298,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [1, 2, 3, 40, 50, 60, 70, 80, 9, 10]
 
-**flatMapIf(__mapper__, __predicate__)** - optionally flattens elements mapped to streams depending on the supplied predicate
+#### flatMapIf
+
+`flatMapIf(mapper, predicate)` - optionally flattens elements mapped to streams depending on the supplied predicate
 
 ```java
   import static jhspetersson.packrat.Packrat.flatMapIf;
@@ -238,7 +311,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [A, B, C, D, E]
 
-**zip(__input__, __mapper__)** - returns elements mapped ("zipped") with the values from some other stream or iterable
+#### zip
+
+`zip(input, mapper)` - returns elements mapped ("zipped") with the values from some other stream or iterable
 
 ```java
   import static jhspetersson.packrat.Packrat.zip;
@@ -250,7 +325,9 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 > [User[name=Anna, age=20], User[name=Mike, age=30], User[name=Sandra, age=40]]
 
-**asGatherer(__collector__)** - provides the result of the supplied collector as a single element into the stream, effectively converts any Collector into a Gatherer
+#### asGatherer
+
+`asGatherer(collector)` - provides the result of the supplied collector as a single element into the stream, effectively converts any Collector into a Gatherer
 
 ```java
   import static jhspetersson.packrat.Packrat.asGatherer;
