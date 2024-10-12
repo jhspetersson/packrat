@@ -17,31 +17,34 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 ### Gatherers
 
-- [distinctBy](#distinctby)
-- [filterBy](#filterby)
-- [removeBy](#removeby)
-- [increasing](#increasing)
-- [increasingOrEqual](#increasingorequal)
-- [decreasing](#decreasing)
-- [increasingChunks](#increasingchunks)
-- [increasingOrEqualChunks](#increasingorequalchunks)
-- [decreasingChunks](#decreasingchunks)
-- [decreasingOrEqualChunks](#decreasingorequalchunks)
-- [reverse](#reverse)
-- [rotate](#rotate)
-- [shuffle](#shuffle)
-- [chars](#chars)
-- [words](#words)
-- [sentences](#sentences)
-- [nCopies](#ncopies)
-- [atLeast](#atleast)
-- [mapFirst](#mapfirst)
-- [mapN](#mapn)
-- [skipAndMap](#skipandmap)
-- [skipAndMapN](#skipandmapn)
-- [flatMapIf](#flatmapif)
-- [zip](#zip)
-- [asGatherer](#asgatherer)
+| Name                                                | Description                                            |
+|-----------------------------------------------------|--------------------------------------------------------|
+| [distinctBy](#distinctby)                           | Distinct values with custom mapper                     |
+| [filterBy](#filterby)                               | Filter with custom mapper and (optionally) predicate   |
+| [removeBy](#removeby)                               | Remove with custom mapper and (optionally) predicate   |
+| [increasing](#increasing)                           | Increasing sequence, other elements dropped            |
+| [increasingOrEqual](#increasingorequal)             | Increasing (or equal) sequence, other elements dropped |
+| [decreasing](#decreasing)                           | Decreasing sequence, other elements dropped            |
+| [decreasingOrEqual](#decreasingorequal)             | Decreasing (or equal) sequence, other elements dropped |
+| [increasingChunks](#increasingchunks)               | Lists of increasing values                             |
+| [increasingOrEqualChunks](#increasingorequalchunks) | Lists of increasing or equal values |                    
+| [decreasingChunks](#decreasingchunks)               | Lists of decreasing values |
+| [decreasingOrEqualChunks](#decreasingorequalchunks) | Lists of decreasing or equal values |
+| [reverse](#reverse)                                 | All elements in reverse order |
+| [rotate](#rotate)                                   | All elements rotated left or right |
+| [shuffle](#shuffle)                                 | All elements in random order |
+| [chars](#chars)                                     | String splitted by Unicode graphemes |
+| [words](#words)                                     | String splitted by words |
+| [sentences](#sentences)                             | String splitted by sentences |
+| [nCopies](#ncopies)                                 | Copies every element __n__ times |
+| [atLeast](#atleast)                                 | Distinct values that appear at least __n__ times |
+| [mapFirst](#mapfirst)                               | Maps first element with mapper, other unchanged |
+| [mapN](#mapn)                                       | Maps __n__ elements, other unchanged |
+| [skipAndMap](#skipandmap)                           | Skips __n__ elements, maps others |
+| [skipAndMapN](#skipandmapn)                         | Skips __skipN__ elements, maps __mapN__ others | 
+| [flatMapIf](#flatmapif)                             | Optional `flatMap` depending on predicate |
+| [zip](#zip)                                         | Zips values with zipper, leftovers dropped |
+| [asGatherer](#asgatherer)                           | Converts `Collector` into `Gatherer` |
 
 #### distinctBy
 
