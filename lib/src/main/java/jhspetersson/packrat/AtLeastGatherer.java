@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
@@ -21,6 +22,11 @@ class AtLeastGatherer<T, U> implements Gatherer<T, Map<? super U, List<T>>, T> {
     private final Function<? super T, ? extends U> mapper;
 
     AtLeastGatherer(long atLeast, Function<? super T, ? extends U> mapper) {
+        if (atLeast < 0) {
+            throw new IllegalArgumentException("atLeast must be a positive number");
+        }
+        Objects.requireNonNull(mapper, "mapper cannot be null");
+
         this.atLeast = atLeast;
         this.mapper = mapper;
     }

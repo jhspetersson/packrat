@@ -13,6 +13,10 @@ class NCopiesGatherer<T> implements Gatherer<T, Void, T> {
     private final long n;
 
     NCopiesGatherer(long n) {
+        if (n < 0) {
+            throw new IllegalArgumentException("n must be a positive number");
+        }
+
         this.n = n;
     }
 

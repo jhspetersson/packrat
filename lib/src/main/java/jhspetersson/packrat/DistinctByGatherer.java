@@ -1,6 +1,7 @@
 package jhspetersson.packrat;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -18,6 +19,8 @@ class DistinctByGatherer<T, U> implements Gatherer<T, Set<? super U>, T> {
     private final Function<? super T, ? extends U> mapper;
 
     DistinctByGatherer(Function<? super T, ? extends U> mapper) {
+        Objects.requireNonNull(mapper, "mapper cannot be null");
+
         this.mapper = mapper;
     }
 

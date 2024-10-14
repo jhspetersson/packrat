@@ -1,5 +1,6 @@
 package jhspetersson.packrat;
 
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -22,6 +23,8 @@ class MapWhileUntilGatherer<T> implements Gatherer<T, boolean[], T> {
     }
 
     MapWhileUntilGatherer(Function<? super T, ? extends T> mapper, Predicate<? super T> whilePredicate, Predicate<? super T> untilPredicate) {
+        Objects.requireNonNull(mapper, "mapper cannot be null");
+
         this.mapper = mapper;
         this.whilePredicate = whilePredicate;
         this.untilPredicate = untilPredicate;

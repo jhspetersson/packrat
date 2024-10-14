@@ -1,6 +1,7 @@
 package jhspetersson.packrat;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.stream.Gatherer;
 import java.util.stream.Stream;
@@ -19,11 +20,17 @@ class ZipGatherer<T, U, V> implements Gatherer<T, Void, V> {
     private final BiFunction<? super T, ? super U, ? extends V> mapper;
 
     ZipGatherer(Iterable<? extends U> input, BiFunction<? super T, ? super U, ? extends V> mapper) {
+        Objects.requireNonNull(input, "input cannot be null");
+        Objects.requireNonNull(mapper, "mapper cannot be null");
+
         this.iterator = input.iterator();
         this.mapper = mapper;
     }
 
     ZipGatherer(Stream<? extends U> input, BiFunction<? super T, ? super U, ? extends V> mapper) {
+        Objects.requireNonNull(input, "input cannot be null");
+        Objects.requireNonNull(mapper, "mapper cannot be null");
+
         this.iterator = input.iterator();
         this.mapper = mapper;
     }

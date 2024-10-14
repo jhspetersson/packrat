@@ -1,6 +1,7 @@
 package jhspetersson.packrat;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Gatherer;
 
@@ -17,6 +18,9 @@ class IncreasingDecreasingGatherer<T> implements Gatherer<T, Void, T> {
     private T value;
 
     IncreasingDecreasingGatherer(Comparator<? super T> comparator, Predicate<Integer> predicate) {
+        Objects.requireNonNull(comparator, "comparator cannot be null");
+        Objects.requireNonNull(predicate, "predicate cannot be null");
+
         this.comparator = comparator;
         this.predicate = predicate;
     }

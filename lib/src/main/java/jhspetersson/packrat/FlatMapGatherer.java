@@ -1,5 +1,6 @@
 package jhspetersson.packrat;
 
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Gatherer;
@@ -17,6 +18,9 @@ class FlatMapGatherer<T> implements Gatherer<T, boolean[], T> {
     private final Predicate<? super T> predicate;
 
     FlatMapGatherer(Function<? super T, Stream<? extends T>> mapper, Predicate<? super T> predicate) {
+        Objects.requireNonNull(mapper, "mapper cannot be null");
+        Objects.requireNonNull(predicate, "predicate cannot be null");
+
         this.mapper = mapper;
         this.predicate = predicate;
     }

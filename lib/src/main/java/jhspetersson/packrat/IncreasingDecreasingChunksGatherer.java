@@ -3,6 +3,7 @@ package jhspetersson.packrat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -22,6 +23,9 @@ class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, List<T>, List
     private T value;
 
     IncreasingDecreasingChunksGatherer(Comparator<? super T> comparator, Predicate<Integer> predicate) {
+        Objects.requireNonNull(comparator, "comparator cannot be null");
+        Objects.requireNonNull(predicate, "predicate cannot be null");
+
         this.comparator = comparator;
         this.predicate = predicate;
     }

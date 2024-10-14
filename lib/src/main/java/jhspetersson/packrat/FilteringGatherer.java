@@ -1,5 +1,6 @@
 package jhspetersson.packrat;
 
+import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.stream.Gatherer;
@@ -23,6 +24,9 @@ class FilteringGatherer<T, U> implements Gatherer<T, Void, T> {
     }
 
     FilteringGatherer(Function<? super T, ? extends U> mapper, U value, BiPredicate<? super U, ? super U> predicate, boolean invert) {
+        Objects.requireNonNull(mapper, "mapper cannot be null");
+        Objects.requireNonNull(predicate, "predicate cannot be null");
+
         this.mapper = mapper;
         this.value = value;
         this.predicate = predicate;

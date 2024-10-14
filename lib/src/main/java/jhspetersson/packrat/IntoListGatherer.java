@@ -2,6 +2,7 @@ package jhspetersson.packrat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
@@ -19,6 +20,8 @@ class IntoListGatherer<T> implements Gatherer<T, List<T>, T> {
     private final Consumer<List<T>> consumer;
 
     IntoListGatherer(Consumer<List<T>> consumer) {
+        Objects.requireNonNull(consumer, "consumer cannot be null");
+
         this.consumer = consumer;
     }
 

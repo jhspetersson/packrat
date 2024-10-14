@@ -1,5 +1,6 @@
 package jhspetersson.packrat;
 
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
@@ -20,6 +21,8 @@ public class CollectingGatherer<T, U, V> implements Gatherer<T, U, V> {
     private final Collector<? super T, U, ? extends V> collector;
 
     public CollectingGatherer(Collector<? super T, U, ? extends V> collector) {
+        Objects.requireNonNull(collector, "collector cannot be null");
+
         this.collector = collector;
     }
 

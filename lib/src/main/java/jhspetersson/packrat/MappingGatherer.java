@@ -1,5 +1,6 @@
 package jhspetersson.packrat;
 
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
@@ -17,6 +18,8 @@ class MappingGatherer<T> implements Gatherer<T, Long[], T> {
     private final Function<? super T, ? extends T> mapper;
 
     MappingGatherer(long skipN, long mapN, Function<? super T, ? extends T> mapper) {
+        Objects.requireNonNull(mapper, "mapper cannot be null");
+
         this.skipN = skipN;
         this.mapN = mapN;
         this.mapper = mapper;

@@ -1,6 +1,7 @@
 package jhspetersson.packrat;
 
 import java.text.BreakIterator;
+import java.util.Objects;
 import java.util.stream.Gatherer;
 
 /**
@@ -19,6 +20,8 @@ class BreakingGatherer<T> implements Gatherer<T, Void, String> {
     }
 
     BreakingGatherer(BreakIterator breakIterator, boolean skipBlanks) {
+        Objects.requireNonNull(breakIterator, "breakIterator cannot be null");
+
         this.breakIterator = breakIterator;
         this.skipBlanks = skipBlanks;
     }
