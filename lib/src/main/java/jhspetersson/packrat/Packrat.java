@@ -464,6 +464,36 @@ public final class Packrat {
     }
 
     /**
+     * Returns a sample of the specified size from the stream of elements.
+     * <p>
+     *
+     * @param n sample size
+     * @return sampling gatherer
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> sample(int n) {
+        var maxSpan = n < 512
+                ? 1024
+                : n < Integer.MAX_VALUE / 2
+                    ? n * 2
+                    : n + (Integer.MAX_VALUE - n) / 2;
+        return sample(n, maxSpan);
+    }
+
+    /**
+     * Returns a sample of the specified size from the stream of elements.
+     * <p>
+     *
+     * @param n sample size
+     * @param maxSpan maximum count of the elements to inspect
+     * @return sampling gatherer
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> sample(int n, int maxSpan) {
+        return new SamplingGatherer<>(n, maxSpan);
+    }
+
+    /**
      * Provides the result of the supplied collector as a single element into the stream.
      * Effectively converts any Collector into a Gatherer.
      *
