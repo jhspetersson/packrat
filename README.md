@@ -34,6 +34,7 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 | [rotate](#rotate)                                   | All elements rotated left or right |
 | [shuffle](#shuffle)                                 | All elements in random order |
 | [sample](#sample)                                   | Sample of the specified size |
+| [last](#last)                                       | Last __n__ elements |
 | [chars](#chars)                                     | String splitted by Unicode graphemes |
 | [words](#words)                                     | String splitted by words |
 | [sentences](#sentences)                             | String splitted by sentences |
@@ -206,6 +207,18 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 > [0, 8, 27, 33, 65, 66, 88, 90, 93, 96]
 
 `sample(n, maxSpan)` - returns a sample of the specified size from the stream of elements, inspects first __maxSpan__ elements.
+
+#### last
+
+`last(n)` - returns __n__ last elements from the stream.
+
+```java
+  import static jhspetersson.packrat.Packrat.last;
+  var integers = IntStream.range(0, 100).boxed().gather(last()).toList();
+  System.out.println(integers);
+```
+
+> [90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
 
 #### chars
 
