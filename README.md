@@ -214,7 +214,7 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 
 ```java
   import static jhspetersson.packrat.Packrat.last;
-  var integers = IntStream.range(0, 100).boxed().gather(last()).toList();
+  var integers = IntStream.range(0, 100).boxed().gather(last(10)).toList();
   System.out.println(integers);
 ```
 
