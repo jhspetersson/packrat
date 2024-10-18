@@ -27,26 +27,27 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 | [decreasing](#decreasing)                           | Decreasing sequence, other elements dropped            |
 | [decreasingOrEqual](#decreasingorequal)             | Decreasing (or equal) sequence, other elements dropped |
 | [increasingChunks](#increasingchunks)               | Lists of increasing values                             |
-| [increasingOrEqualChunks](#increasingorequalchunks) | Lists of increasing or equal values |                    
-| [decreasingChunks](#decreasingchunks)               | Lists of decreasing values |
-| [decreasingOrEqualChunks](#decreasingorequalchunks) | Lists of decreasing or equal values |
-| [reverse](#reverse)                                 | All elements in reverse order |
-| [rotate](#rotate)                                   | All elements rotated left or right |
-| [shuffle](#shuffle)                                 | All elements in random order |
-| [sample](#sample)                                   | Sample of the specified size |
-| [last](#last)                                       | Last __n__ elements |
-| [chars](#chars)                                     | String splitted by Unicode graphemes |
-| [words](#words)                                     | String splitted by words |
-| [sentences](#sentences)                             | String splitted by sentences |
-| [nCopies](#ncopies)                                 | Copies every element __n__ times |
-| [atLeast](#atleast)                                 | Distinct values that appear at least __n__ times |
-| [mapFirst](#mapfirst)                               | Maps first element with mapper, other unchanged |
-| [mapN](#mapn)                                       | Maps __n__ elements, other unchanged |
-| [skipAndMap](#skipandmap)                           | Skips __n__ elements, maps others |
-| [skipAndMapN](#skipandmapn)                         | Skips __skipN__ elements, maps __mapN__ others | 
-| [flatMapIf](#flatmapif)                             | Optional `flatMap` depending on predicate |
-| [zip](#zip)                                         | Zips values with zipper, leftovers dropped |
-| [asGatherer](#asgatherer)                           | Converts `Collector` into `Gatherer` |
+| [increasingOrEqualChunks](#increasingorequalchunks) | Lists of increasing or equal values                    |                    
+| [decreasingChunks](#decreasingchunks)               | Lists of decreasing values                             |
+| [decreasingOrEqualChunks](#decreasingorequalchunks) | Lists of decreasing or equal values                    |
+| [reverse](#reverse)                                 | All elements in reverse order                          |
+| [rotate](#rotate)                                   | All elements rotated left or right                     |
+| [shuffle](#shuffle)                                 | All elements in random order                           |
+| [sample](#sample)                                   | Sample of the specified size                           |
+| [last](#last)                                       | Last __n__ elements                                    |
+| [lastUnique](#lastunique)                           | Last __n__ unique elements                             |
+| [chars](#chars)                                     | String splitted by Unicode graphemes                   |
+| [words](#words)                                     | String splitted by words                               |
+| [sentences](#sentences)                             | String splitted by sentences                           |
+| [nCopies](#ncopies)                                 | Copies every element __n__ times                       |
+| [atLeast](#atleast)                                 | Distinct values that appear at least __n__ times       |
+| [mapFirst](#mapfirst)                               | Maps first element with mapper, other unchanged        |
+| [mapN](#mapn)                                       | Maps __n__ elements, other unchanged                   |
+| [skipAndMap](#skipandmap)                           | Skips __n__ elements, maps others                      |
+| [skipAndMapN](#skipandmapn)                         | Skips __skipN__ elements, maps __mapN__ others         | 
+| [flatMapIf](#flatmapif)                             | Optional `flatMap` depending on predicate              |
+| [zip](#zip)                                         | Zips values with zipper, leftovers dropped             |
+| [asGatherer](#asgatherer)                           | Converts `Collector` into `Gatherer`                   |
 
 #### distinctBy
 
@@ -219,6 +220,18 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 ```
 
 > [90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+
+#### lastUnique
+
+`lastUnique(n)` - returns __n__ last unique elements from the stream.
+
+```java
+  import static jhspetersson.packrat.Packrat.lastUnique;
+  var integers = List.of(1, 2, 3, 4, 5, 4, 1, 1, 1, 2, 2, 6).stream().gather(lastUnique(3)).toList();
+  System.out.println(integers);
+```
+
+> [1, 2, 6]
 
 #### chars
 

@@ -505,6 +505,17 @@ public final class Packrat {
     }
 
     /**
+     * Returns last n unique elements.
+     *
+     * @param n count of last unique elements to return
+     * @return lasting gatherer
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> lastUnique(long n) {
+        return new LastingGatherer<>(n, true);
+    }
+
+    /**
      * Provides the result of the supplied collector as a single element into the stream.
      * Effectively converts any Collector into a Gatherer.
      *

@@ -24,4 +24,11 @@ public class LastNTest {
 
         assertEquals(List.of(90, 91, 92, 93, 94, 95, 96, 97, 98, 99), after);
     }
+
+    @Test
+    public void lastNUniqueTest() {
+        var integers = List.of(1, 2, 3, 4, 5, 4, 1, 1, 1, 2, 2, 6).stream().gather(Packrat.lastUnique(3)).toList();
+
+        assertEquals(List.of(1, 2, 6), integers);
+    }
 }
