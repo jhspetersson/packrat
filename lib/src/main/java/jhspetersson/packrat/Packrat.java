@@ -80,6 +80,52 @@ public final class Packrat {
     }
 
     /**
+     * Outputs the smallest element in the stream, comparing is done after mapping function applied.
+     *
+     * @param mapper mapping function
+     * @param <T> element type
+     * @param <U> mapped element type
+     */
+    public static <T, U extends Comparable<U>> Gatherer<T, ?, T> minBy(Function<? super T, ? extends U> mapper) {
+        return minBy(mapper, Comparator.naturalOrder());
+    }
+
+    /**
+     * Outputs the smallest element in the stream, comparing with given comparator is done after mapping function applied.
+     *
+     * @param mapper mapping function
+     * @param comparator comparator
+     * @param <T> element type
+     * @param <U> mapped element type
+     */
+    public static <T, U extends Comparable<U>> Gatherer<T, ?, T> minBy(Function<? super T, ? extends U> mapper, Comparator<? super U> comparator) {
+        return new MinMaxGatherer<>(mapper, comparator, cmp -> cmp < 0);
+    }
+
+    /**
+     * Outputs the greatest element in the stream, comparing is done after mapping function applied.
+     *
+     * @param mapper mapping function
+     * @param <T> element type
+     * @param <U> mapped element type
+     */
+    public static <T, U extends Comparable<U>> Gatherer<T, ?, T> maxBy(Function<? super T, ? extends U> mapper) {
+        return maxBy(mapper, Comparator.naturalOrder());
+    }
+
+    /**
+     * Outputs the greatest element in the stream, comparing with given comparator is done after mapping function applied.
+     *
+     * @param mapper mapping function
+     * @param comparator comparator
+     * @param <T> element type
+     * @param <U> mapped element type
+     */
+    public static <T, U extends Comparable<U>> Gatherer<T, ?, T> maxBy(Function<? super T, ? extends U> mapper, Comparator<? super U> comparator) {
+        return new MinMaxGatherer<>(mapper, comparator, cmp -> cmp > 0);
+    }
+
+    /**
      * Returns elements in an increasing sequence using natural order comparator.
      * Elements out of the sequence, as well as repeating values, are dropped.
      *

@@ -21,6 +21,8 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 |-----------------------------------------------------|--------------------------------------------------------|
 | [distinctBy](#distinctby)                           | Distinct values with custom mapper                     |
 | [filterBy](#filterby)                               | Filter with custom mapper and (optionally) predicate   |
+| [minBy](#minby)                                     | The smallest element compared after mapping applied    |
+| [maxBy](#maxby)                                     | The greatest element compared after mapping applied    |
 | [removeBy](#removeby)                               | Remove with custom mapper and (optionally) predicate   |
 | [increasing](#increasing)                           | Increasing sequence, other elements dropped            |
 | [increasingOrEqual](#increasingorequal)             | Increasing (or equal) sequence, other elements dropped |
@@ -79,6 +81,38 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
   System.out.println(ffValue);
 ```
 > [255]
+
+#### minBy
+
+`minBy(mapper)` - returns the smallest element in the stream, comparing is done after mapping function applied.
+
+```java
+  import static jhspetersson.packrat.Packrat.minBy;
+  var check = Stream.of("2", "1", "-12", "22", "10").gather(minBy(Long::parseLong)).toList();
+  System.out.println(check);
+```
+
+> [-12]
+
+However, resulting list contains original element of type `String`;
+
+`minBy(mapper, comparator)` - returns the smallest element in the stream, comparing with given comparator is done after mapping function applied.
+
+#### maxBy
+
+`maxBy(mapper)` - returns the greatest element in the stream, comparing is done after mapping function applied.
+
+```java
+  import static jhspetersson.packrat.Packrat.maxBy;
+  var check = Stream.of("2", "1", "-12", "22", "10").gather(maxBy(Long::parseLong)).toList();
+  System.out.println(check);
+```
+
+> [22]
+
+However, resulting list contains original element of type `String`;
+
+`maxBy(mapper, comparator)` - returns the greatest element in the stream, comparing with given comparator is done after mapping function applied.
 
 #### removeBy
 
