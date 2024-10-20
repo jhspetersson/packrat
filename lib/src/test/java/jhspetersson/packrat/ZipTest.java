@@ -47,5 +47,17 @@ public class ZipTest {
         assertEquals(60, users.get("Monica"));
     }
 
+    @Test
+    public void zipLongerWithShorterTest() {
+        var names = List.of("Anna", "Mike", "Sandra", "Rudolf", "Monica");
+        var ages = List.of(20, 30, 40);
+
+        var users = names.stream().gather(Packrat.zip(ages, User::new)).toList();
+
+        assertEquals(ages.size(), users.size());
+        assertEquals(new User("Anna", 20), users.getFirst());
+        assertEquals(new User("Sandra", 40), users.getLast());
+    }
+
     record User(String name, int age) {}
 }
