@@ -3,8 +3,10 @@ package jhspetersson.packrat;
 import java.text.BreakIterator;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -355,6 +357,17 @@ public final class Packrat {
     }
 
     /**
+     * Returns map entries from elements of the stream mapped ("zipped") with the values from some other iterable.
+     *
+     * @param input iterable
+     * @param <T> element type
+     * @param <U> supplied iterable element type
+     */
+    public static <T, U> Gatherer<T, ?, Map.Entry<T, ? extends U>> zip(Iterable<? extends U> input) {
+        return zip(input, Map::entry);
+    }
+
+    /**
      * Returns elements mapped ("zipped") with the values from some other iterable.
      *
      * @param input iterable
@@ -368,6 +381,17 @@ public final class Packrat {
     }
 
     /**
+     * Returns map entries from elements of the stream mapped ("zipped") with the values from some other stream.
+     *
+     * @param input iterable
+     * @param <T> element type
+     * @param <U> supplied iterable element type
+     */
+    public static <T, U> Gatherer<T, ?, Map.Entry<T, ? extends U>> zip(Stream<? extends U> input) {
+        return zip(input, Map::entry);
+    }
+
+    /**
      * Returns elements mapped ("zipped") with the values from some other stream.
      *
      * @param input stream
@@ -378,6 +402,30 @@ public final class Packrat {
      */
     public static <T, U, V> Gatherer<T, ?, V> zip(Stream<? extends U> input, BiFunction<? super T, ? super U, ? extends V> mapper) {
         return new ZipGatherer<>(input, mapper);
+    }
+
+    /**
+     * Returns map entries from elements of the stream mapped ("zipped") with the values from some other iterator.
+     *
+     * @param iterator iterator
+     * @param <T> element type
+     * @param <U> supplied iterable element type
+     */
+    public static <T, U> Gatherer<T, ?, Map.Entry<T, ? extends U>> zip(Iterator<? extends U> iterator) {
+        return zip(iterator, Map::entry);
+    }
+
+    /**
+     * Returns elements mapped ("zipped") with the values from some other iterator.
+     *
+     * @param iterator iterator
+     * @param mapper zipping function
+     * @param <T> element type
+     * @param <U> supplied stream element type
+     * @param <V> result ("zipped") type
+     */
+    public static <T, U, V> Gatherer<T, ?, V> zip(Iterator<? extends U> iterator, BiFunction<? super T, ? super U, ? extends V> mapper) {
+        return new ZipGatherer<>(iterator, mapper);
     }
 
     /**

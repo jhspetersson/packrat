@@ -7,7 +7,7 @@ import java.util.stream.Gatherer;
 import java.util.stream.Stream;
 
 /**
- * Returns elements mapped ("zipped") with the values from some other stream or iterable.
+ * Returns elements mapped ("zipped") with the values from some other stream, iterable or iterator.
  *
  * @param <T> element type
  * @param <U> element type of the supplied stream or iterable
@@ -21,17 +21,21 @@ class ZipGatherer<T, U, V> implements Gatherer<T, Void, V> {
 
     ZipGatherer(Iterable<? extends U> input, BiFunction<? super T, ? super U, ? extends V> mapper) {
         Objects.requireNonNull(input, "input cannot be null");
-        Objects.requireNonNull(mapper, "mapper cannot be null");
 
-        this.iterator = input.iterator();
-        this.mapper = mapper;
+        this(input.iterator(), mapper);
     }
 
     ZipGatherer(Stream<? extends U> input, BiFunction<? super T, ? super U, ? extends V> mapper) {
         Objects.requireNonNull(input, "input cannot be null");
+
+        this(input.iterator(), mapper);
+    }
+
+    ZipGatherer(Iterator<? extends U> iterator, BiFunction<? super T, ? super U, ? extends V> mapper) {
+        Objects.requireNonNull(iterator, "iterator cannot be null");
         Objects.requireNonNull(mapper, "mapper cannot be null");
 
-        this.iterator = input.iterator();
+        this.iterator = iterator;
         this.mapper = mapper;
     }
 

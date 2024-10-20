@@ -390,7 +390,7 @@ However, resulting list contains original element of type `String`;
 
 #### zip
 
-`zip(input, mapper)` - returns elements mapped ("zipped") with the values from some other stream or iterable
+`zip(input, mapper)` - returns elements mapped ("zipped") with the values from some other stream, iterable or iterator.
 
 ```java
   import static jhspetersson.packrat.Packrat.zip;
@@ -401,6 +401,18 @@ However, resulting list contains original element of type `String`;
 ```
 
 > [User[name=Anna, age=20], User[name=Mike, age=30], User[name=Sandra, age=40]]
+
+`zip(input)` - zips current stream and input into Map entries.
+
+```java
+  import static jhspetersson.packrat.Packrat.zip;
+  var names = List.of("Anna", "Mike", "Sandra");
+  var ages = Stream.of(20, 30, 40);
+  var users = names.stream().gather(zip(ages)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+  System.out.println(users);
+```
+
+> {Mike=30, Anna=20, Sandra=40}
 
 #### asGatherer
 
