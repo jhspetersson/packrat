@@ -56,7 +56,7 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 `distinctBy(mapper)` - returns elements with distinct values that result from a mapping by the supplied function
 
 ```java
-  import static jhspetersson.packrat.Packrat.distinctBy;
+  import static io.github.jhspetersson.packrat.Packrat.distinctBy;
   var oneOddOneEven = IntStream.range(1, 10).boxed().gather(distinctBy(i -> i % 2)).toList();
   System.out.println(oneOddOneEven);
 ```
@@ -67,7 +67,7 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 `filterBy(mapper, value)` - filters mapped elements based on the equality to the value, stream continues with original elements
 
 ```java
-  import static jhspetersson.packrat.Packrat.filterBy;
+  import static io.github.jhspetersson.packrat.Packrat.filterBy;
   var oneDigitNumbers = IntStream.range(0, 100).boxed().gather(filterBy(i -> i.toString().length(), 1)).toList();
   System.out.println(oneDigitNumbers);
 ```
@@ -76,7 +76,7 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 `filterBy(mapper, value, predicate)` - filters mapped elements based on the predicate test against the value, stream continues with original elements
 
 ```java
-  import static jhspetersson.packrat.Packrat.filterBy;
+  import static io.github.jhspetersson.packrat.Packrat.filterBy;
   var ffValue = IntStream.range(0, 1000).boxed().gather(filterBy(Integer::toHexString, "ff", String::equalsIgnoreCase)).toList();
   System.out.println(ffValue);
 ```
@@ -87,7 +87,7 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 `minBy(mapper)` - returns the smallest element in the stream, comparing is done after mapping function applied.
 
 ```java
-  import static jhspetersson.packrat.Packrat.minBy;
+  import static io.github.jhspetersson.packrat.Packrat.minBy;
   var check = Stream.of("2", "1", "-12", "22", "10").gather(minBy(Long::parseLong)).toList();
   System.out.println(check);
 ```
@@ -103,7 +103,7 @@ However, resulting list contains original element of type `String`;
 `maxBy(mapper)` - returns the greatest element in the stream, comparing is done after mapping function applied.
 
 ```java
-  import static jhspetersson.packrat.Packrat.maxBy;
+  import static io.github.jhspetersson.packrat.Packrat.maxBy;
   var check = Stream.of("2", "1", "-12", "22", "10").gather(maxBy(Long::parseLong)).toList();
   System.out.println(check);
 ```
@@ -119,7 +119,7 @@ However, resulting list contains original element of type `String`;
 `removeBy(mapper, value)` - removes mapped elements based on the equality to the value, stream continues with original elements
 
 ```java
-  import static jhspetersson.packrat.Packrat.removeBy;
+  import static io.github.jhspetersson.packrat.Packrat.removeBy;
   var oneDigitNumbers = IntStream.range(0, 100).boxed().gather(removeBy(i -> i.toString().length(), 2)).toList();
   System.out.println(oneDigitNumbers);
 ```
@@ -128,7 +128,7 @@ However, resulting list contains original element of type `String`;
 `removeBy(mapper, value, predicate)` - removes mapped elements based on the predicate test against the value, stream continues with original elements
 
 ```java
-  import static jhspetersson.packrat.Packrat.removeBy;
+  import static io.github.jhspetersson.packrat.Packrat.removeBy;
   var ageDivisibleByThree = getEmployees().gather(removeBy(emp -> emp.age() % 3, 0, (i, value) -> !Objects.equals(i, value))).toList();
   System.out.println(ageDivisibleByThree);
 ```
@@ -139,7 +139,7 @@ However, resulting list contains original element of type `String`;
 `increasing()` - returns elements in an increasing sequence, elements out of the sequence, as well as repeating values, are dropped
 
 ```java
-  import static jhspetersson.packrat.Packrat.increasing;
+  import static io.github.jhspetersson.packrat.Packrat.increasing;
   var numbers = Stream.of(1, 2, 2, 5, 4, 2, 6, 9, 3, 11, 0, 1, 20);
   var increasingNumbers = numbers.gather(increasing()).toList();
   System.out.println(increasingNumbers);
@@ -164,7 +164,7 @@ However, resulting list contains original element of type `String`;
 `increasingChunks()` - returns lists ("chunks") of elements, where each next element is greater than the previous one
 
 ```java
-  import static jhspetersson.packrat.Packrat.increasingChunks;
+  import static io.github.jhspetersson.packrat.Packrat.increasingChunks;
   var numbers = Stream.of(1, 2, 2, 5, 4, 2, 6, 9, 3, 11, 0, 1, 20);
   var result = numbers.gather(increasingChunks()).toList();
   System.out.println(result);
@@ -177,7 +177,7 @@ However, resulting list contains original element of type `String`;
 `increasingOrEqualChunks()` - returns lists ("chunks") of elements, where each next element is greater or equal than the previous one
 
 ```java
-  import static jhspetersson.packrat.Packrat.increasingOrEqualChunks;
+  import static io.github.jhspetersson.packrat.Packrat.increasingOrEqualChunks;
   var numbers = Stream.of(1, 2, 2, 5, 4, 2, 6, 9, 3, 11, 0, 1, 20);
   var result = numbers.gather(increasingOrEqualChunks()).toList();
   System.out.println(result);
@@ -198,7 +198,7 @@ However, resulting list contains original element of type `String`;
 `reverse()` - reverses the elements
 
 ```java
-  import static jhspetersson.packrat.Packrat.reverse;
+  import static io.github.jhspetersson.packrat.Packrat.reverse;
   var reverseOrdered = IntStream.range(0, 10).boxed().gather(reverse()).toList();
   System.out.println(reverseOrdered);
 ```
@@ -209,7 +209,7 @@ However, resulting list contains original element of type `String`;
 `rotate(distance)` - rotates the elements
 
 ```java
-  import static jhspetersson.packrat.Packrat.rotate;
+  import static io.github.jhspetersson.packrat.Packrat.rotate;
   var positiveRotation = IntStream.range(0, 10).boxed().gather(rotate(3)).toList();
   System.out.println(positiveRotation);
   var negativeRotation = IntStream.range(0, 10).boxed().gather(rotate(-4)).toList();
@@ -224,7 +224,7 @@ However, resulting list contains original element of type `String`;
 `shuffle()` - shuffle the elements
 
 ```java
-  import static jhspetersson.packrat.Packrat.shuffle;
+  import static io.github.jhspetersson.packrat.Packrat.shuffle;
   var randomlyOrdered = IntStream.range(0, 10).boxed().gather(shuffle()).toList();
   System.out.println(randomlyOrdered);
 ```
@@ -235,7 +235,7 @@ However, resulting list contains original element of type `String`;
 `sample(n)` - returns a sample of the specified size from the stream of elements.
 
 ```java
-  import static jhspetersson.packrat.Packrat.sample;
+  import static io.github.jhspetersson.packrat.Packrat.sample;
   var source = IntStream.range(0, 100).boxed().gather(sample(10)).toList();
   System.out.println(source);
 ```
@@ -248,7 +248,7 @@ However, resulting list contains original element of type `String`;
 `last(n)` - returns __n__ last elements from the stream.
 
 ```java
-  import static jhspetersson.packrat.Packrat.last;
+  import static io.github.jhspetersson.packrat.Packrat.last;
   var integers = IntStream.range(0, 100).boxed().gather(last(10)).toList();
   System.out.println(integers);
 ```
@@ -260,7 +260,7 @@ However, resulting list contains original element of type `String`;
 `lastUnique(n)` - returns __n__ last unique elements from the stream.
 
 ```java
-  import static jhspetersson.packrat.Packrat.lastUnique;
+  import static io.github.jhspetersson.packrat.Packrat.lastUnique;
   var integers = List.of(1, 2, 3, 4, 5, 4, 1, 1, 1, 2, 2, 6).stream().gather(lastUnique(3)).toList();
   System.out.println(integers);
 ```
@@ -272,7 +272,7 @@ However, resulting list contains original element of type `String`;
 `chars()` - returns characters as strings parsed from the stream elements
   
 ```java
-  import static jhspetersson.packrat.Packrat.chars;
+  import static io.github.jhspetersson.packrat.Packrat.chars;
   var charStrings = Stream.of("Hello, \uD83D\uDC22!").gather(chars()).toList();
   System.out.println(charStrings);
 ```
@@ -284,7 +284,7 @@ However, resulting list contains original element of type `String`;
 `words()` - returns words as strings parsed from the stream elements
 
 ```java
-  import static jhspetersson.packrat.Packrat.words;
+  import static io.github.jhspetersson.packrat.Packrat.words;
   var wordStrings = Stream.of("Another test!").gather(words()).toList();
   System.out.println(wordStrings);
 ```
@@ -296,7 +296,7 @@ However, resulting list contains original element of type `String`;
 `sentences()` - returns sentences as strings parsed from the stream elements
 
 ```java
-  import static jhspetersson.packrat.Packrat.sentences;
+  import static io.github.jhspetersson.packrat.Packrat.sentences;
   var sentenceStrings = Stream.of("And another one. How many left?").gather(sentences()).toList();
   System.out.println(sentenceStrings);
 ```
@@ -308,7 +308,7 @@ However, resulting list contains original element of type `String`;
 `nCopies(n)` - returns __n__ copies of every element, __n__ less than or equal to zero effectively empties the stream
 
 ```java
-  import static jhspetersson.packrat.Packrat.nCopies;
+  import static io.github.jhspetersson.packrat.Packrat.nCopies;
   var numbers = IntStream.of(5).boxed().gather(nCopies(10)).toList();
   System.out.println(numbers);
 ```
@@ -320,7 +320,7 @@ However, resulting list contains original element of type `String`;
 `atLeast(n)` - returns distinct elements that appear at least __n__ times in the stream
 
 ```java
-  import static jhspetersson.packrat.Packrat.atLeast;
+  import static io.github.jhspetersson.packrat.Packrat.atLeast;
   var numbers = Stream.of(1, 2, 3, 3, 3, 4, 5, 5, 6, 7, 8, 8, 8, 8, 9, 10);
   var atLeastThree = numbers.gather(atLeast(3)).toList();
   System.out.println(atLeastThree);
@@ -332,7 +332,7 @@ However, resulting list contains original element of type `String`;
 `mapFirst(mapper)` - returns all elements, the first element is mapped with the supplied mapping function
 
 ```java
-  import static jhspetersson.packrat.Packrat.mapFirst;
+  import static io.github.jhspetersson.packrat.Packrat.mapFirst;
   var mapped = IntStream.rangeClosed(1, 10).boxed().gather(mapFirst(n -> n * 10)).toList();
   System.out.println(mapped);
 ```
@@ -344,7 +344,7 @@ However, resulting list contains original element of type `String`;
 `mapN(n, mapper)` - returns all elements, the first __n__ elements are mapped with the supplied mapping function
 
 ```java
-  import static jhspetersson.packrat.Packrat.mapN;
+  import static io.github.jhspetersson.packrat.Packrat.mapN;
   var mapped = IntStream.rangeClosed(1, 10).boxed().gather(mapN(5, n -> n * 10)).toList();
   System.out.println(mapped);
 ```
@@ -356,7 +356,7 @@ However, resulting list contains original element of type `String`;
 `skipAndMap(n, mapper)` - returns all elements that after the first __n__ are mapped with the supplied mapping function
 
 ```java
-  import static jhspetersson.packrat.Packrat.skipAndMap;
+  import static io.github.jhspetersson.packrat.Packrat.skipAndMap;
   var mapped = IntStream.rangeClosed(1, 10).boxed().gather(skipAndMap(3, n -> n * 10)).toList();
   System.out.println(mapped);
 ```
@@ -368,7 +368,7 @@ However, resulting list contains original element of type `String`;
 `skipAndMapN(skipN, mapN, mapper)` - returns all elements, after __skipN__ elements the first __mapN__ elements are mapped with the supplied mapping function
 
 ```java
-  import static jhspetersson.packrat.Packrat.skipAndMapN;
+  import static io.github.jhspetersson.packrat.Packrat.skipAndMapN;
   var mapped = IntStream.rangeClosed(1, 10).boxed().gather(skipAndMapN(3, 5, n -> n * 10)).toList();
   System.out.println(mapped);
 ```
@@ -380,7 +380,7 @@ However, resulting list contains original element of type `String`;
 `flatMapIf(mapper, predicate)` - optionally flattens elements mapped to streams depending on the supplied predicate
 
 ```java
-  import static jhspetersson.packrat.Packrat.flatMapIf;
+  import static io.github.jhspetersson.packrat.Packrat.flatMapIf;
   var strings = Stream.of("A", "B", "CDE");
   var result = strings.gather(flatMapIf(s -> Arrays.stream(s.split("")), s -> s.length() > 1)).toList();
   System.out.println(result);
@@ -393,7 +393,7 @@ However, resulting list contains original element of type `String`;
 `zip(input, mapper)` - returns elements mapped ("zipped") with the values from some other stream, iterable or iterator.
 
 ```java
-  import static jhspetersson.packrat.Packrat.zip;
+  import static io.github.jhspetersson.packrat.Packrat.zip;
   var names = List.of("Anna", "Mike", "Sandra");
   var ages = Stream.of(20, 30, 40, 50, 60, 70, 80, 90);
   var users = names.stream().gather(zip(ages, User::new)).toList();
@@ -405,7 +405,7 @@ However, resulting list contains original element of type `String`;
 `zip(input)` - zips current stream and input into Map entries.
 
 ```java
-  import static jhspetersson.packrat.Packrat.zip;
+  import static io.github.jhspetersson.packrat.Packrat.zip;
   var names = List.of("Anna", "Mike", "Sandra");
   var ages = Stream.of(20, 30, 40);
   var users = names.stream().gather(zip(ages)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -419,7 +419,7 @@ However, resulting list contains original element of type `String`;
 `asGatherer(collector)` - provides the result of the supplied collector as a single element into the stream, effectively converts any Collector into a Gatherer
 
 ```java
-  import static jhspetersson.packrat.Packrat.asGatherer;
+  import static io.github.jhspetersson.packrat.Packrat.asGatherer;
   var numbers = Stream.of(1, 2, 3, 4, 5);
   var listOfCollectedList = numbers.gather(asGatherer(Collectors.toList())).toList();
   System.out.println(listOfCollectedList);
