@@ -429,6 +429,54 @@ public final class Packrat {
     }
 
     /**
+     * Returns elements mapped ("zipped") with an increasing index.
+     * Output type is {@link java.util.Map.Entry} with a Long key and an element as a value.
+     *
+     * @param <T> element type
+     * @see java.util.Map.Entry
+     */
+    public static <T> Gatherer<T, ?, Map.Entry<Long, ? extends T>> zipWithIndex() {
+        return zipWithIndex(Map::entry);
+    }
+
+    /**
+     * Returns elements mapped ("zipped") with an increasing index.
+     * Output type is {@link java.util.Map.Entry} with a Long key and an element as a value.
+     *
+     * @param startIndex starting index
+     * @param <T> element type
+     * @see java.util.Map.Entry
+     */
+    public static <T> Gatherer<T, ?, Map.Entry<Long, ? extends T>> zipWithIndex(long startIndex) {
+        return zipWithIndex(Map::entry, startIndex);
+    }
+
+    /**
+     * Returns elements mapped ("zipped") with an increasing index.
+     * Mapping function receives the index as the first argument.
+     *
+     * @param mapper zipping function
+     * @param <T> element type
+     * @param <U> result ("zipped") type
+     */
+    public static <T, U> Gatherer<T, ?, U> zipWithIndex(BiFunction<Long, ? super T, ? extends U> mapper) {
+        return zipWithIndex(mapper, 0L);
+    }
+
+    /**
+     * Returns elements mapped ("zipped") with an increasing index.
+     * Mapping function receives the index as the first argument.
+     *
+     * @param mapper zipping function
+     * @param startIndex starting index
+     * @param <T> element type
+     * @param <U> result ("zipped") type
+     */
+    public static <T, U> Gatherer<T, ?, U> zipWithIndex(BiFunction<Long, ? super T, ? extends U> mapper, long startIndex) {
+        return new ZipWithIndexGatherer<>(mapper, startIndex);
+    }
+
+    /**
      * Returns characters as strings parsed from the stream elements.
      *
      * @param <T> element type

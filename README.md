@@ -49,6 +49,7 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 | [skipAndMapN](#skipandmapn)                         | Skips __skipN__ elements, maps __mapN__ others         | 
 | [flatMapIf](#flatmapif)                             | Optional `flatMap` depending on predicate              |
 | [zip](#zip)                                         | Zips values with zipper, leftovers dropped             |
+| [zipWithIndex](#zipwithindex)                       | Zips values with an increasing index                   |
 | [asGatherer](#asgatherer)                           | Converts `Collector` into `Gatherer`                   |
 
 #### distinctBy
@@ -413,6 +414,48 @@ However, resulting list contains original element of type `String`;
 ```
 
 > {Mike=30, Anna=20, Sandra=40}
+
+#### zipWithIndex
+
+`zipWithIndex()` - zips current stream with an increasing index into Map entries.
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.zipWithIndex;
+  var names = List.of("Anna", "Mike", "Sandra");
+  var users = names.stream().gather(zipWithIndex()).toList();
+```
+
+> [0=Anna, 1=Mike, 2=Sandra]
+
+`zipWithIndex(startIndex)` - zips current stream with an increasing index (beginning with _startIndex_) into Map entries.
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.zipWithIndex;
+  var names = List.of("Anna", "Mike", "Sandra");
+  var users = names.stream().gather(zipWithIndex(10)).toList();
+```
+
+> [10=Anna, 11=Mike, 12=Sandra]
+
+`zipWithIndex(mapper)` - zips current stream with an increasing index, mapping function receives the index as the first argument.
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.zipWithIndex;
+  var names = List.of("Anna", "Mike", "Sandra");
+  var users = names.stream().gather(zipWithIndex(User::new)).toList();
+```
+
+> [User[index=0, name=Anna], User[index=1, name=Mike], User[index=2, name=Sandra]]
+
+`zipWithIndex(mapper, startIndex)` - zips current stream with an increasing index (beginning with _startIndex_), mapping function receives the index as the first argument.
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.zipWithIndex;
+  var names = List.of("Anna", "Mike", "Sandra");
+  var users = names.stream().gather(zipWithIndex(User::new, 10)).toList();
+```
+
+> [User[index=10, name=Anna], User[index=11, name=Mike], User[index=12, name=Sandra]]
 
 #### asGatherer
 
