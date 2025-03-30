@@ -15,7 +15,6 @@ import java.util.stream.Gatherer;
  * @param <U> mapped element type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 class MinMaxGatherer<T, U> implements Gatherer<T, MinMaxGatherer.State<T, U>, T> {
     private final Function<? super T, ? extends U> mapper;
     private final Comparator<? super U> comparator;

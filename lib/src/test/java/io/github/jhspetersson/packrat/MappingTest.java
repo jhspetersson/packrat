@@ -7,7 +7,6 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SuppressWarnings("preview")
 public class MappingTest {
     @Test
     public void mapFirstTest() {

@@ -12,7 +12,6 @@ import java.util.stream.Stream;
  * @param <T> element type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 class FlatMapGatherer<T> implements Gatherer<T, boolean[], T> {
     private final Function<? super T, Stream<? extends T>> mapper;
     private final Predicate<? super T> predicate;

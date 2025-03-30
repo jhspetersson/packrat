@@ -7,7 +7,6 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SuppressWarnings("preview")
 public class ZipWithIndexTest {
     @Test
     public void defaultTest() {

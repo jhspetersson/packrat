@@ -14,7 +14,6 @@ import java.util.stream.Gatherer;
  * @param <T> element type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 class SamplingGatherer<T> implements Gatherer<T, SamplingGatherer.State<T>, T> {
     private final int n;
     private final int maxSpan;

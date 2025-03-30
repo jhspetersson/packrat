@@ -6,7 +6,6 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SuppressWarnings("preview")
 public class NCopiesTest {
     @Test
     public void nCopiesTest() {

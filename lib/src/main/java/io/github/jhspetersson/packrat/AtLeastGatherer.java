@@ -16,7 +16,6 @@ import java.util.stream.Gatherer;
  * @param <U> mapped element type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 class AtLeastGatherer<T, U> implements Gatherer<T, Map<? super U, List<T>>, T> {
     private final long atLeast;
     private final Function<? super T, ? extends U> mapper;

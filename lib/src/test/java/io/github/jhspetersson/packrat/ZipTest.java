@@ -9,7 +9,6 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SuppressWarnings("preview")
 public class ZipTest {
     @Test
     public void zipWithIterableTest() {

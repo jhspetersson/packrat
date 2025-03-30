@@ -15,7 +15,6 @@ import java.util.stream.Gatherer;
  * @param <T> element type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
     private final long n;
     private final boolean unique;

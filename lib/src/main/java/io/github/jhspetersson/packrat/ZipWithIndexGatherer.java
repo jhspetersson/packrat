@@ -12,7 +12,6 @@ import java.util.stream.Gatherer;
  * @param <U> mapped element type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 class ZipWithIndexGatherer<T, U> implements Gatherer<T, long[], U> {
     private final BiFunction<Long, ? super T, ? extends U> mapper;
     private final long startIndex;

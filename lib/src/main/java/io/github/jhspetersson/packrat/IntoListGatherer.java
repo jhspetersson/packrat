@@ -15,7 +15,6 @@ import java.util.stream.Gatherer;
  * @param <T> element type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 class IntoListGatherer<T> implements Gatherer<T, List<T>, T> {
     private final Consumer<List<T>> consumer;
 

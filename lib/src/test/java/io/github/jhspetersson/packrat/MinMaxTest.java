@@ -4,12 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
-import static io.github.jhspetersson.packrat.Packrat.filterBy;
-import static io.github.jhspetersson.packrat.Packrat.removeBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SuppressWarnings("preview")
 public class MinMaxTest {
     @Test
     void emptyTest() {

@@ -7,9 +7,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SuppressWarnings("preview")
 public class IncreasingDecreasingTest {
-
     @Test
     void increasingTest() {
         var numbers = Stream.of(1, 2, 2, 5, 4, 2, 6, 9, 3, 11, 0, 1, 20);

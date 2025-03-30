@@ -10,7 +10,6 @@ import java.util.stream.Gatherer;
  * @param <T> element type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 class BreakingGatherer<T> implements Gatherer<T, Void, String> {
     private final BreakIterator breakIterator;
     private final boolean skipBlanks;

@@ -21,7 +21,6 @@ import java.util.stream.Stream;
  *
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 public final class Packrat {
     /**
      * Returns elements with distinct values that result from a mapping by the supplied function.

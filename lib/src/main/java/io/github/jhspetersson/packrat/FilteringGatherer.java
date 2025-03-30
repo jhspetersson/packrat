@@ -12,7 +12,6 @@ import java.util.stream.Gatherer;
  * @param <U> mapped element type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 class FilteringGatherer<T, U> implements Gatherer<T, Void, T> {
     private final Function<? super T, ? extends U> mapper;
     private final U value;

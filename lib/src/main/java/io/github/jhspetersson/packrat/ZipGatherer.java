@@ -14,20 +14,15 @@ import java.util.stream.Stream;
  * @param <V> mapped element type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 class ZipGatherer<T, U, V> implements Gatherer<T, Void, V> {
     private final Iterator<? extends U> iterator;
     private final BiFunction<? super T, ? super U, ? extends V> mapper;
 
     ZipGatherer(Iterable<? extends U> input, BiFunction<? super T, ? super U, ? extends V> mapper) {
-        Objects.requireNonNull(input, "input cannot be null");
-
         this(input.iterator(), mapper);
     }
 
     ZipGatherer(Stream<? extends U> input, BiFunction<? super T, ? super U, ? extends V> mapper) {
-        Objects.requireNonNull(input, "input cannot be null");
-
         this(input.iterator(), mapper);
     }
 

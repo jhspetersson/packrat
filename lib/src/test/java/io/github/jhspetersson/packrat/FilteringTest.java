@@ -8,7 +8,6 @@ import static io.github.jhspetersson.packrat.TestUtils.getEmployees;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SuppressWarnings("preview")
 public class FilteringTest {
     @Test
     void filterByTest() {

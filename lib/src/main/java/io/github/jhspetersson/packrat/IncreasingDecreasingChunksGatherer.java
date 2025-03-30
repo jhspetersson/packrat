@@ -16,7 +16,6 @@ import java.util.stream.Gatherer;
  * @param <T> element type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, List<T>, List<T>> {
     private final Comparator<? super T> comparator;
     private final Predicate<Integer> predicate;

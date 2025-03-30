@@ -16,7 +16,6 @@ import java.util.stream.Gatherer;
  * @param <V> result type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 public class CollectingGatherer<T, U, V> implements Gatherer<T, U, V> {
     private final Collector<? super T, U, ? extends V> collector;
 

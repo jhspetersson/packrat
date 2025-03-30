@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SuppressWarnings("preview")
 public class CollectingTest {
     @Test
     void collectingTest() {

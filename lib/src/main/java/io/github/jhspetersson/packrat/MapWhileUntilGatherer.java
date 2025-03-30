@@ -12,7 +12,6 @@ import java.util.stream.Gatherer;
  * @param <T> element type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 class MapWhileUntilGatherer<T> implements Gatherer<T, boolean[], T> {
     private final Function<? super T, ? extends T> mapper;
     private final Predicate<? super T> whilePredicate;

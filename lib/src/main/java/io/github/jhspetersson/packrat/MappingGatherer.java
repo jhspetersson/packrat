@@ -11,7 +11,6 @@ import java.util.stream.Gatherer;
  * @param <T> element type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 class MappingGatherer<T> implements Gatherer<T, Long[], T> {
     private final long skipN;
     private final long mapN;

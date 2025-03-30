@@ -8,7 +8,6 @@ import java.util.stream.Gatherer;
  * @param <T> element type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 class NCopiesGatherer<T> implements Gatherer<T, Void, T> {
     private final long n;
 

@@ -14,7 +14,6 @@ import java.util.stream.Gatherer;
  * @param <U> mapped element type
  * @author jhspetersson
  */
-@SuppressWarnings("preview")
 class DistinctByGatherer<T, U> implements Gatherer<T, Set<? super U>, T> {
     private final Function<? super T, ? extends U> mapper;
 
