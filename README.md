@@ -26,6 +26,7 @@ Build scripts expect running on JDK version not lower than 24.
 | [minBy](#minby)                                     | The smallest element compared after mapping applied    |
 | [maxBy](#maxby)                                     | The greatest element compared after mapping applied    |
 | [removeBy](#removeby)                               | Remove with custom mapper and (optionally) predicate   |
+| [removeDuplicates](#removeduplicates)               | Removes consecutive duplicates from a stream           |
 | [increasing](#increasing)                           | Increasing sequence, other elements dropped            |
 | [increasingOrEqual](#increasingorequal)             | Increasing (or equal) sequence, other elements dropped |
 | [decreasing](#decreasing)                           | Decreasing sequence, other elements dropped            |
@@ -136,6 +137,18 @@ However, resulting list contains original element of type `String`;
   System.out.println(ageDivisibleByThree);
 ```
 > [Employee[name=Mark Bloom, age=21], Employee[name=Rebecca Schneider, age=24]]
+
+#### removeDuplicates
+
+`removeDuplicates()` - removes consecutive duplicates from a stream, only adjacent elements that are equal will be considered duplicates
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.removeDuplicates;
+  var listWithCopies = List.of(0, 1, 2, 2, 3, 4, 5, 5, 6, 7, 8, 8, 8, 9, 8, 7, 7, 6, 5, 4, 4, 4, 3, 2, 1, 0);
+  var unique = listWithCopies.stream().gather(removeDuplicates()).toList();
+  System.out.println(unique);
+```
+> [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
 
 #### increasing
 
@@ -273,7 +286,7 @@ However, resulting list contains original element of type `String`;
 #### chars
 
 `chars()` - returns characters as strings parsed from the stream elements
-  
+
 ```java
   import static io.github.jhspetersson.packrat.Packrat.chars;
   var charStrings = Stream.of("Hello, \uD83D\uDC22!").gather(chars()).toList();
