@@ -15,6 +15,8 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 |[473](https://openjdk.org/jeps/473)|23|Second Preview|
 |[485](https://openjdk.org/jeps/485)|24|Final|
 
+Build scripts expect running on JDK version not lower than 24.
+
 ### Gatherers
 
 | Name                                                | Description                                            |
