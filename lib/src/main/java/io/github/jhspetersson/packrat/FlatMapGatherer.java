@@ -12,7 +12,7 @@ import java.util.stream.Stream;
  * @param <T> element type
  * @author jhspetersson
  */
-class FlatMapGatherer<T> implements Gatherer<T, boolean[], T> {
+class FlatMapGatherer<T> implements Gatherer<T, Void, T> {
     private final Function<? super T, Stream<? extends T>> mapper;
     private final Predicate<? super T> predicate;
 
@@ -25,7 +25,7 @@ class FlatMapGatherer<T> implements Gatherer<T, boolean[], T> {
     }
 
     @Override
-    public Integrator<boolean[], T, T> integrator() {
+    public Integrator<Void, T, T> integrator() {
         return Integrator.of((_, element, downstream) -> {
             if (predicate.test(element)) {
                 var stream = mapper.apply(element);

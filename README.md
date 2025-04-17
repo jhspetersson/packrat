@@ -416,12 +416,12 @@ However, resulting list contains original element of type `String`;
 
 ```java
   import static io.github.jhspetersson.packrat.Packrat.flatMapIf;
-  var strings = Stream.of("A", "B", "CDE");
-  var result = strings.gather(flatMapIf(s -> Arrays.stream(s.split("")), s -> s.length() > 1)).toList();
+  var strings = Stream.of("A", "BC", "DEF");
+  var result = strings.gather(flatMapIf(s -> Arrays.stream(s.split("")), s -> s.length() >= 3)).toList();
   System.out.println(result);
 ```
 
-> [A, B, C, D, E]
+> [A, BC, D, E, F]
 
 #### zip
 
