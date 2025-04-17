@@ -56,6 +56,8 @@ Build scripts expect running on JDK version not lower than 24.
 | [zip](#zip)                                         | Zips values with zipper, leftovers dropped             |
 | [zipWithIndex](#zipwithindex)                       | Zips values with an increasing index                   |
 | [peekWithIndex](#peekwithindex)                     | Peek at each element with its index                    |
+| [filterWithIndex](#filterwithindex)                 | Filter elements based on their index and a predicate   |
+| [removeWithIndex](#removewithindex)                 | Remove elements based on their index and a predicate   |
 | [asGatherer](#asgatherer)                           | Converts `Collector` into `Gatherer`                   |
 
 #### distinctBy
@@ -570,6 +572,54 @@ However, resulting list contains original element of type `String`;
 > Element at index 11: Mike
 > Element at index 12: Sandra
 > [Anna, Mike, Sandra]
+
+#### filterWithIndex
+
+`filterWithIndex(predicate)` - filters elements based on their index and a predicate, the index starts from 0
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.filterWithIndex;
+  var numbers = Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+  var result = numbers.gather(filterWithIndex((index, element) -> index % 2 == 0)).toList();
+  System.out.println(result);
+```
+
+> [1, 3, 5, 7, 9]
+
+`filterWithIndex(predicate, startIndex)` - filters elements based on their index and a predicate, the index starts from _startIndex_
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.filterWithIndex;
+  var numbers = Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+  var result = numbers.gather(filterWithIndex((index, element) -> index % 2 == 0, 1)).toList();
+  System.out.println(result);
+```
+
+> [2, 4, 6, 8, 10]
+
+#### removeWithIndex
+
+`removeWithIndex(predicate)` - removes elements based on their index and a predicate, the index starts from 0
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.removeWithIndex;
+  var numbers = Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+  var result = numbers.gather(removeWithIndex((index, element) -> index % 2 == 0)).toList();
+  System.out.println(result);
+```
+
+> [2, 4, 6, 8, 10]
+
+`removeWithIndex(predicate, startIndex)` - removes elements based on their index and a predicate, the index starts from _startIndex_
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.removeWithIndex;
+  var numbers = Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+  var result = numbers.gather(removeWithIndex((index, element) -> index % 2 == 0, 1)).toList();
+  System.out.println(result);
+```
+
+> [1, 3, 5, 7, 9]
 
 #### asGatherer
 

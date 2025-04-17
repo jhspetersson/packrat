@@ -559,6 +559,50 @@ public final class Packrat {
     }
 
     /**
+     * Filters elements based on their index and a predicate.
+     * The index starts from 0.
+     *
+     * @param predicate predicate function that accepts index and element
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> filterWithIndex(BiPredicate<Long, ? super T> predicate) {
+        return filterWithIndex(predicate, 0);
+    }
+
+    /**
+     * Filters elements based on their index and a predicate.
+     *
+     * @param predicate predicate function that accepts index and element
+     * @param startIndex starting index
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> filterWithIndex(BiPredicate<Long, ? super T> predicate, long startIndex) {
+        return new FilteringWithIndexGatherer<>(predicate, startIndex);
+    }
+
+    /**
+     * Removes elements based on their index and a predicate.
+     * The index starts from 0.
+     *
+     * @param predicate predicate function that accepts index and element
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> removeWithIndex(BiPredicate<Long, ? super T> predicate) {
+        return removeWithIndex(predicate, 0);
+    }
+
+    /**
+     * Removes elements based on their index and a predicate.
+     *
+     * @param predicate predicate function that accepts index and element
+     * @param startIndex starting index
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> removeWithIndex(BiPredicate<Long, ? super T> predicate, long startIndex) {
+        return new FilteringWithIndexGatherer<>(predicate, startIndex, true);
+    }
+
+    /**
      * Provides instance of {@link FilteringGatherer} that checks equality of the mapped element with the specific value.
      * Passed elements do NOT go down the stream.
      *
