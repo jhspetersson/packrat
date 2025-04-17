@@ -710,6 +710,16 @@ public final class Packrat {
     }
 
     /**
+     * Returns every nth element from the stream.
+     *
+     * @param n take every nth element
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> nth(int n) {
+        return new NthGatherer<>(n);
+    }
+
+    /**
      * Returns last n elements.
      *
      * @param n count of last elements to return

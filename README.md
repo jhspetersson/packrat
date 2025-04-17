@@ -39,6 +39,7 @@ Build scripts expect running on JDK version not lower than 24.
 | [rotate](#rotate)                                   | All elements rotated left or right                     |
 | [shuffle](#shuffle)                                 | All elements in random order                           |
 | [sample](#sample)                                   | Sample of the specified size                           |
+| [nth](#nth)                                         | Takes nth element from the stream                      |
 | [last](#last)                                       | Last __n__ elements                                    |
 | [lastUnique](#lastunique)                           | Last __n__ unique elements                             |
 | [chars](#chars)                                     | String splitted by Unicode graphemes                   |
@@ -279,6 +280,19 @@ However, resulting list contains original element of type `String`;
 > [0, 8, 27, 33, 65, 66, 88, 90, 93, 96]
 
 `sample(n, maxSpan)` - returns a sample of the specified size from the stream of elements, inspects first __maxSpan__ elements.
+
+#### nth
+
+`nth(n)` - takes every nth element from the stream
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.nth;
+  var numbers = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+  var result = numbers.stream().gather(nth(3)).toList();
+  System.out.println(result);
+```
+
+> [3, 6, 9]
 
 #### last
 
