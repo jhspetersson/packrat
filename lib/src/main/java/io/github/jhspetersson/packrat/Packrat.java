@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -533,6 +534,28 @@ public final class Packrat {
 
     public static <T> Gatherer<T, ?, String> sentences(Locale locale) {
         return new BreakingGatherer<>(BreakIterator.getSentenceInstance(locale));
+    }
+
+    /**
+     * Peeks at each element along with its index, but passes the original element downstream.
+     * The index starts from 0.
+     *
+     * @param consumer consumer function that accepts index and element
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> peekWithIndex(BiConsumer<Long, ? super T> consumer) {
+        return peekWithIndex(consumer, 0);
+    }
+
+    /**
+     * Peeks at each element along with its index, but passes the original element downstream.
+     *
+     * @param consumer consumer function that accepts index and element
+     * @param startIndex starting index
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> peekWithIndex(BiConsumer<Long, ? super T> consumer, long startIndex) {
+        return new PeekWithIndexGatherer<>(consumer, startIndex);
     }
 
     /**

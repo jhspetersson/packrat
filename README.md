@@ -54,6 +54,7 @@ Build scripts expect running on JDK version not lower than 24.
 | [flatMapIf](#flatmapif)                             | Optional `flatMap` depending on predicate              |
 | [zip](#zip)                                         | Zips values with zipper, leftovers dropped             |
 | [zipWithIndex](#zipwithindex)                       | Zips values with an increasing index                   |
+| [peekWithIndex](#peekwithindex)                     | Peek at each element with its index                    |
 | [asGatherer](#asgatherer)                           | Converts `Collector` into `Gatherer`                   |
 
 #### distinctBy
@@ -513,6 +514,38 @@ However, resulting list contains original element of type `String`;
 ```
 
 > [User[index=10, name=Anna], User[index=11, name=Mike], User[index=12, name=Sandra]]
+
+#### peekWithIndex
+
+`peekWithIndex(consumer)` - peeks at each element along with its index (starting from 0), but passes the original element downstream unchanged
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.peekWithIndex;
+  var names = List.of("Anna", "Mike", "Sandra");
+  var result = names.stream().gather(peekWithIndex((index, name) -> 
+      System.out.println("Element at index " + index + ": " + name))).toList();
+  System.out.println(result);
+```
+
+> Element at index 0: Anna
+> Element at index 1: Mike
+> Element at index 2: Sandra
+> [Anna, Mike, Sandra]
+
+`peekWithIndex(consumer, startIndex)` - peeks at each element along with its index (beginning with _startIndex_), but passes the original element downstream unchanged
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.peekWithIndex;
+  var names = List.of("Anna", "Mike", "Sandra");
+  var result = names.stream().gather(peekWithIndex((index, name) -> 
+      System.out.println("Element at index " + index + ": " + name), 10)).toList();
+  System.out.println(result);
+```
+
+> Element at index 10: Anna
+> Element at index 11: Mike
+> Element at index 12: Sandra
+> [Anna, Mike, Sandra]
 
 #### asGatherer
 
