@@ -46,6 +46,7 @@ Build scripts expect running on JDK version not lower than 24.
 | [sentences](#sentences)                             | String splitted by sentences                           |
 | [nCopies](#ncopies)                                 | Copies every element __n__ times                       |
 | [atLeast](#atleast)                                 | Distinct values that appear at least __n__ times       |
+| [atMost](#atmost)                                   | Distinct values that appear at most __n__ times        |
 | [mapFirst](#mapfirst)                               | Maps first element with mapper, other unchanged        |
 | [mapN](#mapn)                                       | Maps __n__ elements, other unchanged                   |
 | [skipAndMap](#skipandmap)                           | Skips __n__ elements, maps others                      |
@@ -361,6 +362,28 @@ However, resulting list contains original element of type `String`;
   System.out.println(atLeastThree);
 ```
 > [3, 3, 3, 8, 8, 8, 8]
+
+#### atMost
+
+`atMost(n)` - returns distinct elements that appear at most __n__ times in the stream
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.atMost;
+  var numbers = Stream.of(1, 2, 3, 3, 3, 4, 5, 5, 6, 7, 8, 8, 8, 8, 9, 10);
+  var atMostTwo = numbers.gather(atMost(2)).toList();
+  System.out.println(atMostTwo);
+```
+> [1, 2, 4, 5, 5, 6, 7, 9, 10]
+
+`atMostBy(n, mapper)` - returns distinct elements mapped by the supplied function that appear at most __n__ times in the stream
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.atMostBy;
+  var strings = Stream.of("apple", "banana", "cherry", "date", "elderberry", "fig", "grape");
+  var uniqueLengths = strings.gather(atMostBy(1, String::length)).toList();
+  System.out.println(uniqueLengths);
+```
+> [date, elderberry, fig]
 
 #### mapFirst
 

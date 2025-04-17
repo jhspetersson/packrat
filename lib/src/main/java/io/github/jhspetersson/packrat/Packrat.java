@@ -54,6 +54,27 @@ public final class Packrat {
     }
 
     /**
+     * Returns elements that appear at most <code>n</code> times in the stream.
+     *
+     * @param n at most how many times the element has to appear in the stream
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> atMost(long n) {
+        return atMostBy(n, Function.identity());
+    }
+
+    /**
+     * Returns elements mapped by the supplied function that appear at most <code>n</code> times in the stream.
+     *
+     * @param n at most how many times the element has to appear in the stream
+     * @param <T> element type
+     * @param <U> mapped element type
+     */
+    public static <T, U> Gatherer<T, ?, T> atMostBy(long n, Function<? super T, ? extends U> mapper) {
+        return new AtMostGatherer<>(n, mapper);
+    }
+
+    /**
      * Provides instance of {@link FilteringGatherer} that checks equality of the mapped element with the specific value.
      * Passed elements unmodified go down the stream.
      *
