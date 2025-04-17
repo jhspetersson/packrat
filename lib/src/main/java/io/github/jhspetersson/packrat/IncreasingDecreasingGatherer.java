@@ -38,7 +38,7 @@ class IncreasingDecreasingGatherer<T> implements Gatherer<T, Void, T> {
                 return downstream.push(element);
             }
 
-            return true;
+            return !downstream.isRejecting();
         });
     }
 }

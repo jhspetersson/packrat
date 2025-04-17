@@ -34,7 +34,7 @@ public class RemoveDuplicatesGatherer<T, U> implements Gatherer<T, List<U>, T> {
         return Integrator.of((state, element, downstream) -> {
             var mappedValue = mapper.apply(element);
             if (!state.isEmpty() && Objects.equals(state.getFirst(), mappedValue)) {
-                return true;
+                return !downstream.isRejecting();
             } else {
                 state.clear();
                 state.add(mappedValue);

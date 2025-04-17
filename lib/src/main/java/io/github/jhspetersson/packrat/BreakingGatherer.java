@@ -51,7 +51,7 @@ class BreakingGatherer<T> implements Gatherer<T, Void, String> {
                     idx = breakIterator.next();
                 }
             }
-            return true;
+            return !downstream.isRejecting();
         });
     }
 }

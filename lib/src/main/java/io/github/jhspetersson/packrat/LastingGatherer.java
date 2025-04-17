@@ -39,7 +39,7 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
 
     @Override
     public Integrator<State<T>, T, T> integrator() {
-        return Integrator.ofGreedy((state, element, _) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             if (unique && state.containsElement(element)) {
                 return true;
             }
@@ -50,7 +50,7 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
 
             state.addElement(element);
 
-            return true;
+            return !downstream.isRejecting();
         });
     }
 

@@ -31,7 +31,7 @@ class NthGatherer<T> implements Gatherer<T, int[], T> {
             if (state[0]++ % n == 0) {
                 return downstream.push(element);
             }
-            return true;
+            return !downstream.isRejecting();
         });
     }
 }

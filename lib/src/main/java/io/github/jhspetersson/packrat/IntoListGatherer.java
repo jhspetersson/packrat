@@ -31,9 +31,9 @@ class IntoListGatherer<T> implements Gatherer<T, List<T>, T> {
 
     @Override
     public Integrator<List<T>, T, T> integrator() {
-        return Integrator.ofGreedy((state, element, _) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             state.add(element);
-            return true;
+            return !downstream.isRejecting();
         });
     }
 

@@ -43,7 +43,7 @@ class SamplingGatherer<T> implements Gatherer<T, SamplingGatherer.State<T>, T> {
     @Override
     public Integrator<State<T>, T, T> integrator() {
         var random = ThreadLocalRandom.current();
-        return Integrator.of((state, element, _) -> {
+        return Integrator.of((state, element, downstream) -> {
             if (state.list.size() < n) {
                 state.list.add(element);
             } else if (state.counter <= maxSpan - n) {
@@ -54,7 +54,7 @@ class SamplingGatherer<T> implements Gatherer<T, SamplingGatherer.State<T>, T> {
                 }
                 state.counter++;
             }
-            return true;
+            return !downstream.isRejecting();
         });
     }
 

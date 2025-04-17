@@ -55,7 +55,7 @@ class AtLeastGatherer<T, U> implements Gatherer<T, Map<? super U, List<T>>, T> {
             } else {
                 elementList.add(element);
             }
-            return true;
+            return !downstream.isRejecting();
         });
     }
 }

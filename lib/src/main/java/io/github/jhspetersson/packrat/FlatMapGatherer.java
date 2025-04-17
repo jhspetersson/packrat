@@ -36,7 +36,7 @@ class FlatMapGatherer<T> implements Gatherer<T, Void, T> {
                         return false;
                     }
                 }
-                return true;
+                return !downstream.isRejecting();
             } else {
                 return downstream.push(element);
             }

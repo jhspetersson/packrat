@@ -40,7 +40,7 @@ class FilteringGatherer<T, U> implements Gatherer<T, Void, T> {
             if (testResult ^ invert) {
                 return downstream.push(element);
             }
-            return true;
+            return !downstream.isRejecting();
         });
     }
 }

@@ -50,7 +50,7 @@ class MinMaxGatherer<T, U> implements Gatherer<T, MinMaxGatherer.State<T, U>, T>
                 state.element = element;
                 state.mappedElement = mappedValue;
             }
-            return true;
+            return !downstream.isRejecting();
         });
     }
 

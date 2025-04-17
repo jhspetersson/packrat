@@ -53,7 +53,7 @@ class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, List<T>, List
                 }
             }
 
-            return true;
+            return !downstream.isRejecting();
         });
     }
 

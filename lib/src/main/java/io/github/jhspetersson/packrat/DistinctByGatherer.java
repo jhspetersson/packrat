@@ -36,7 +36,7 @@ class DistinctByGatherer<T, U> implements Gatherer<T, Set<? super U>, T> {
                 state.add(mappedValue);
                 return downstream.push(element);
             }
-            return true;
+            return !downstream.isRejecting();
         });
     }
 }

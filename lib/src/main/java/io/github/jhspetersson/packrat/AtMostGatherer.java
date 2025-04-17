@@ -38,13 +38,13 @@ class AtMostGatherer<T, U> implements Gatherer<T, Map<? super U, List<T>>, T> {
 
     @Override
     public Integrator<Map<? super U, List<T>>, T, T> integrator() {
-        return Integrator.ofGreedy((state, element, _) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             var mappedValue = mapper.apply(element);
             var elementList = state.computeIfAbsent(mappedValue, _ -> new ArrayList<>());
             if (elementList.size() <= atMost) {
                 elementList.add(element);
             }
-            return true;
+            return !downstream.isRejecting();
         });
     }
 

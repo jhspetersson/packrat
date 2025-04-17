@@ -41,7 +41,7 @@ class FilteringWithIndexGatherer<T> implements Gatherer<T, long[], T> {
             if (testResult ^ invert) {
                 return downstream.push(element);
             }
-            return true;
+            return !downstream.isRejecting();
         });
     }
 }

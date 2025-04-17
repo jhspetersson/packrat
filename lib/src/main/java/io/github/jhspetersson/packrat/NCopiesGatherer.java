@@ -27,7 +27,7 @@ class NCopiesGatherer<T> implements Gatherer<T, Void, T> {
                     return false;
                 }
             }
-            return true;
+            return !downstream.isRejecting();
         });
     }
 }
