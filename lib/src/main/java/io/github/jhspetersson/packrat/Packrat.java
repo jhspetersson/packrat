@@ -543,6 +543,7 @@ public final class Packrat {
 
     /**
      * Removes consecutive duplicates from the stream.
+     * Only adjacent elements that have equal mapped values will be considered duplicates.
      * <p>
      *
      * <pre>
@@ -553,11 +554,22 @@ public final class Packrat {
      *   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
      * </pre>
      *
-     * @return remove duplicates gatherer
      * @param <T> element type
      */
     public static <T> Gatherer<T, ?, T> removeDuplicates() {
-        return new RemoveDuplicatesGatherer<>();
+        return removeDuplicatesBy(Function.identity());
+    }
+
+    /**
+     * Removes consecutive duplicates from the stream based on a mapping function.
+     * Only adjacent elements that have equal mapped values will be considered duplicates.
+     *
+     * @param mapper mapping function
+     * @param <T> element type
+     * @param <U> mapped element type
+     */
+    public static <T, U> Gatherer<T, ?, T> removeDuplicatesBy(Function<? super T, ? extends U> mapper) {
+        return new RemoveDuplicatesGatherer<>(mapper);
     }
 
     /**

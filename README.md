@@ -150,6 +150,25 @@ However, resulting list contains original element of type `String`;
 ```
 > [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
 
+#### removeDuplicatesBy
+
+`removeDuplicatesBy(mapper)` - removes consecutive duplicates from a stream based on a mapping function, only adjacent elements that have equal mapped values will be considered duplicates
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.removeDuplicatesBy;
+  var people = List.of(
+      new Person("John", 25),
+      new Person("Alice", 30),
+      new Person("Bob", 30),
+      new Person("Charlie", 30),
+      new Person("David", 40),
+      new Person("Eve", 40)
+  );
+  var uniqueByAge = people.stream().gather(removeDuplicatesBy(Person::age)).toList();
+  System.out.println(uniqueByAge);
+```
+> [Person[name=John, age=25], Person[name=Alice, age=30], Person[name=David, age=40]]
+
 #### increasing
 
 `increasing()` - returns elements in an increasing sequence, elements out of the sequence, as well as repeating values, are dropped
