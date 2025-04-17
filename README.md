@@ -296,6 +296,16 @@ However, resulting list contains original element of type `String`;
 
 #### last
 
+`last()` - returns last element from the stream.
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.last;
+  var integers = IntStream.range(0, 100).boxed().gather(last()).toList();
+  System.out.println(integers);
+```
+
+> [99]
+
 `last(n)` - returns __n__ last elements from the stream.
 
 ```java

@@ -12,6 +12,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LastNTest {
     @Test
+    public void lastTest() {
+        var before = new ArrayList<Integer>();
+        IntStream.range(0, 100).forEach(before::add);
+
+        assertTrue(isOrderedSequence(before));
+
+        var after = before.stream().gather(Packrat.last()).toList();
+
+        assertEquals(List.of(99), after);
+    }
+
+    @Test
     public void lastNTest() {
         var before = new ArrayList<Integer>();
         IntStream.range(0, 100).forEach(before::add);

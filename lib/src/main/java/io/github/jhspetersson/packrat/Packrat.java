@@ -720,6 +720,16 @@ public final class Packrat {
     }
 
     /**
+     * Returns last element.
+     *
+     * @return lasting gatherer
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> last() {
+        return last(1);
+    }
+
+    /**
      * Returns last n elements.
      *
      * @param n count of last elements to return
