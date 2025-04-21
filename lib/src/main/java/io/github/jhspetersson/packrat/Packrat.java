@@ -796,6 +796,25 @@ public final class Packrat {
     }
 
     /**
+     * Drops last element.
+     *
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> dropLast() {
+        return dropLast(1);
+    }
+
+    /**
+     * Drops last n elements.
+     *
+     * @param n count of last elements to drop
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> dropLast(long n) {
+        return new DropLastNGatherer<>(n);
+    }
+
+    /**
      * Provides the result of the supplied collector as a single element into the stream.
      * Effectively converts any Collector into a Gatherer.
      *

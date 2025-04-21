@@ -42,6 +42,7 @@ Build scripts expect running on JDK version not lower than 24.
 | [nth](#nth)                                         | Takes nth element from the stream                      |
 | [last](#last)                                       | Last __n__ elements                                    |
 | [lastUnique](#lastunique)                           | Last __n__ unique elements                             |
+| [dropLast](#droplast)                               | Drops last __n__ elements                             |
 | [chars](#chars)                                     | String splitted by Unicode graphemes                   |
 | [words](#words)                                     | String splitted by words                               |
 | [sentences](#sentences)                             | String splitted by sentences                           |
@@ -329,6 +330,20 @@ However, resulting list contains original element of type `String`;
 ```
 
 > [1, 2, 6]
+
+#### dropLast
+
+`dropLast()` - drops last element.
+
+`dropLast(n)` - drops last __n__ elements from the stream.
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.dropLast;
+  var integers = IntStream.range(0, 10).boxed().gather(dropLast(3)).toList();
+  System.out.println(integers);
+```
+
+> [0, 1, 2, 3, 4, 5, 6]
 
 #### chars
 
