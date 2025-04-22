@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'io.github.jhspetersson'
-version = '0.0.1'
+version = '0.1.0'
 
 repositories {
     mavenCentral()
@@ -18,10 +18,27 @@ test {
     useJUnitPlatform()
 }
 
-tasks.named('jar') {
+jar {
     archiveBaseName = rootProject.name
     manifest {
         attributes('Implementation-Title': rootProject.name,
                    'Implementation-Version': project.version)
     }
+}
+
+tasks.register('sourcesJar', Jar) {
+    archiveBaseName.set(rootProject.name)
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+tasks.register('javadocJar', Jar) {
+    archiveBaseName.set(rootProject.name)
+    archiveClassifier.set('javadoc')
+    from tasks.javadoc
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
 }
