@@ -29,6 +29,7 @@ public final class Packrat {
      * @param mapper mapping function
      * @param <T> element type
      * @param <U> mapped element type
+     * @return a gatherer that filters elements based on distinct mapped values
      */
     public static <T, U> Gatherer<T, ?, T> distinctBy(Function<? super T, ? extends U> mapper) {
         return new DistinctByGatherer<>(mapper);
@@ -39,6 +40,7 @@ public final class Packrat {
      *
      * @param n at least how many times the element has to appear in the stream
      * @param <T> element type
+     * @return a gatherer that filters elements based on their frequency in the stream
      */
     public static <T> Gatherer<T, ?, T> atLeast(long n) {
         return atLeastBy(n, Function.identity());
@@ -49,6 +51,8 @@ public final class Packrat {
      *
      * @param n at least how many times the element has to appear in the stream
      * @param <T> element type
+     * @param <U> mapped element type
+     * @return a gatherer that filters elements based on the frequency of their mapped values in the stream
      */
     public static <T, U> Gatherer<T, ?, T> atLeastBy(long n, Function<? super T, ? extends U> mapper) {
         return new AtLeastGatherer<>(n, mapper);
@@ -59,6 +63,7 @@ public final class Packrat {
      *
      * @param n at most how many times the element has to appear in the stream
      * @param <T> element type
+     * @return a gatherer that filters elements based on their frequency in the stream
      */
     public static <T> Gatherer<T, ?, T> atMost(long n) {
         return atMostBy(n, Function.identity());
@@ -70,6 +75,7 @@ public final class Packrat {
      * @param n at most how many times the element has to appear in the stream
      * @param <T> element type
      * @param <U> mapped element type
+     * @return a gatherer that filters elements based on the frequency of their mapped values in the stream
      */
     public static <T, U> Gatherer<T, ?, T> atMostBy(long n, Function<? super T, ? extends U> mapper) {
         return new AtMostGatherer<>(n, mapper);
@@ -83,6 +89,7 @@ public final class Packrat {
      * @param value specific value
      * @param <T> element type
      * @param <U> mapped element type
+     * @return a gatherer that filters elements based on equality of their mapped values with the specific value
      */
     public static <T, U> Gatherer<T, ?, T> filterBy(Function<? super T, ? extends U> mapper, U value) {
         return filterBy(mapper, value, Objects::equals);
@@ -97,6 +104,8 @@ public final class Packrat {
      * @param predicate testing predicate
      * @param <T> element type
      * @param <U> mapped element type
+     * @return a gatherer that filters elements
+     * based on testing their mapped values against the specific value with the provided predicate
      */
     public static <T, U> Gatherer<T, ?, T> filterBy(Function<? super T, ? extends U> mapper, U value, BiPredicate<? super U, ? super U> predicate) {
         return new FilteringGatherer<>(mapper, value, predicate);
@@ -109,6 +118,7 @@ public final class Packrat {
      * @param mapper mapping function
      * @param <T> element type
      * @param <U> mapped element type
+     * @return a gatherer that outputs the smallest element in the stream based on the mapped values
      */
     public static <T, U extends Comparable<U>> Gatherer<T, ?, T> minBy(Function<? super T, ? extends U> mapper) {
         return minBy(mapper, Comparator.naturalOrder());
@@ -122,6 +132,7 @@ public final class Packrat {
      * @param comparator comparator
      * @param <T> element type
      * @param <U> mapped element type
+     * @return a gatherer that outputs the smallest element in the stream based on the mapped values and the provided comparator
      */
     public static <T, U extends Comparable<U>> Gatherer<T, ?, T> minBy(Function<? super T, ? extends U> mapper, Comparator<? super U> comparator) {
         return new MinMaxGatherer<>(mapper, comparator, cmp -> cmp < 0);
@@ -134,6 +145,7 @@ public final class Packrat {
      * @param mapper mapping function
      * @param <T> element type
      * @param <U> mapped element type
+     * @return a gatherer that outputs the greatest element in the stream based on the mapped values
      */
     public static <T, U extends Comparable<U>> Gatherer<T, ?, T> maxBy(Function<? super T, ? extends U> mapper) {
         return maxBy(mapper, Comparator.naturalOrder());
@@ -147,6 +159,7 @@ public final class Packrat {
      * @param comparator comparator
      * @param <T> element type
      * @param <U> mapped element type
+     * @return a gatherer that outputs the greatest element in the stream based on the mapped values and the provided comparator
      */
     public static <T, U extends Comparable<U>> Gatherer<T, ?, T> maxBy(Function<? super T, ? extends U> mapper, Comparator<? super U> comparator) {
         return new MinMaxGatherer<>(mapper, comparator, cmp -> cmp > 0);
@@ -157,6 +170,7 @@ public final class Packrat {
      * Elements out of the sequence, as well as repeating values, are dropped.
      *
      * @param <T> element type
+     * @return a gatherer that filters elements to form an increasing sequence
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> increasing() {
         return increasing(Comparator.naturalOrder());
@@ -168,6 +182,7 @@ public final class Packrat {
      *
      * @param comparator comparator
      * @param <T> element type
+     * @return a gatherer that filters elements to form an increasing sequence using the provided comparator
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> increasing(Comparator<? super T> comparator) {
         return new IncreasingDecreasingGatherer<>(comparator, cmp -> cmp < 0);
@@ -178,6 +193,7 @@ public final class Packrat {
      * Repeating values are preserved. Elements out of the sequence are dropped.
      *
      * @param <T> element type
+     * @return a gatherer that filters elements to form an increasing sequence, preserving repeating values
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> increasingOrEqual() {
         return increasingOrEqual(Comparator.naturalOrder());
@@ -189,6 +205,8 @@ public final class Packrat {
      *
      * @param comparator comparator
      * @param <T> element type
+     * @return a gatherer that filters elements to form an increasing sequence using the provided comparator,
+     * preserving repeating values
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> increasingOrEqual(Comparator<? super T> comparator) {
         return new IncreasingDecreasingGatherer<>(comparator, cmp -> cmp <= 0);
@@ -199,6 +217,7 @@ public final class Packrat {
      * Elements out of the sequence, as well as repeating values, are dropped.
      *
      * @param <T> element type
+     * @return a gatherer that filters elements to form a decreasing sequence
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> decreasing() {
         return decreasing(Comparator.naturalOrder());
@@ -210,6 +229,7 @@ public final class Packrat {
      *
      * @param comparator comparator
      * @param <T> element type
+     * @return a gatherer that filters elements to form a decreasing sequence using the provided comparator
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> decreasing(Comparator<? super T> comparator) {
         return new IncreasingDecreasingGatherer<>(comparator, cmp -> cmp > 0);
@@ -220,6 +240,7 @@ public final class Packrat {
      * Repeating values are preserved. Elements out of the sequence are dropped.
      *
      * @param <T> element type
+     * @return a gatherer that filters elements to form a decreasing sequence, preserving repeating values
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> decreasingOrEqual() {
         return decreasingOrEqual(Comparator.naturalOrder());
@@ -231,6 +252,8 @@ public final class Packrat {
      *
      * @param comparator comparator
      * @param <T> element type
+     * @return a gatherer that filters elements to form a decreasing sequence using the provided comparator,
+     * preserving repeating values
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> decreasingOrEqual(Comparator<? super T> comparator) {
         return new IncreasingDecreasingGatherer<>(comparator, cmp -> cmp >= 0);
@@ -241,6 +264,7 @@ public final class Packrat {
      * Comparison is done with the natural order comparator.
      *
      * @param <T> element type
+     * @return a gatherer that groups elements into lists where each element is greater than the previous one
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingChunks() {
         return increasingChunks(Comparator.naturalOrder());
@@ -252,6 +276,8 @@ public final class Packrat {
      *
      * @param comparator comparator
      * @param <T> element type
+     * @return a gatherer that groups elements into lists where each element is greater than the previous one,
+     * using the provided comparator
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingChunks(Comparator<? super T> comparator) {
         return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp < 0);
@@ -262,6 +288,7 @@ public final class Packrat {
      * Comparison is done with the natural order comparator.
      *
      * @param <T> element type
+     * @return a gatherer that groups elements into lists where each element is greater or equal than the previous one
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingOrEqualChunks() {
         return increasingOrEqualChunks(Comparator.naturalOrder());
@@ -273,6 +300,8 @@ public final class Packrat {
      *
      * @param comparator comparator
      * @param <T> element type
+     * @return a gatherer that groups elements into lists where each element is greater or equal than the previous one,
+     * using the provided comparator
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingOrEqualChunks(Comparator<? super T> comparator) {
         return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp <= 0);
@@ -283,6 +312,7 @@ public final class Packrat {
      * Comparison is done with the natural order comparator.
      *
      * @param <T> element type
+     * @return a gatherer that groups elements into lists where each element is less than the previous one
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingChunks() {
         return decreasingChunks(Comparator.naturalOrder());
@@ -294,6 +324,8 @@ public final class Packrat {
      *
      * @param comparator comparator
      * @param <T> element type
+     * @return a gatherer that groups elements into lists where each element is less than the previous one,
+     * using the provided comparator
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingChunks(Comparator<? super T> comparator) {
         return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp > 0);
@@ -304,6 +336,7 @@ public final class Packrat {
      * Comparison is done with the natural order comparator.
      *
      * @param <T> element type
+     * @return a gatherer that groups elements into lists where each element is less or equal than the previous one
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingOrEqualChunks() {
         return decreasingOrEqualChunks(Comparator.naturalOrder());
@@ -315,6 +348,8 @@ public final class Packrat {
      *
      * @param comparator comparator
      * @param <T> element type
+     * @return a gatherer that groups elements into lists where each element is less or equal than the previous one,
+     * using the provided comparator
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingOrEqualChunks(Comparator<? super T> comparator) {
         return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp >= 0);
@@ -325,6 +360,7 @@ public final class Packrat {
      *
      * @param n how many copies, value less than or equal to zero effectively empties the stream.
      * @param <T> element type
+     * @return a gatherer that produces n copies of each element in the stream
      */
     public static <T> Gatherer<T, ?, T> nCopies(long n) {
         return new NCopiesGatherer<>(n);
@@ -335,6 +371,7 @@ public final class Packrat {
      *
      * @param mapper mapping function
      * @param <T> element type
+     * @return a gatherer that maps only the first element in the stream using the provided function
      */
     public static <T> Gatherer<T, ?, T> mapFirst(Function<? super T, ? extends T> mapper) {
         return skipAndMapN(0L, 1L, mapper);
@@ -343,8 +380,10 @@ public final class Packrat {
     /**
      * Returns all elements, the first mapN elements are mapped with the supplied mapping function.
      *
+     * @param mapN number of elements to map
      * @param mapper mapping function
      * @param <T> element type
+     * @return a gatherer that maps the first mapN elements in the stream using the provided function
      */
     public static <T> Gatherer<T, ?, T> mapN(long mapN, Function<? super T, ? extends T> mapper) {
         return skipAndMapN(0L, mapN, mapper);
@@ -353,8 +392,10 @@ public final class Packrat {
     /**
      * Returns all elements that after the first skipN are mapped with the supplied mapping function.
      *
+     * @param skipN number of elements to skip before mapping
      * @param mapper mapping function
      * @param <T> element type
+     * @return a gatherer that maps all elements after skipping the first skipN elements
      */
     public static <T> Gatherer<T, ?, T> skipAndMap(long skipN, Function<? super T, ? extends T> mapper) {
         return skipAndMapN(skipN, -1L, mapper);
@@ -363,8 +404,11 @@ public final class Packrat {
     /**
      * Returns all elements, after skipN elements the first mapN elements are mapped with the supplied mapping function.
      *
+     * @param skipN number of elements to skip before mapping
+     * @param mapN number of elements to map after skipping
      * @param mapper mapping function
      * @param <T> element type
+     * @return a gatherer that maps mapN elements after skipping skipN elements
      */
     public static <T> Gatherer<T, ?, T> skipAndMapN(long skipN, long mapN, Function<? super T, ? extends T> mapper) {
         return new MappingGatherer<>(skipN, mapN, mapper);
@@ -377,6 +421,7 @@ public final class Packrat {
      * @param mapper mapping function
      * @param predicate predicate to determine when to stop mapping
      * @param <T> element type
+     * @return a gatherer that maps elements while the predicate evaluates to true
      */
     public static <T> Gatherer<T, ?, T> mapWhile(Function<? super T, ? extends T> mapper, Predicate<? super T> predicate) {
         return new MapWhileUntilGatherer<>(mapper, predicate);
@@ -389,6 +434,7 @@ public final class Packrat {
      * @param mapper mapping function
      * @param predicate predicate to determine when to stop mapping
      * @param <T> element type
+     * @return a gatherer that maps elements until the predicate evaluates to true
      */
     public static <T> Gatherer<T, ?, T> mapUntil(Function<? super T, ? extends T> mapper, Predicate<? super T> predicate) {
         return new MapWhileUntilGatherer<>(mapper, null, predicate);
@@ -400,6 +446,7 @@ public final class Packrat {
      * @param mapper mapping function, usually calls <code>element::stream</code> method
      * @param predicate deciding predicate when to call the mapping function
      * @param <T> element type
+     * @return a gatherer that optionally flattens elements based on the predicate
      */
     public static <T> Gatherer<T, ?, ?> flatMapIf(Function<? super T, Stream<? extends T>> mapper, Predicate<? super T> predicate) {
         return new FlatMapGatherer<>(mapper, predicate);
@@ -411,6 +458,7 @@ public final class Packrat {
      * @param input iterable
      * @param <T> element type
      * @param <U> supplied iterable element type
+     * @return a gatherer that produces map entries from zipping stream elements with the values from the iterable source
      */
     public static <T, U> Gatherer<T, ?, Map.Entry<T, ? extends U>> zip(Iterable<? extends U> input) {
         return zip(input, Map::entry);
@@ -424,6 +472,7 @@ public final class Packrat {
      * @param <T> element type
      * @param <U> supplied iterable element type
      * @param <V> result ("zipped") type
+     * @return a gatherer that produces elements by zipping stream elements with the values from the iterable source using the mapper function
      */
     public static <T, U, V> Gatherer<T, ?, V> zip(Iterable<? extends U> input, BiFunction<? super T, ? super U, ? extends V> mapper) {
         return new ZipGatherer<>(input, mapper);
@@ -435,6 +484,7 @@ public final class Packrat {
      * @param input iterable
      * @param <T> element type
      * @param <U> supplied iterable element type
+     * @return a gatherer that produces map entries from zipping stream elements with another stream's values
      */
     public static <T, U> Gatherer<T, ?, Map.Entry<T, ? extends U>> zip(Stream<? extends U> input) {
         return zip(input, Map::entry);
@@ -448,6 +498,7 @@ public final class Packrat {
      * @param <T> element type
      * @param <U> supplied stream element type
      * @param <V> result ("zipped") type
+     * @return a gatherer that produces elements by zipping stream elements with another stream's values using the mapper function
      */
     public static <T, U, V> Gatherer<T, ?, V> zip(Stream<? extends U> input, BiFunction<? super T, ? super U, ? extends V> mapper) {
         return new ZipGatherer<>(input, mapper);
@@ -459,6 +510,7 @@ public final class Packrat {
      * @param iterator iterator
      * @param <T> element type
      * @param <U> supplied iterable element type
+     * @return a gatherer that produces map entries from zipping stream elements with iterator values
      */
     public static <T, U> Gatherer<T, ?, Map.Entry<T, ? extends U>> zip(Iterator<? extends U> iterator) {
         return zip(iterator, Map::entry);
@@ -472,6 +524,7 @@ public final class Packrat {
      * @param <T> element type
      * @param <U> supplied stream element type
      * @param <V> result ("zipped") type
+     * @return a gatherer that produces elements by zipping stream elements with iterator values using the mapper function
      */
     public static <T, U, V> Gatherer<T, ?, V> zip(Iterator<? extends U> iterator, BiFunction<? super T, ? super U, ? extends V> mapper) {
         return new ZipGatherer<>(iterator, mapper);
@@ -483,6 +536,7 @@ public final class Packrat {
      *
      * @param <T> element type
      * @see java.util.Map.Entry
+     * @return a gatherer that produces map entries from zipping stream elements with their indices
      */
     public static <T> Gatherer<T, ?, Map.Entry<Long, ? extends T>> zipWithIndex() {
         return zipWithIndex(Map::entry);
@@ -495,6 +549,7 @@ public final class Packrat {
      * @param startIndex starting index
      * @param <T> element type
      * @see java.util.Map.Entry
+     * @return a gatherer that produces map entries from zipping stream elements with their indices starting from the specified index
      */
     public static <T> Gatherer<T, ?, Map.Entry<Long, ? extends T>> zipWithIndex(long startIndex) {
         return zipWithIndex(Map::entry, startIndex);
@@ -507,6 +562,7 @@ public final class Packrat {
      * @param mapper zipping function
      * @param <T> element type
      * @param <U> result ("zipped") type
+     * @return a gatherer that produces elements by zipping stream elements with their indices using the mapper function
      */
     public static <T, U> Gatherer<T, ?, U> zipWithIndex(BiFunction<Long, ? super T, ? extends U> mapper) {
         return zipWithIndex(mapper, 0L);
@@ -520,6 +576,9 @@ public final class Packrat {
      * @param startIndex starting index
      * @param <T> element type
      * @param <U> result ("zipped") type
+     * @return a gatherer
+     * that produces elements by zipping stream elements with their indices starting from the specified index
+     * using the mapper function
      */
     public static <T, U> Gatherer<T, ?, U> zipWithIndex(BiFunction<Long, ? super T, ? extends U> mapper, long startIndex) {
         return new ZipWithIndexGatherer<>(mapper, startIndex);
@@ -529,11 +588,19 @@ public final class Packrat {
      * Returns characters as strings parsed from the stream elements.
      *
      * @param <T> element type
+     * @return a gatherer that produces characters as strings from the stream elements
      */
     public static <T> Gatherer<T, ?, String> chars() {
         return new BreakingGatherer<>(BreakIterator.getCharacterInstance());
     }
 
+    /**
+     * Returns characters as strings parsed from the stream elements using the specified locale.
+     *
+     * @param locale the locale to use for character breaking
+     * @param <T> element type
+     * @return a gatherer that produces characters as strings from the stream elements using the specified locale
+     */
     public static <T> Gatherer<T, ?, String> chars(Locale locale) {
         return new BreakingGatherer<>(BreakIterator.getCharacterInstance(locale));
     }
@@ -542,11 +609,19 @@ public final class Packrat {
      * Returns words as strings parsed from the stream elements.
      *
      * @param <T> element type
+     * @return a gatherer that produces words as strings from the stream elements
      */
     public static <T> Gatherer<T, ?, String> words() {
         return new BreakingGatherer<>(BreakIterator.getWordInstance(), true);
     }
 
+    /**
+     * Returns words as strings parsed from the stream elements using the specified locale.
+     *
+     * @param locale the locale to use for word breaking
+     * @param <T> element type
+     * @return a gatherer that produces words as strings from the stream elements using the specified locale
+     */
     public static <T> Gatherer<T, ?, String> words(Locale locale) {
         return new BreakingGatherer<>(BreakIterator.getWordInstance(locale), true);
     }
@@ -555,11 +630,19 @@ public final class Packrat {
      * Returns sentences as strings parsed from the stream elements.
      *
      * @param <T> element type
+     * @return a gatherer that produces sentences as strings from the stream elements
      */
     public static <T> Gatherer<T, ?, String> sentences() {
         return new BreakingGatherer<>(BreakIterator.getSentenceInstance());
     }
 
+    /**
+     * Returns sentences as strings parsed from the stream elements using the specified locale.
+     *
+     * @param locale the locale to use for sentence breaking
+     * @param <T> element type
+     * @return a gatherer that produces sentences as strings from the stream elements using the specified locale
+     */
     public static <T> Gatherer<T, ?, String> sentences(Locale locale) {
         return new BreakingGatherer<>(BreakIterator.getSentenceInstance(locale));
     }
@@ -570,6 +653,7 @@ public final class Packrat {
      *
      * @param consumer consumer function that accepts index and element
      * @param <T> element type
+     * @return a gatherer that peeks at each element with its index and passes the original element downstream
      */
     public static <T> Gatherer<T, ?, T> peekWithIndex(BiConsumer<Long, ? super T> consumer) {
         return peekWithIndex(consumer, 0);
@@ -581,6 +665,8 @@ public final class Packrat {
      * @param consumer consumer function that accepts index and element
      * @param startIndex starting index
      * @param <T> element type
+     * @return a gatherer that peeks at each element with its index starting from the specified index
+     * and passes the original element downstream
      */
     public static <T> Gatherer<T, ?, T> peekWithIndex(BiConsumer<Long, ? super T> consumer, long startIndex) {
         return new PeekWithIndexGatherer<>(consumer, startIndex);
@@ -592,6 +678,7 @@ public final class Packrat {
      *
      * @param predicate predicate function that accepts index and element
      * @param <T> element type
+     * @return a gatherer that filters elements based on their index and the predicate
      */
     public static <T> Gatherer<T, ?, T> filterWithIndex(BiPredicate<Long, ? super T> predicate) {
         return filterWithIndex(predicate, 0);
@@ -603,6 +690,7 @@ public final class Packrat {
      * @param predicate predicate function that accepts index and element
      * @param startIndex starting index
      * @param <T> element type
+     * @return a gatherer that filters elements based on their index starting from the specified index and the predicate
      */
     public static <T> Gatherer<T, ?, T> filterWithIndex(BiPredicate<Long, ? super T> predicate, long startIndex) {
         return new FilteringWithIndexGatherer<>(predicate, startIndex);
@@ -614,6 +702,7 @@ public final class Packrat {
      *
      * @param predicate predicate function that accepts index and element
      * @param <T> element type
+     * @return a gatherer that removes elements based on their index and the predicate
      */
     public static <T> Gatherer<T, ?, T> removeWithIndex(BiPredicate<Long, ? super T> predicate) {
         return removeWithIndex(predicate, 0);
@@ -625,6 +714,7 @@ public final class Packrat {
      * @param predicate predicate function that accepts index and element
      * @param startIndex starting index
      * @param <T> element type
+     * @return a gatherer that removes elements based on their index starting from the specified index and the predicate
      */
     public static <T> Gatherer<T, ?, T> removeWithIndex(BiPredicate<Long, ? super T> predicate, long startIndex) {
         return new FilteringWithIndexGatherer<>(predicate, startIndex, true);
@@ -638,6 +728,7 @@ public final class Packrat {
      * @param value specific value
      * @param <T> element type
      * @param <U> mapped element type
+     * @return a gatherer that removes elements based on equality of their mapped values with the specific value
      */
     public static <T, U> Gatherer<T, ?, T> removeBy(Function<? super T, ? extends U> mapper, U value) {
         return removeBy(mapper, value, Objects::equals);
@@ -652,6 +743,8 @@ public final class Packrat {
      * @param predicate testing predicate
      * @param <T> element type
      * @param <U> mapped element type
+     * @return a gatherer
+     * that removes elements based on testing their mapped values against the specific value with the provided predicate
      */
     public static <T, U> Gatherer<T, ?, T> removeBy(Function<? super T, ? extends U> mapper, U value, BiPredicate<? super U, ? super U> predicate) {
         return new FilteringGatherer<>(mapper, value, predicate, true);
@@ -671,6 +764,7 @@ public final class Packrat {
      * </pre>
      *
      * @param <T> element type
+     * @return a gatherer that removes consecutive duplicate elements from the stream
      */
     public static <T> Gatherer<T, ?, T> removeDuplicates() {
         return removeDuplicatesBy(Function.identity());
@@ -683,6 +777,7 @@ public final class Packrat {
      * @param mapper mapping function
      * @param <T> element type
      * @param <U> mapped element type
+     * @return a gatherer that removes consecutive duplicate elements from the stream based on their mapped values
      */
     public static <T, U> Gatherer<T, ?, T> removeDuplicatesBy(Function<? super T, ? extends U> mapper) {
         return new RemoveDuplicatesGatherer<>(mapper);
@@ -699,8 +794,8 @@ public final class Packrat {
      *   [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
      * </pre>
      *
-     * @return reverse gatherer
      * @param <T> element type
+     * @return reverse gatherer
      */
     public static <T> Gatherer<T, ?, T> reverse() {
         return new IntoListGatherer<>(Collections::reverse);
@@ -726,8 +821,8 @@ public final class Packrat {
      *
      * @see java.util.Collections#rotate
      * @param distance rotation distance, any number
-     * @return rotation gatherer
      * @param <T> element type
+     * @return rotation gatherer
      */
     public static <T> Gatherer<T, ?, T> rotate(int distance) {
         return new IntoListGatherer<>(list -> Collections.rotate(list, distance));
@@ -744,8 +839,8 @@ public final class Packrat {
      *   [2, 7, 6, 9, 8, 5, 1, 3, 0, 4]
      * </pre>
      *
-     * @return shuffle gatherer
      * @param <T> element type
+     * @return shuffle gatherer
      */
     public static <T> Gatherer<T, ?, T> shuffle() {
         return new IntoListGatherer<>(Collections::shuffle);
@@ -756,8 +851,8 @@ public final class Packrat {
      * <p>
      *
      * @param n sample size
-     * @return sampling gatherer
      * @param <T> element type
+     * @return sampling gatherer
      */
     public static <T> Gatherer<T, ?, T> sample(int n) {
         var maxSpan = n < 512
@@ -774,8 +869,8 @@ public final class Packrat {
      *
      * @param n sample size
      * @param maxSpan maximum count of the elements to inspect
-     * @return sampling gatherer
      * @param <T> element type
+     * @return sampling gatherer
      */
     public static <T> Gatherer<T, ?, T> sample(int n, int maxSpan) {
         return new SamplingGatherer<>(n, maxSpan);
@@ -786,6 +881,7 @@ public final class Packrat {
      *
      * @param n take every nth element
      * @param <T> element type
+     * @return a gatherer that outputs every nth element from the stream
      */
     public static <T> Gatherer<T, ?, T> nth(int n) {
         return new NthGatherer<>(n);
@@ -794,8 +890,8 @@ public final class Packrat {
     /**
      * Returns last element.
      *
-     * @return lasting gatherer
      * @param <T> element type
+     * @return a gatherer that returns the last element from the stream
      */
     public static <T> Gatherer<T, ?, T> last() {
         return last(1);
@@ -805,8 +901,8 @@ public final class Packrat {
      * Returns last n elements.
      *
      * @param n count of last elements to return
-     * @return lasting gatherer
      * @param <T> element type
+     * @return a gatherer that returns the last n elements from the stream
      */
     public static <T> Gatherer<T, ?, T> last(long n) {
         return new LastingGatherer<>(n);
@@ -816,8 +912,8 @@ public final class Packrat {
      * Returns last n unique elements.
      *
      * @param n count of last unique elements to return
-     * @return lasting gatherer
      * @param <T> element type
+     * @return a gatherer that returns the last n unique elements from the stream
      */
     public static <T> Gatherer<T, ?, T> lastUnique(long n) {
         return new LastingGatherer<>(n, true);
@@ -827,6 +923,7 @@ public final class Packrat {
      * Drops last element.
      *
      * @param <T> element type
+     * @return a gatherer that drops the last element from the stream
      */
     public static <T> Gatherer<T, ?, T> dropLast() {
         return dropLast(1);
@@ -837,6 +934,7 @@ public final class Packrat {
      *
      * @param n count of last elements to drop
      * @param <T> element type
+     * @return a gatherer that drops the last n elements from the stream
      */
     public static <T> Gatherer<T, ?, T> dropLast(long n) {
         return new DropLastNGatherer<>(n);
@@ -850,6 +948,7 @@ public final class Packrat {
      * @param <T> element type
      * @param <U> state type
      * @param <V> result type
+     * @return a gatherer that provides the result of the supplied collector as a single element
      */
     public static <T, U, V> Gatherer<T, U, V> asGatherer(Collector<? super T, U, ? extends V> collector) {
         return new CollectingGatherer<>(collector);
