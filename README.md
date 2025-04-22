@@ -42,10 +42,10 @@ Build scripts expect running on JDK version not lower than 24.
 | [nth](#nth)                                         | Takes nth element from the stream                      |
 | [last](#last)                                       | Last __n__ elements                                    |
 | [lastUnique](#lastunique)                           | Last __n__ unique elements                             |
-| [dropLast](#droplast)                               | Drops last __n__ elements                             |
-| [chars](#chars)                                     | String splitted by Unicode graphemes                   |
-| [words](#words)                                     | String splitted by words                               |
-| [sentences](#sentences)                             | String splitted by sentences                           |
+| [dropLast](#droplast)                               | Drops last __n__ elements                              |
+| [chars](#chars)                                     | String split by Unicode graphemes                      |
+| [words](#words)                                     | String split by words                                  |
+| [sentences](#sentences)                             | String split by sentences                              |
 | [nCopies](#ncopies)                                 | Copies every element __n__ times                       |
 | [atLeast](#atleast)                                 | Distinct values that appear at least __n__ times       |
 | [atMost](#atmost)                                   | Distinct values that appear at most __n__ times        |
@@ -104,7 +104,7 @@ Build scripts expect running on JDK version not lower than 24.
 
 > [-12]
 
-However, resulting list contains original element of type `String`;
+However, resulting list contains an original element of type `String`;
 
 `minBy(mapper, comparator)` - returns the smallest element in the stream, comparing with given comparator is done after mapping function applied.
 
@@ -120,7 +120,7 @@ However, resulting list contains original element of type `String`;
 
 > [22]
 
-However, resulting list contains original element of type `String`;
+However, resulting list contains an original element of type `String`;
 
 `maxBy(mapper, comparator)` - returns the greatest element in the stream, comparing with given comparator is done after mapping function applied.
 
