@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class MapWhileUntilTest {
     @Test
     public void mapWhileTest() {
-        var mapped = IntStream.rangeClosed(1, 10).boxed().gather(Packrat.mapWhihle(n -> n * 10, n -> n <= 3)).toList();
+        var mapped = IntStream.rangeClosed(1, 10).boxed().gather(Packrat.mapWhile(n -> n * 10, n -> n <= 3)).toList();
         assertEquals(List.of(10, 20, 30, 4, 5, 6, 7, 8, 9, 10), mapped);
     }
 

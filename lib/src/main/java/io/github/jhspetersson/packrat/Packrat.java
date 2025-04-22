@@ -89,7 +89,7 @@ public final class Packrat {
     }
 
     /**
-     * Provides instance of {@link FilteringGatherer} that tests mapped element against the specific value with some predicate.
+     * Provides instance of {@link FilteringGatherer} that tests a mapped element against the specific value with some predicate.
      * Passed elements unmodified go down the stream.
      *
      * @param mapper mapping function
@@ -103,7 +103,8 @@ public final class Packrat {
     }
 
     /**
-     * Outputs the smallest element in the stream, comparing is done after mapping function applied.
+     * Outputs the smallest element in the stream.
+     * Comparing is done after the mapping function is applied.
      *
      * @param mapper mapping function
      * @param <T> element type
@@ -114,7 +115,8 @@ public final class Packrat {
     }
 
     /**
-     * Outputs the smallest element in the stream, comparing with given comparator is done after mapping function applied.
+     * Outputs the smallest element in the stream.
+     * Comparing with a given comparator is done after the mapping function is applied.
      *
      * @param mapper mapping function
      * @param comparator comparator
@@ -126,7 +128,8 @@ public final class Packrat {
     }
 
     /**
-     * Outputs the greatest element in the stream, comparing is done after mapping function applied.
+     * Outputs the greatest element in the stream.
+     * Comparing is done after the mapping function is applied.
      *
      * @param mapper mapping function
      * @param <T> element type
@@ -137,7 +140,8 @@ public final class Packrat {
     }
 
     /**
-     * Outputs the greatest element in the stream, comparing with given comparator is done after mapping function applied.
+     * Outputs the greatest element in the stream.
+     * Comparing with a given comparator is done after the mapping function is applied.
      *
      * @param mapper mapping function
      * @param comparator comparator
@@ -159,9 +163,10 @@ public final class Packrat {
     }
 
     /**
-     * Returns elements in an increasing sequence using provided comparator.
+     * Returns elements in an increasing sequence using the provided comparator.
      * Elements out of the sequence, as well as repeating values, are dropped.
      *
+     * @param comparator comparator
      * @param <T> element type
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> increasing(Comparator<? super T> comparator) {
@@ -179,9 +184,10 @@ public final class Packrat {
     }
 
     /**
-     * Returns elements in an increasing sequence using provided comparator.
+     * Returns elements in an increasing sequence using the provided comparator.
      * Repeating values are preserved. Elements out of the sequence are dropped.
      *
+     * @param comparator comparator
      * @param <T> element type
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> increasingOrEqual(Comparator<? super T> comparator) {
@@ -199,9 +205,10 @@ public final class Packrat {
     }
 
     /**
-     * Returns elements in a decreasing sequence using provided comparator.
+     * Returns elements in a decreasing sequence using the provided comparator.
      * Elements out of the sequence, as well as repeating values, are dropped.
      *
+     * @param comparator comparator
      * @param <T> element type
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> decreasing(Comparator<? super T> comparator) {
@@ -219,9 +226,10 @@ public final class Packrat {
     }
 
     /**
-     * Returns elements in a decreasing sequence using provided comparator.
+     * Returns elements in a decreasing sequence using the provided comparator.
      * Repeating values are preserved. Elements out of the sequence are dropped.
      *
+     * @param comparator comparator
      * @param <T> element type
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> decreasingOrEqual(Comparator<? super T> comparator) {
@@ -242,6 +250,7 @@ public final class Packrat {
      * Returns lists ("chunks") of elements, where each next element is greater than the previous one.
      * Comparison is done with the supplied comparator.
      *
+     * @param comparator comparator
      * @param <T> element type
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingChunks(Comparator<? super T> comparator) {
@@ -262,6 +271,7 @@ public final class Packrat {
      * Returns lists ("chunks") of elements, where each next element is greater than the previous one.
      * Comparison is done with the supplied comparator.
      *
+     * @param comparator comparator
      * @param <T> element type
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingOrEqualChunks(Comparator<? super T> comparator) {
@@ -282,6 +292,7 @@ public final class Packrat {
      * Returns lists ("chunks") of elements, where each next element is less than the previous one.
      * Comparison is done with the supplied comparator.
      *
+     * @param comparator comparator
      * @param <T> element type
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingChunks(Comparator<? super T> comparator) {
@@ -302,6 +313,7 @@ public final class Packrat {
      * Returns lists ("chunks") of elements, where each next element is less or equal than the previous one.
      * Comparison is done with the supplied comparator.
      *
+     * @param comparator comparator
      * @param <T> element type
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingOrEqualChunks(Comparator<? super T> comparator) {
@@ -358,10 +370,26 @@ public final class Packrat {
         return new MappingGatherer<>(skipN, mapN, mapper);
     }
 
-    public static <T> Gatherer<T, ?, T> mapWhihle(Function<? super T, ? extends T> mapper, Predicate<? super T> predicate) {
+    /**
+     * Maps elements using the supplied mapping function while the predicate evaluates to true.
+     * Once the predicate evaluates to false, no further elements are mapped, and the original elements are passed downstream.
+     *
+     * @param mapper mapping function
+     * @param predicate predicate to determine when to stop mapping
+     * @param <T> element type
+     */
+    public static <T> Gatherer<T, ?, T> mapWhile(Function<? super T, ? extends T> mapper, Predicate<? super T> predicate) {
         return new MapWhileUntilGatherer<>(mapper, predicate);
     }
 
+    /**
+     * Maps elements using the supplied mapping function until the predicate evaluates to true.
+     * Once the predicate evaluates to true, no further elements are mapped, and the original elements are passed downstream.
+     *
+     * @param mapper mapping function
+     * @param predicate predicate to determine when to stop mapping
+     * @param <T> element type
+     */
     public static <T> Gatherer<T, ?, T> mapUntil(Function<? super T, ? extends T> mapper, Predicate<? super T> predicate) {
         return new MapWhileUntilGatherer<>(mapper, null, predicate);
     }
@@ -537,7 +565,7 @@ public final class Packrat {
     }
 
     /**
-     * Peeks at each element along with its index, but passes the original element downstream.
+     * Peeks at each element along with its index but passes the original element downstream.
      * The index starts from 0.
      *
      * @param consumer consumer function that accepts index and element
@@ -548,7 +576,7 @@ public final class Packrat {
     }
 
     /**
-     * Peeks at each element along with its index, but passes the original element downstream.
+     * Peeks at each element along with its index but passes the original element downstream.
      *
      * @param consumer consumer function that accepts index and element
      * @param startIndex starting index

@@ -15,51 +15,53 @@ Packrat is a Java library that provides various [Gatherer](https://docs.oracle.c
 |[473](https://openjdk.org/jeps/473)|23|Second Preview|
 |[485](https://openjdk.org/jeps/485)|24|Final|
 
-Build scripts expect running on JDK version not lower than 24.
+Build scripts expect to run on JDK version not lower than 24.
 
 ### Gatherers
 
-| Name                                                | Description                                            |
-|-----------------------------------------------------|--------------------------------------------------------|
-| [distinctBy](#distinctby)                           | Distinct values with custom mapper                     |
-| [filterBy](#filterby)                               | Filter with custom mapper and (optionally) predicate   |
-| [minBy](#minby)                                     | The smallest element compared after mapping applied    |
-| [maxBy](#maxby)                                     | The greatest element compared after mapping applied    |
-| [removeBy](#removeby)                               | Remove with custom mapper and (optionally) predicate   |
-| [removeDuplicates](#removeduplicates)               | Removes consecutive duplicates from a stream           |
-| [increasing](#increasing)                           | Increasing sequence, other elements dropped            |
-| [increasingOrEqual](#increasingorequal)             | Increasing (or equal) sequence, other elements dropped |
-| [decreasing](#decreasing)                           | Decreasing sequence, other elements dropped            |
-| [decreasingOrEqual](#decreasingorequal)             | Decreasing (or equal) sequence, other elements dropped |
-| [increasingChunks](#increasingchunks)               | Lists of increasing values                             |
-| [increasingOrEqualChunks](#increasingorequalchunks) | Lists of increasing or equal values                    |                    
-| [decreasingChunks](#decreasingchunks)               | Lists of decreasing values                             |
-| [decreasingOrEqualChunks](#decreasingorequalchunks) | Lists of decreasing or equal values                    |
-| [reverse](#reverse)                                 | All elements in reverse order                          |
-| [rotate](#rotate)                                   | All elements rotated left or right                     |
-| [shuffle](#shuffle)                                 | All elements in random order                           |
-| [sample](#sample)                                   | Sample of the specified size                           |
-| [nth](#nth)                                         | Takes nth element from the stream                      |
-| [last](#last)                                       | Last __n__ elements                                    |
-| [lastUnique](#lastunique)                           | Last __n__ unique elements                             |
-| [dropLast](#droplast)                               | Drops last __n__ elements                              |
-| [chars](#chars)                                     | String split by Unicode graphemes                      |
-| [words](#words)                                     | String split by words                                  |
-| [sentences](#sentences)                             | String split by sentences                              |
-| [nCopies](#ncopies)                                 | Copies every element __n__ times                       |
-| [atLeast](#atleast)                                 | Distinct values that appear at least __n__ times       |
-| [atMost](#atmost)                                   | Distinct values that appear at most __n__ times        |
-| [mapFirst](#mapfirst)                               | Maps first element with mapper, other unchanged        |
-| [mapN](#mapn)                                       | Maps __n__ elements, other unchanged                   |
-| [skipAndMap](#skipandmap)                           | Skips __n__ elements, maps others                      |
-| [skipAndMapN](#skipandmapn)                         | Skips __skipN__ elements, maps __mapN__ others         | 
-| [flatMapIf](#flatmapif)                             | Optional `flatMap` depending on predicate              |
-| [zip](#zip)                                         | Zips values with zipper, leftovers dropped             |
-| [zipWithIndex](#zipwithindex)                       | Zips values with an increasing index                   |
-| [peekWithIndex](#peekwithindex)                     | Peek at each element with its index                    |
-| [filterWithIndex](#filterwithindex)                 | Filter elements based on their index and a predicate   |
-| [removeWithIndex](#removewithindex)                 | Remove elements based on their index and a predicate   |
-| [asGatherer](#asgatherer)                           | Converts `Collector` into `Gatherer`                   |
+| Name                                                | Description                                                                       |
+|-----------------------------------------------------|-----------------------------------------------------------------------------------|
+| [distinctBy](#distinctby)                           | Distinct values with custom mapper                                                |
+| [filterBy](#filterby)                               | Filter with custom mapper and (optionally) predicate                              |
+| [minBy](#minby)                                     | The smallest element compared after mapping applied                               |
+| [maxBy](#maxby)                                     | The greatest element compared after mapping applied                               |
+| [removeBy](#removeby)                               | Remove with custom mapper and (optionally) predicate                              |
+| [removeDuplicates](#removeduplicates)               | Removes consecutive duplicates from a stream                                      |
+| [increasing](#increasing)                           | Increasing sequence, other elements dropped                                       |
+| [increasingOrEqual](#increasingorequal)             | Increasing (or equal) sequence, other elements dropped                            |
+| [decreasing](#decreasing)                           | Decreasing sequence, other elements dropped                                       |
+| [decreasingOrEqual](#decreasingorequal)             | Decreasing (or equal) sequence, other elements dropped                            |
+| [increasingChunks](#increasingchunks)               | Lists of increasing values                                                        |
+| [increasingOrEqualChunks](#increasingorequalchunks) | Lists of increasing or equal values                                               |                    
+| [decreasingChunks](#decreasingchunks)               | Lists of decreasing values                                                        |
+| [decreasingOrEqualChunks](#decreasingorequalchunks) | Lists of decreasing or equal values                                               |
+| [reverse](#reverse)                                 | All elements in reverse order                                                     |
+| [rotate](#rotate)                                   | All elements rotated left or right                                                |
+| [shuffle](#shuffle)                                 | All elements in random order                                                      |
+| [sample](#sample)                                   | Sample of the specified size                                                      |
+| [nth](#nth)                                         | Takes nth element from the stream                                                 |
+| [last](#last)                                       | Last __n__ elements                                                               |
+| [lastUnique](#lastunique)                           | Last __n__ unique elements                                                        |
+| [dropLast](#droplast)                               | Drops last __n__ elements                                                         |
+| [chars](#chars)                                     | String split by Unicode graphemes                                                 |
+| [words](#words)                                     | String split by words                                                             |
+| [sentences](#sentences)                             | String split by sentences                                                         |
+| [nCopies](#ncopies)                                 | Copies every element __n__ times                                                  |
+| [atLeast](#atleast)                                 | Distinct values that appear at least __n__ times                                  |
+| [atMost](#atmost)                                   | Distinct values that appear at most __n__ times                                   |
+| [mapFirst](#mapfirst)                               | Maps first element with mapper, other unchanged                                   |
+| [mapN](#mapn)                                       | Maps __n__ elements, other unchanged                                              |
+| [skipAndMap](#skipandmap)                           | Skips __n__ elements, maps others                                                 |
+| [skipAndMapN](#skipandmapn)                         | Skips __skipN__ elements, maps __mapN__ others                                    | 
+| [mapWhile](#mapwhile)                               | Maps elements using the supplied function while the predicate evaluates to true.  |
+| [mapUntil](#mapuntil)                               | Maps elements using the supplied function until the predicate evaluates to false. |
+| [flatMapIf](#flatmapif)                             | Optional `flatMap` depending on predicate                                         |
+| [zip](#zip)                                         | Zips values with zipper, leftovers dropped                                        |
+| [zipWithIndex](#zipwithindex)                       | Zips values with an increasing index                                              |
+| [peekWithIndex](#peekwithindex)                     | Peek at each element with its index                                               |
+| [filterWithIndex](#filterwithindex)                 | Filter elements based on their index and a predicate                              |
+| [removeWithIndex](#removewithindex)                 | Remove elements based on their index and a predicate                              |
+| [asGatherer](#asgatherer)                           | Converts `Collector` into `Gatherer`                                              |
 
 #### distinctBy
 
@@ -474,6 +476,30 @@ However, resulting list contains an original element of type `String`;
 ```
 
 > [1, 2, 3, 40, 50, 60, 70, 80, 9, 10]
+
+#### mapWhile
+
+`mapWhile(predicate, mapper)` - maps elements using the supplied function while the predicate evaluates to true
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.mapWhile;
+  var numbers = IntStream.rangeClosed(1, 10).boxed().gather(mapWhile(n -> n * 10, n -> n < 5)).toList();
+  System.out.println(numbers);
+```
+
+> [10, 20, 30, 40, 5, 6, 7, 8, 9, 10]
+
+#### mapUntil
+
+`mapUntil(predicate, mapper)` - maps elements using the supplied function until the predicate evaluates to false
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.mapUntil;
+  var numbers = IntStream.rangeClosed(1, 10).boxed().gather(mapUntil(n -> n * 10, n -> n == 5)).toList();
+  System.out.println(numbers);
+```
+
+> [10, 20, 30, 40, 5, 6, 7, 8, 9, 10]
 
 #### flatMapIf
 
