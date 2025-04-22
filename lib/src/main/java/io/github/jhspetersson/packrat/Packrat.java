@@ -50,6 +50,7 @@ public final class Packrat {
      * Returns distinct elements mapped by the supplied function that appear at least <code>n</code> times in the stream.
      *
      * @param n at least how many times the element has to appear in the stream
+     * @param mapper mapping function
      * @param <T> element type
      * @param <U> mapped element type
      * @return a gatherer that filters elements based on the frequency of their mapped values in the stream
@@ -73,6 +74,7 @@ public final class Packrat {
      * Returns elements mapped by the supplied function that appear at most <code>n</code> times in the stream.
      *
      * @param n at most how many times the element has to appear in the stream
+     * @param mapper mapping function
      * @param <T> element type
      * @param <U> mapped element type
      * @return a gatherer that filters elements based on the frequency of their mapped values in the stream
@@ -753,7 +755,6 @@ public final class Packrat {
     /**
      * Removes consecutive duplicates from the stream.
      * Only adjacent elements that have equal mapped values will be considered duplicates.
-     * <p>
      *
      * <pre>
      *   var listWithCopies = List.of(0, 1, 2, 2, 3, 4, 5, 5, 6, 7, 8, 8, 8, 9, 8, 7, 7, 6, 5, 4, 4, 4, 3, 2, 1, 0);
@@ -785,7 +786,6 @@ public final class Packrat {
 
     /**
      * Reverses the element stream.
-     * <p>
      *
      * <pre>
      *   var reverseOrdered = IntStream.range(0, 10).boxed().gather(reverse()).toList();
@@ -803,7 +803,6 @@ public final class Packrat {
 
     /**
      * Rotates the element stream.
-     * <p>
      *
      * <pre>
      *   var positiveRotation = IntStream.range(0, 10).boxed().gather(Packrat.rotate(3)).toList();
@@ -830,7 +829,6 @@ public final class Packrat {
 
     /**
      * Shuffles the element stream.
-     * <p>
      *
      * <pre>
      *   var randomlyOrdered = IntStream.range(0, 10).boxed().gather(shuffle()).toList();
@@ -848,7 +846,6 @@ public final class Packrat {
 
     /**
      * Returns a sample of the specified size from the stream of elements.
-     * <p>
      *
      * @param n sample size
      * @param <T> element type
@@ -865,7 +862,6 @@ public final class Packrat {
 
     /**
      * Returns a sample of the specified size from the stream of elements.
-     * <p>
      *
      * @param n sample size
      * @param maxSpan maximum count of the elements to inspect

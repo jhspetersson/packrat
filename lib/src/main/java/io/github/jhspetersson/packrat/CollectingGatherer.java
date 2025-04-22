@@ -19,6 +19,12 @@ import java.util.stream.Gatherer;
 public class CollectingGatherer<T, U, V> implements Gatherer<T, U, V> {
     private final Collector<? super T, U, ? extends V> collector;
 
+    /**
+     * Constructs a new CollectingGatherer instance.
+     *
+     * @param collector the collector to be used for gathering elements, must not be null
+     * @throws NullPointerException if the collector is null
+     */
     public CollectingGatherer(Collector<? super T, U, ? extends V> collector) {
         Objects.requireNonNull(collector, "collector cannot be null");
 
