@@ -1,6 +1,5 @@
 package io.github.jhspetersson.packrat;
 
-import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
