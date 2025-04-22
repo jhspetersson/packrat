@@ -587,6 +587,37 @@ public final class Packrat {
     }
 
     /**
+     * Returns elements mapped with an increasing index.
+     * Mapping function receives the index as the first argument.
+     * This is a synonym for {@link #zipWithIndex(BiFunction)}.
+     *
+     * @param mapper mapping function
+     * @param <T> element type
+     * @param <U> result type
+     * @return a gatherer that produces elements by mapping stream elements with their indices using the mapper function
+     */
+    public static <T, U> Gatherer<T, ?, U> mapWithIndex(BiFunction<Long, ? super T, ? extends U> mapper) {
+        return zipWithIndex(mapper);
+    }
+
+    /**
+     * Returns elements mapped with an increasing index.
+     * Mapping function receives the index as the first argument.
+     * This is a synonym for {@link #zipWithIndex(BiFunction, long)}.
+     *
+     * @param mapper mapping function
+     * @param startIndex starting index
+     * @param <T> element type
+     * @param <U> result type
+     * @return a gatherer
+     * that produces elements by mapping stream elements with their indices starting from the specified index
+     * using the mapper function
+     */
+    public static <T, U> Gatherer<T, ?, U> mapWithIndex(BiFunction<Long, ? super T, ? extends U> mapper, long startIndex) {
+        return zipWithIndex(mapper, startIndex);
+    }
+
+    /**
      * Returns characters as strings parsed from the stream elements.
      *
      * @param <T> element type
