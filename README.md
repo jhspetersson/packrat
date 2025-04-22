@@ -110,6 +110,9 @@ However, resulting list contains an original element of type `String`;
 
 `minBy(mapper, comparator)` - returns the smallest element in the stream, comparing with given comparator is done after mapping function applied.
 
+> [!CAUTION]
+> This gatherer will consume the entire stream before producing any output.
+
 #### maxBy
 
 `maxBy(mapper)` - returns the greatest element in the stream, comparing is done after mapping function applied.
@@ -125,6 +128,9 @@ However, resulting list contains an original element of type `String`;
 However, resulting list contains an original element of type `String`;
 
 `maxBy(mapper, comparator)` - returns the greatest element in the stream, comparing with given comparator is done after mapping function applied.
+
+> [!CAUTION]
+> This gatherer will consume the entire stream before producing any output.
 
 #### removeBy
 
@@ -247,6 +253,9 @@ However, resulting list contains an original element of type `String`;
 ```
 > [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
 
+> [!CAUTION]
+> This gatherer will consume the entire stream before producing any output.
+
 #### rotate
 
 `rotate(distance)` - rotates the elements
@@ -262,6 +271,9 @@ However, resulting list contains an original element of type `String`;
 
 > [4, 5, 6, 7, 8, 9, 0, 1, 2, 3]
 
+> [!CAUTION]
+> This gatherer will consume the entire stream before producing any output.
+
 #### shuffle
 
 `shuffle()` - shuffle the elements
@@ -272,6 +284,9 @@ However, resulting list contains an original element of type `String`;
   System.out.println(randomlyOrdered);
 ```
 > [2, 7, 6, 9, 8, 5, 1, 3, 0, 4]
+
+> [!CAUTION]
+> This gatherer will consume the entire stream before producing any output.
 
 #### sample
 
@@ -321,6 +336,9 @@ However, resulting list contains an original element of type `String`;
 
 > [90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
 
+> [!CAUTION]
+> This gatherer will consume the entire stream before producing any output.
+
 #### lastUnique
 
 `lastUnique(n)` - returns __n__ last unique elements from the stream.
@@ -332,6 +350,9 @@ However, resulting list contains an original element of type `String`;
 ```
 
 > [1, 2, 6]
+
+> [!CAUTION]
+> This gatherer will consume the entire stream before producing any output.
 
 #### dropLast
 
@@ -346,6 +367,9 @@ However, resulting list contains an original element of type `String`;
 ```
 
 > [0, 1, 2, 3, 4, 5, 6]
+
+> [!CAUTION]
+> This gatherer will consume the entire stream before producing any output.
 
 #### chars
 
@@ -428,6 +452,9 @@ However, resulting list contains an original element of type `String`;
   System.out.println(uniqueLengths);
 ```
 > [date, elderberry, fig]
+
+> [!CAUTION]
+> This gatherer will consume the entire stream before producing any output.
 
 #### mapFirst
 
