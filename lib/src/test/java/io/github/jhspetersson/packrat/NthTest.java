@@ -14,14 +14,14 @@ public class NthTest {
     public void nthTest() {
         var numbers = Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         var result = numbers.gather(Packrat.nth(3)).toList();
-        assertEquals(List.of(1, 4, 7, 10), result);
+        assertEquals(List.of(3, 6, 9), result);
     }
 
     @Test
     public void nthWithLargeStreamTest() {
         var numbers = IntStream.rangeClosed(1, 100).boxed();
         var result = numbers.gather(Packrat.nth(10)).toList();
-        assertEquals(List.of(1, 11, 21, 31, 41, 51, 61, 71, 81, 91), result);
+        assertEquals(List.of(10, 20, 30, 40, 50, 60, 70, 80, 90, 100), result);
     }
 
     @Test
@@ -42,20 +42,20 @@ public class NthTest {
     public void nthWithFewerElementsThanNTest() {
         var numbers = Stream.of(1, 2, 3, 4);
         var result = numbers.gather(Packrat.nth(5)).toList();
-        assertEquals(List.of(1), result);
+        assertEquals(List.of(), result);
     }
 
     @Test
     public void nthWithExactlyNElementsTest() {
         var numbers = Stream.of(1, 2, 3, 4, 5);
         var result = numbers.gather(Packrat.nth(5)).toList();
-        assertEquals(List.of(1), result);
+        assertEquals(List.of(5), result);
     }
 
     @Test
     public void nthWithStringTest() {
         var strings = Stream.of("apple", "banana", "cherry", "date", "elderberry", "fig", "grape");
         var result = strings.gather(Packrat.nth(2)).toList();
-        assertEquals(List.of("apple", "cherry", "elderberry", "grape"), result);
+        assertEquals(List.of("banana", "date", "fig"), result);
     }
 }

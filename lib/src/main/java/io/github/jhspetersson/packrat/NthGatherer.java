@@ -22,13 +22,13 @@ class NthGatherer<T> implements Gatherer<T, int[], T> {
 
     @Override
     public Supplier<int[]> initializer() {
-        return () -> new int[1]; // Using an array to store the counter
+        return () -> new int[1];
     }
 
     @Override
     public Integrator<int[], T, T> integrator() {
         return Integrator.of((state, element, downstream) -> {
-            if (state[0]++ % n == 0) {
+            if (++state[0] % n == 0) {
                 return downstream.push(element);
             }
             return !downstream.isRejecting();
