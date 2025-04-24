@@ -309,6 +309,14 @@ public final class Packrat {
         return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp <= 0);
     }
 
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> equalChunks() {
+        return equalChunks(Function.identity());
+    }
+
+    public static <T, U> Gatherer<T, ?, List<T>> equalChunks(Function<? super T, ? extends U> mapper) {
+        return new EqualChunksGatherer<>(mapper);
+    }
+
     /**
      * Returns lists ("chunks") of elements, where each next element is less than the previous one.
      * Comparison is done with the natural order comparator.

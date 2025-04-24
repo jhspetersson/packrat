@@ -33,6 +33,7 @@ Build scripts expect to run on JDK version not lower than 24.
 | [decreasingOrEqual](#decreasingorequal)                        | Decreasing (or equal) sequence, other elements dropped                            |
 | [increasingChunks](#increasingchunks)                          | Lists of increasing values                                                        |
 | [increasingOrEqualChunks](#increasingorequalchunks)            | Lists of increasing or equal values                                               |                    
+| [equalChunks](#equalchunks)                                    | Lists of equal values                                                             |
 | [decreasingChunks](#decreasingchunks)                          | Lists of decreasing values                                                        |
 | [decreasingOrEqualChunks](#decreasingorequalchunks)            | Lists of decreasing or equal values                                               |
 | [reverse](#reverse)                                            | All elements in reverse order                                                     |
@@ -242,6 +243,30 @@ However, resulting list contains an original element of type `String`;
 #### decreasingOrEqualChunks
 
 `decreasingOrEqualChunks()` - returns lists ("chunks") of elements, where each next element is less or equal than the previous one
+
+#### equalChunks
+
+`equalChunks()` - returns lists ("chunks") of elements, where all elements in a chunk are equal to each other
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.equalChunks;
+  var numbers = Stream.of(1, 1, 2, 2, 2, 3, 4, 4, 5, 5, 5, 5, 6);
+  var result = numbers.gather(equalChunks()).toList();
+  System.out.println(result);
+```
+
+> [[1, 1], [2, 2, 2], [3], [4, 4], [5, 5, 5, 5], [6]]
+
+`equalChunks(mapper)` - returns lists ("chunks") of elements, where all elements in a chunk have equal values after applying the mapper function
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.equalChunks;
+  var strings = Stream.of("apple", "apricot", "banana", "blueberry", "cherry", "date");
+  var result = strings.gather(equalChunks(s -> s.charAt(0))).toList();
+  System.out.println(result);
+```
+
+> [[apple, apricot], [banana, blueberry], [cherry], [date]]
 
 #### reverse
 
