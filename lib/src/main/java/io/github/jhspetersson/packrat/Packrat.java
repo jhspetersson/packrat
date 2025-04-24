@@ -915,6 +915,17 @@ public final class Packrat {
     }
 
     /**
+     * Drops every nth element from the stream.
+     *
+     * @param n drop every nth element
+     * @param <T> element type
+     * @return a gatherer that drops every nth element from the stream
+     */
+    public static <T> Gatherer<T, ?, T> dropNth(int n) {
+        return new DropNthGatherer<>(n);
+    }
+
+    /**
      * Returns last element.
      *
      * @param <T> element type

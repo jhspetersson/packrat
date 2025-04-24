@@ -40,6 +40,7 @@ Build scripts expect to run on JDK version not lower than 24.
 | [shuffle](#shuffle)                                            | All elements in random order                                                      |
 | [sample](#sample)                                              | Sample of the specified size                                                      |
 | [nth](#nth)                                                    | Takes nth element from the stream                                                 |
+| [dropNth](#dropnth)                                            | Drops every nth element from the stream                                           |
 | [last](#last)                                                  | Last __n__ elements                                                               |
 | [lastUnique](#lastunique)                                      | Last __n__ unique elements                                                        |
 | [dropLast](#droplast)                                          | Drops last __n__ elements                                                         |
@@ -313,6 +314,19 @@ However, resulting list contains an original element of type `String`;
 ```
 
 > [3, 6, 9]
+
+#### dropNth
+
+`dropNth(n)` - drops every nth element from the stream
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.dropNth;
+  var numbers = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+  var result = numbers.stream().gather(dropNth(3)).toList();
+  System.out.println(result);
+```
+
+> [1, 2, 4, 5, 7, 8, 10]
 
 #### last
 
