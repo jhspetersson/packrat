@@ -309,10 +309,25 @@ public final class Packrat {
         return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp <= 0);
     }
 
+    /**
+     * Returns lists ("chunks") of elements where all elements in a chunk are equal.
+     *
+     * @param <T> element type
+     * @return a gatherer that groups elements into lists where all elements are equal
+     */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> equalChunks() {
         return equalChunks(Function.identity());
     }
 
+    /**
+     * Returns lists ("chunks") of elements where all elements in a chunk are equal after applying the mapping function.
+     *
+     * @param mapper mapping function
+     * @param <T> element type
+     * @param <U> mapped element type
+     * @return a gatherer that groups elements into lists where all elements are equal
+     * after applying the mapping function
+     */
     public static <T, U> Gatherer<T, ?, List<T>> equalChunks(Function<? super T, ? extends U> mapper) {
         return new EqualChunksGatherer<>(mapper);
     }
