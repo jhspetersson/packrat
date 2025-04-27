@@ -38,10 +38,10 @@ class DropLastNGatherer<T> implements Gatherer<T, Deque<T>, T> {
     @Override
     public BiConsumer<Deque<T>, Downstream<? super T>> finisher() {
         return (deque, downstream) -> {
-            int elementsToSkip = (int) Math.min(n, deque.size());
-            int elementsToProcess = deque.size() - elementsToSkip;
+            var elementsToSkip = (int) Math.min(n, deque.size());
+            var elementsToProcess = deque.size() - elementsToSkip;
 
-            for (int i = 0; i < elementsToProcess; i++) {
+            for (var i = 0; i < elementsToProcess; i++) {
                 if (!downstream.push(deque.removeFirst())) {
                     break;
                 }
