@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'maven-publish'
 }
 
 group = 'io.github.jhspetersson'
@@ -41,4 +42,62 @@ tasks.register('javadocJar', Jar) {
 artifacts {
     archives sourcesJar
     archives javadocJar
+}
+
+publishing {
+    publications {
+        myPublication(MavenPublication) {
+            from components.java
+
+            artifactId = rootProject.name
+
+            pom {
+                name = "${project.group}:${rootProject.name}"
+                description = 'Gatherers library for Java Stream API'
+                url = 'https://github.com/jhspetersson/packrat'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        name = 'Ivan Petrichenko'
+                        email = 'jhspetersson@gmail.com'
+                        organizationUrl = 'https://github.com/jhspetersson'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git://github.com/jhspetersson/packrat.git'
+                    developerConnection = 'scm:git:ssh://github.com/jhspetersson/packrat.git'
+                    url = 'https://github.com/jhspetersson/packrat'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('fake-repo')
+        }
+    }
+}
+
+tasks.register('generatePom', GenerateMavenPom) {
+    group = 'build'
+    description = 'Generates the POM file without publishing.'
+    destination = file("$buildDir/libs/${rootProject.name}-${project.version}.pom")
+    pom = publishing.publications.myPublication.pom
+
+    doLast {
+        println "POM file written to: ${destination}"
+    }
+}
+
+build.finalizedBy {
+    tasks.generatePom
 }
