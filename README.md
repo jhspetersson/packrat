@@ -49,6 +49,7 @@ Build scripts expect to run on JDK version not lower than 24.
 | [words](#words)                                                | String split by words                                                             |
 | [sentences](#sentences)                                        | String split by sentences                                                         |
 | [nCopies](#ncopies)                                            | Copies every element __n__ times                                                  |
+| [repeat](#repeat)                                              | Collects the whole stream and repeats it __n__ times                              |
 | [atLeast](#atleast)                                            | Distinct values that appear at least __n__ times                                  |
 | [atMost](#atmost)                                              | Distinct values that appear at most __n__ times                                   |
 | [mapFirst](#mapfirst)                                          | Maps first element with mapper, other unchanged                                   |
@@ -457,6 +458,21 @@ However, resulting list contains an original element of type `String`;
 ```
 
 > [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+
+#### repeat
+
+`repeat(n)` - collects the whole stream and repeats it __n__ times, __n__ equal to zero effectively empties the stream
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.repeat;
+  var numbers = Stream.of(1, 2, 3).gather(repeat(2)).toList();
+  System.out.println(numbers);
+```
+
+> [1, 2, 3, 1, 2, 3]
+
+> [!CAUTION]
+> This gatherer will consume the entire stream before producing any output.
 
 #### atLeast
 

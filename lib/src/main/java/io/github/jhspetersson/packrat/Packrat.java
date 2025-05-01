@@ -392,6 +392,17 @@ public final class Packrat {
     }
 
     /**
+     * Collects the whole stream and repeats it n times.
+     *
+     * @param n how many times to repeat the stream, value equal to zero effectively empties the stream
+     * @param <T> element type
+     * @return a gatherer that collects the whole stream and repeats it n times
+     */
+    public static <T> Gatherer<T, ?, T> repeat(long n) {
+        return new RepeatGatherer<>(n);
+    }
+
+    /**
      * Returns all elements, the first element is mapped with the supplied mapping function.
      *
      * @param mapper mapping function
