@@ -276,7 +276,7 @@ However, resulting list contains an original element of type `String`;
 
 > [[1, 1], [2, 2, 2], [3], [4, 4], [5, 5, 5, 5], [6]]
 
-`equalChunks(mapper)` - returns lists ("chunks") of elements, where all elements in a chunk have equal values after applying the mapper function
+`equalChunksBy(mapper)` - returns lists ("chunks") of elements, where all elements in a chunk have equal values after applying the mapper function
 
 ```java
   import static io.github.jhspetersson.packrat.Packrat.equalChunks;
@@ -286,6 +286,44 @@ However, resulting list contains an original element of type `String`;
 ```
 
 > [[apple, apricot], [banana, blueberry], [cherry], [date]]
+
+`equalChunks(comparator)` - returns lists ("chunks") of elements, where all elements in a chunk are equal according to the supplied comparator
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.equalChunks;
+  // Case-insensitive string comparison
+  var strings = Stream.of("Apple", "apple", "Banana", "banana", "Cherry", "cherry");
+  var result = strings.gather(equalChunks(String.CASE_INSENSITIVE_ORDER)).toList();
+  System.out.println(result);
+```
+
+> [[Apple, apple], [Banana, banana], [Cherry, cherry]]
+
+`equalChunksBy(mapper, comparator)` - returns lists ("chunks") of elements, where all elements in a chunk have equal values after applying the mapper function, with equality determined by the supplied comparator
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.equalChunks;
+  record Person(String name, String id) {}
+
+  // Group people by the first letter of their ID, case-insensitive
+  var people = Stream.of(
+      new Person("John", "A123"),
+      new Person("Alice", "a456"),
+      new Person("Bob", "B789"),
+      new Person("Charlie", "b012"),
+      new Person("David", "C345"),
+      new Person("Eve", "c678")
+  );
+
+  var result = people.gather(equalChunks(
+      p -> p.id().substring(0, 1),  // Map to first letter of ID
+      String.CASE_INSENSITIVE_ORDER  // Compare case-insensitive
+  )).toList();
+
+  System.out.println(result);
+```
+
+> [[Person[name=John, id=A123], Person[name=Alice, id=a456]], [Person[name=Bob, id=B789], Person[name=Charlie, id=b012]], [Person[name=David, id=C345], Person[name=Eve, id=c678]]]
 
 #### reverse
 

@@ -316,7 +316,7 @@ public final class Packrat {
      * @return a gatherer that groups elements into lists where all elements are equal
      */
     public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> equalChunks() {
-        return equalChunks(Function.identity());
+        return equalChunksBy(Function.identity());
     }
 
     /**
@@ -328,8 +328,36 @@ public final class Packrat {
      * @return a gatherer that groups elements into lists where all elements are equal
      * after applying the mapping function
      */
-    public static <T, U> Gatherer<T, ?, List<T>> equalChunks(Function<? super T, ? extends U> mapper) {
+    public static <T, U> Gatherer<T, ?, List<T>> equalChunksBy(Function<? super T, ? extends U> mapper) {
         return new EqualChunksGatherer<>(mapper);
+    }
+
+    /**
+     * Returns lists ("chunks") of elements where all elements in a chunk are equal after applying the mapping function.
+     * Comparison is done with the supplied comparator.
+     *
+     * @param mapper mapping function
+     * @param comparator comparator for comparing mapped values
+     * @param <T> element type
+     * @param <U> mapped element type
+     * @return a gatherer that groups elements into lists where all elements are equal
+     * after applying the mapping function, using the provided comparator
+     */
+    public static <T, U> Gatherer<T, ?, List<T>> equalChunksBy(Function<? super T, ? extends U> mapper, Comparator<? super U> comparator) {
+        return new EqualChunksGatherer<>(mapper, comparator);
+    }
+
+    /**
+     * Returns lists ("chunks") of elements where all elements in a chunk are equal.
+     * Comparison is done with the supplied comparator.
+     *
+     * @param comparator comparator for comparing elements
+     * @param <T> element type
+     * @return a gatherer that groups elements into lists where all elements are equal,
+     * using the provided comparator
+     */
+    public static <T> Gatherer<T, ?, List<T>> equalChunks(Comparator<? super T> comparator) {
+        return new EqualChunksGatherer<>(Function.identity(), comparator);
     }
 
     /**
