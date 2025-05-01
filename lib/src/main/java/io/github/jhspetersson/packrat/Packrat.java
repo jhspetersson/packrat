@@ -381,22 +381,22 @@ public final class Packrat {
     }
 
     /**
-     * Returns n copies of every element.
+     * Returns <code>n</code> copies of every element.
      *
-     * @param n how many copies, value less than or equal to zero effectively empties the stream.
+     * @param n how many copies, value equal to zero effectively empties the stream.
      * @param <T> element type
-     * @return a gatherer that produces n copies of each element in the stream
+     * @return a gatherer that produces <code>n</code> copies of each element in the stream
      */
     public static <T> Gatherer<T, ?, T> nCopies(long n) {
         return new NCopiesGatherer<>(n);
     }
 
     /**
-     * Collects the whole stream and repeats it n times.
+     * Collects the whole stream and repeats it <code>n</code> times.
      *
      * @param n how many times to repeat the stream, value equal to zero effectively empties the stream
      * @param <T> element type
-     * @return a gatherer that collects the whole stream and repeats it n times
+     * @return a gatherer that collects the whole stream and repeats it <code>n</code> times
      */
     public static <T> Gatherer<T, ?, T> repeat(long n) {
         return new RepeatGatherer<>(n);
@@ -414,37 +414,37 @@ public final class Packrat {
     }
 
     /**
-     * Returns all elements, the first mapN elements are mapped with the supplied mapping function.
+     * Returns all elements, the first <code>mapN</code> elements are mapped with the supplied mapping function.
      *
      * @param mapN number of elements to map
      * @param mapper mapping function
      * @param <T> element type
-     * @return a gatherer that maps the first mapN elements in the stream using the provided function
+     * @return a gatherer that maps the first <code>mapN</code> elements in the stream using the provided function
      */
     public static <T> Gatherer<T, ?, T> mapN(long mapN, Function<? super T, ? extends T> mapper) {
         return skipAndMapN(0L, mapN, mapper);
     }
 
     /**
-     * Returns all elements that after the first skipN are mapped with the supplied mapping function.
+     * Returns all elements that after the first <code>skipN</code> are mapped with the supplied mapping function.
      *
      * @param skipN number of elements to skip before mapping
      * @param mapper mapping function
      * @param <T> element type
-     * @return a gatherer that maps all elements after skipping the first skipN elements
+     * @return a gatherer that maps all elements after skipping the first <code>skipN</code> elements
      */
     public static <T> Gatherer<T, ?, T> skipAndMap(long skipN, Function<? super T, ? extends T> mapper) {
         return skipAndMapN(skipN, -1L, mapper);
     }
 
     /**
-     * Returns all elements, after skipN elements the first mapN elements are mapped with the supplied mapping function.
+     * Returns all elements, after <code>skipN</code> elements the first <code>mapN</code> elements are mapped with the supplied mapping function.
      *
      * @param skipN number of elements to skip before mapping
      * @param mapN number of elements to map after skipping
      * @param mapper mapping function
      * @param <T> element type
-     * @return a gatherer that maps mapN elements after skipping skipN elements
+     * @return a gatherer that maps <code>mapN</code> elements after skipping <code>skipN</code> elements
      */
     public static <T> Gatherer<T, ?, T> skipAndMapN(long skipN, long mapN, Function<? super T, ? extends T> mapper) {
         return new MappingGatherer<>(skipN, mapN, mapper);
@@ -970,22 +970,22 @@ public final class Packrat {
     }
 
     /**
-     * Returns last n elements.
+     * Returns last <code>n</code> elements.
      *
      * @param n count of last elements to return
      * @param <T> element type
-     * @return a gatherer that returns the last n elements from the stream
+     * @return a gatherer that returns the last <code>n</code> elements from the stream
      */
     public static <T> Gatherer<T, ?, T> last(long n) {
         return new LastingGatherer<>(n);
     }
 
     /**
-     * Returns last n unique elements.
+     * Returns last <code>n</code> unique elements.
      *
      * @param n count of last unique elements to return
      * @param <T> element type
-     * @return a gatherer that returns the last n unique elements from the stream
+     * @return a gatherer that returns the last <code>n</code> unique elements from the stream
      */
     public static <T> Gatherer<T, ?, T> lastUnique(long n) {
         return new LastingGatherer<>(n, true);
@@ -1002,11 +1002,11 @@ public final class Packrat {
     }
 
     /**
-     * Drops last n elements.
+     * Drops last <code>n</code> elements.
      *
      * @param n count of last elements to drop
      * @param <T> element type
-     * @return a gatherer that drops the last n elements from the stream
+     * @return a gatherer that drops the last <code>n</code> elements from the stream
      */
     public static <T> Gatherer<T, ?, T> dropLast(long n) {
         return new DropLastNGatherer<>(n);

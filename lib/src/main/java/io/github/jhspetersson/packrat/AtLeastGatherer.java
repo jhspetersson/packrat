@@ -22,7 +22,7 @@ class AtLeastGatherer<T, U> implements Gatherer<T, Map<? super U, List<T>>, T> {
 
     AtLeastGatherer(long atLeast, Function<? super T, ? extends U> mapper) {
         if (atLeast < 0) {
-            throw new IllegalArgumentException("atLeast must be a positive number");
+            throw new IllegalArgumentException("atLeast must be a non-negative number");
         }
         Objects.requireNonNull(mapper, "mapper cannot be null");
 

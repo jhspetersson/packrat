@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
 /**
- * Collects the whole stream and repeats it n times.
+ * Collects the whole stream and repeats it <code>n</code> times.
  *
  * @param <T> element type
  * @author jhspetersson
@@ -19,7 +19,7 @@ public class RepeatGatherer<T> implements Gatherer<T, List<T>, T> {
      * Constructs a new RepeatGatherer instance.
      *
      * @param n how many times to repeat the stream, value equal to zero effectively empties the stream
-     * @throws IllegalArgumentException if n is negative
+     * @throws IllegalArgumentException if <code>n</code> is negative
      */
     public RepeatGatherer(long n) {
         if (n < 0) {
@@ -44,7 +44,7 @@ public class RepeatGatherer<T> implements Gatherer<T, List<T>, T> {
     @Override
     public BiConsumer<List<T>, Gatherer.Downstream<? super T>> finisher() {
         return (state, downstream) -> {
-            for (long i = 0; i < n; i++) {
+            for (var i = 0L; i < n; i++) {
                 for (T element : state) {
                     if (!downstream.push(element)) {
                         return;

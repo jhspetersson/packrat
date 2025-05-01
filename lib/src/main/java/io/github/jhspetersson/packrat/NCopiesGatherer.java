@@ -3,7 +3,7 @@ package io.github.jhspetersson.packrat;
 import java.util.stream.Gatherer;
 
 /**
- * Returns elements with distinct values that result from a mapping by the supplied function.
+ * Returns <code>n</code> copies of every element.
  *
  * @param <T> element type
  * @author jhspetersson
@@ -11,9 +11,15 @@ import java.util.stream.Gatherer;
 class NCopiesGatherer<T> implements Gatherer<T, Void, T> {
     private final long n;
 
+    /**
+     * Creates a new instance of {@link NCopiesGatherer}.
+     *
+     * @param n the number of copies to return
+     * @throws IllegalArgumentException if <code>n</code> is negative
+     */
     NCopiesGatherer(long n) {
         if (n < 0) {
-            throw new IllegalArgumentException("n must be a positive number");
+            throw new IllegalArgumentException("n must be a non-negative number");
         }
 
         this.n = n;
