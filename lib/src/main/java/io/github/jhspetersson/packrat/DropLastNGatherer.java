@@ -16,7 +16,7 @@ class DropLastNGatherer<T> implements Gatherer<T, Deque<T>, T> {
 
     DropLastNGatherer(long n) {
         if (n < 0) {
-            throw new IllegalArgumentException("n must be a positive number");
+            throw new IllegalArgumentException("n must be a non-negative number");
         }
 
         this.n = n;
@@ -29,6 +29,10 @@ class DropLastNGatherer<T> implements Gatherer<T, Deque<T>, T> {
 
     @Override
     public Integrator<Deque<T>, T, T> integrator() {
+        if (n == 0) {
+            return Integrator.of((_, element, downstream) -> downstream.push(element));
+        }
+
         return Integrator.ofGreedy((deque, element, downstream) -> {
             deque.add(element);
             return !downstream.isRejecting();

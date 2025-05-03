@@ -36,6 +36,18 @@ public class LastNTest {
     }
 
     @Test
+    public void lastZeroTest() {
+        var before = new ArrayList<Integer>();
+        IntStream.range(0, 100).forEach(before::add);
+
+        assertTrue(isOrderedSequence(before));
+
+        var after = before.stream().gather(Packrat.last(0)).toList();
+
+        assertTrue(after.isEmpty());
+    }
+
+    @Test
     public void lastNUniqueTest() {
         var integers = List.of(1, 2, 3, 4, 5, 4, 1, 1, 1, 2, 2, 6).stream().gather(Packrat.lastUnique(3)).toList();
 

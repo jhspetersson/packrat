@@ -61,4 +61,14 @@ public class DropLastNTest {
 
         assertEquals(List.of(0, 1, 2, 3), after);
     }
+
+    @Test
+    public void dropLastZeroTest() {
+        var before = new ArrayList<Integer>();
+        IntStream.range(0, 5).forEach(before::add);
+
+        var after = before.stream().gather(Packrat.dropLast(0)).toList();
+
+        assertEquals(List.of(0, 1, 2, 3, 4), after);
+    }
 }

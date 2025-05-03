@@ -25,7 +25,7 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
 
     LastingGatherer(long n, boolean unique) {
         if (n < 0) {
-            throw new IllegalArgumentException("n must be a positive number");
+            throw new IllegalArgumentException("n must be a non-negative number");
         }
 
         this.n = n;
@@ -39,6 +39,10 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
 
     @Override
     public Integrator<State<T>, T, T> integrator() {
+        if (n == 0) {
+            return Integrator.of((_, _, _) -> false);
+        }
+
         return Integrator.ofGreedy((state, element, downstream) -> {
             if (unique && state.containsElement(element)) {
                 return true;
