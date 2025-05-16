@@ -123,6 +123,19 @@ public final class Packrat {
     }
 
     /**
+     * Filters Map.Entry elements using a BiPredicate that tests the key and value of each entry.
+     *
+     * @param predicate BiPredicate that tests the key and value of each entry
+     * @param <K> key type
+     * @param <V> value type
+     * @return a gatherer that filters Map.Entry elements based on the BiPredicate
+     * @throws NullPointerException if the predicate is null
+     */
+    public static <K, V> Gatherer<Map.Entry<K, V>, ?, Map.Entry<K, V>> filterEntries(BiPredicate<? super K, ? super V> predicate) {
+        return new FilterEntriesGatherer<>(predicate);
+    }
+
+    /**
      * Outputs the smallest element in the stream.
      * Comparing is done after the mapping function is applied.
      *
@@ -903,6 +916,19 @@ public final class Packrat {
     }
 
     /**
+     * Removes Map.Entry elements using a BiPredicate that tests the key and value of each entry.
+     *
+     * @param predicate BiPredicate that tests the key and value of each entry
+     * @param <K> key type
+     * @param <V> value type
+     * @return a gatherer that removes Map.Entry elements based on the BiPredicate
+     * @throws NullPointerException if the predicate is null
+     */
+    public static <K, V> Gatherer<Map.Entry<K, V>, ?, Map.Entry<K, V>> removeEntries(BiPredicate<? super K, ? super V> predicate) {
+        return new FilterEntriesGatherer<>(predicate, true);
+    }
+
+    /**
      * Removes consecutive duplicates from the stream.
      * Only adjacent elements that have equal mapped values will be considered duplicates.
      *
@@ -975,7 +1001,13 @@ public final class Packrat {
      * @return rotation gatherer
      */
     public static <T> Gatherer<T, ?, T> rotate(int distance) {
-        return new IntoListGatherer<>(list -> Collections.rotate(list, distance));
+        if (distance < 0) {
+            return new RotateLeftGatherer<>(-distance);
+        } else if (distance > 0) {
+            return new IntoListGatherer<>(list -> Collections.rotate(list, distance));
+        } else {
+            return new IdentityGatherer<>();
+        }
     }
 
     /**
@@ -1027,11 +1059,11 @@ public final class Packrat {
     }
 
     /**
-     * Returns every nth element from the stream.
+     * Returns every <code>n</code>th element from the stream.
      *
-     * @param n take every nth element
+     * @param n take every <code>n</code>th element
      * @param <T> element type
-     * @return a gatherer that outputs every nth element from the stream
+     * @return a gatherer that outputs every <code>n</code>th element from the stream
      * @throws IllegalArgumentException if <code>n</code> is less than or equal to zero
      */
     public static <T> Gatherer<T, ?, T> nth(int n) {
@@ -1039,11 +1071,11 @@ public final class Packrat {
     }
 
     /**
-     * Drops every nth element from the stream.
+     * Drops every <code>n</code>th element from the stream.
      *
-     * @param n drop every nth element
+     * @param n drop every <code>n</code>th element
      * @param <T> element type
-     * @return a gatherer that drops every nth element from the stream
+     * @return a gatherer that drops every <code>n</code>th element from the stream
      * @throws IllegalArgumentException if <code>n</code> is less than or equal to zero
      */
     public static <T> Gatherer<T, ?, T> dropNth(int n) {
@@ -1119,6 +1151,17 @@ public final class Packrat {
      */
     public static <T, U, V> Gatherer<T, U, V> asGatherer(Collector<? super T, U, ? extends V> collector) {
         return new CollectingGatherer<>(collector);
+    }
+
+    /**
+     * Returns a gatherer that passes elements through unchanged.
+     * This is an identity operation that doesn't modify the stream elements.
+     *
+     * @param <T> element type
+     * @return an identity gatherer
+     */
+    public static <T> Gatherer<T, ?, T> identity() {
+        return new IdentityGatherer<>();
     }
 
     private Packrat() {}

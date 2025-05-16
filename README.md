@@ -43,7 +43,9 @@ implementation("io.github.jhspetersson:packrat:0.1.0")
 |----------------------------------------------------------------|-----------------------------------------------------------------------------------|
 | [distinctBy](#distinctby)                                      | Distinct values with custom mapper                                                |
 | [filterBy](#filterby)                                          | Filter with custom mapper and (optionally) predicate                              |
+| [filterEntries](#filterentries)                                | Filter Map.Entry elements using a BiPredicate on key and value                    |
 | [removeBy](#removeby)                                          | Remove with custom mapper and (optionally) predicate                              |
+| [removeEntries](#removeentries)                                | Remove Map.Entry elements using a BiPredicate on key and value                    |
 | [removeDuplicates](#removeduplicates)                          | Removes consecutive duplicates from a stream                                      |
 | [flatMapIf](#flatmapif)                                        | Optional `flatMap` depending on predicate                                         |
 | [minBy](#minby)                                                | The smallest element compared after mapping applied                               |
@@ -120,6 +122,7 @@ implementation("io.github.jhspetersson:packrat:0.1.0")
 | Name                                                           | Description                                                                       |
 |----------------------------------------------------------------|-----------------------------------------------------------------------------------|
 | [asGatherer](#asgatherer)                                      | Converts `Collector` into `Gatherer`                                              |
+| [identity](#identity)                                          | Passes elements through unchanged                                                 |
 
 ### Filtering and mapping operations
 
@@ -154,6 +157,22 @@ implementation("io.github.jhspetersson:packrat:0.1.0")
 ```
 > [255]
 
+#### filterEntries
+
+`filterEntries(predicate)` - filters Map.Entry elements using a BiPredicate that tests the key and value of each entry
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.filterEntries;
+  var map = Map.of("one", 1, "two", 2, "three", 3, "four", 4, "five", 5);
+
+  // Filter entries where the value is even
+  var evenValues = map.entrySet().stream()
+          .gather(filterEntries((key, value) -> value % 2 == 0))
+          .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+  System.out.println(evenValues);
+```
+> {two=2, four=4}
+
 #### removeBy
 
 `removeBy(mapper, value)` - removes mapped elements based on the equality to the value, stream continues with original elements
@@ -173,6 +192,22 @@ implementation("io.github.jhspetersson:packrat:0.1.0")
   System.out.println(ageDivisibleByThree);
 ```
 > [Employee[name=Mark Bloom, age=21], Employee[name=Rebecca Schneider, age=24]]
+
+#### removeEntries
+
+`removeEntries(predicate)` - removes Map.Entry elements using a BiPredicate that tests the key and value of each entry
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.removeEntries;
+  var map = Map.of("one", 1, "two", 2, "three", 3, "four", 4, "five", 5);
+
+  // Remove entries where the value is even
+  var oddValues = map.entrySet().stream()
+          .gather(removeEntries((key, value) -> value % 2 == 0))
+          .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+  System.out.println(oddValues);
+```
+> {one=1, three=3, five=5}
 
 #### removeDuplicates
 
@@ -865,6 +900,19 @@ However, resulting list contains an original element of type `String`;
 ```
 
 > [[1, 2, 3, 4, 5]]
+
+#### identity
+
+`identity()` - returns a gatherer that passes elements through unchanged
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.identity;
+  var numbers = IntStream.range(0, 5).boxed();
+  var sameNumbers = numbers.gather(identity()).toList();
+  System.out.println(sameNumbers);
+```
+
+> [0, 1, 2, 3, 4]
 
 ### License
 
