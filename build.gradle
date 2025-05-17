@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'io.github.jhspetersson'
-version = '0.1.0'
+version = '0.2.0'
 
 repositories {
     mavenCentral()
@@ -22,21 +22,18 @@ test {
 }
 
 jar {
-    archiveBaseName = rootProject.name
     manifest {
-        attributes('Implementation-Title': rootProject.name,
+        attributes('Implementation-Title': project.name,
                    'Implementation-Version': project.version)
     }
 }
 
 tasks.register('sourcesJar', Jar) {
-    archiveBaseName.set(rootProject.name)
     archiveClassifier.set('sources')
     from sourceSets.main.allSource
 }
 
 tasks.register('javadocJar', Jar) {
-    archiveBaseName.set(rootProject.name)
     archiveClassifier.set('javadoc')
     from tasks.javadoc
 }
@@ -51,10 +48,8 @@ publishing {
         myPublication(MavenPublication) {
             from components.java
 
-            artifactId = rootProject.name
-
             pom {
-                name = "${project.group}:${rootProject.name}"
+                name = "${project.name}"
                 description = 'Gatherers library for Java Stream API'
                 url = 'https://github.com/jhspetersson/packrat'
 
