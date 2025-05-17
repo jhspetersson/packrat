@@ -2,6 +2,9 @@ package io.github.jhspetersson.packrat;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Objects;
+import java.util.stream.Stream;
+
 import static io.github.jhspetersson.packrat.Packrat.filterBy;
 import static io.github.jhspetersson.packrat.Packrat.removeBy;
 import static io.github.jhspetersson.packrat.TestUtils.getEmployees;
@@ -41,5 +44,37 @@ public class FilteringTest {
         assertEquals(3, under30.size());
         assertEquals("Mark Bloom", under30.getFirst().name());
         assertEquals("Rebecca Schneider", under30.get(1).name());
+    }
+
+    @Test
+    void filterByWithNullValueTest() {
+        Stream<Employee> employees = Stream.of(
+                new Employee("Ann Smith", 35),
+                new Employee(null, 40),
+                new Employee("Mark Bloom", 21),
+                new Employee(null, 24)
+        );
+
+        var nullNameEmployees = employees.gather(filterBy(Employee::name, null, Objects::equals)).toList();
+
+        assertEquals(2, nullNameEmployees.size());
+        assertEquals(40, nullNameEmployees.get(0).age());
+        assertEquals(24, nullNameEmployees.get(1).age());
+    }
+
+    @Test
+    void removeByWithNullValueTest() {
+        Stream<Employee> employees = Stream.of(
+                new Employee("Ann Smith", 35),
+                new Employee(null, 40),
+                new Employee("Mark Bloom", 21),
+                new Employee(null, 24)
+        );
+
+        var nonNullNameEmployees = employees.gather(removeBy(Employee::name, null)).toList();
+
+        assertEquals(2, nonNullNameEmployees.size());
+        assertEquals("Ann Smith", nonNullNameEmployees.get(0).name());
+        assertEquals("Mark Bloom", nonNullNameEmployees.get(1).name());
     }
 }
