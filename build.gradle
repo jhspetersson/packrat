@@ -87,7 +87,7 @@ publishing {
 tasks.register('generatePom', GenerateMavenPom) {
     group = 'build'
     description = 'Generates the POM file without publishing.'
-    destination = file("$buildDir/libs/${rootProject.name}-${project.version}.pom")
+    destination = file("${layout.buildDirectory.asFile.get()}/libs/${rootProject.name}-${project.version}.pom")
     pom = publishing.publications.myPublication.pom
 
     doLast {
