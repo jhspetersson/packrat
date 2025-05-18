@@ -97,6 +97,7 @@ implementation("io.github.jhspetersson:packrat:0.1.0")
 | [peekWithIndex](#peekwithindex)                                | Peek at each element with its index                                               |
 | [filterWithIndex](#filterwithindex)                            | Filter elements based on their index and a predicate                              |
 | [removeWithIndex](#removewithindex)                            | Remove elements based on their index and a predicate                              |
+| [windowSlidingWithIndex](#windowslidingwithindex)                  | Returns fixed-size windows of elements along with their indices                   |
 
 #### Element selection operations
 
@@ -749,6 +750,33 @@ However, resulting list contains an original element of type `String`;
 ```
 
 > [1, 3, 5, 7, 9]
+
+#### windowSlidingWithIndex
+
+`windowSlidingWithIndex(windowSize)` - returns fixed-size windows of elements along with their indices, the index starts from 0
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.windowSlidingWithIndex;
+  var numbers = IntStream.rangeClosed(1, 5).boxed();
+  var result = numbers.gather(windowSlidingWithIndex(3)).toList();
+  System.out.println(result);
+```
+
+> [0=[1, 2, 3], 1=[2, 3, 4], 2=[3, 4, 5]]
+
+`windowSlidingWithIndex(windowSize, startIndex)` - returns fixed-size windows of elements along with their indices, the index starts from _startIndex_
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.windowSlidingWithIndex;
+  var numbers = IntStream.rangeClosed(1, 5).boxed();
+  var result = numbers.gather(windowSlidingWithIndex(3, 10)).toList();
+  System.out.println(result);
+```
+
+> [10=[1, 2, 3], 11=[2, 3, 4], 12=[3, 4, 5]]
+
+`windowSlidingWithIndex(windowSize, mapper)` - returns fixed-size windows of elements along with their indices
+`windowSlidingWithIndex(windowSize, mapper, startIndex)` - returns fixed-size windows of elements along with their indices, the index starts from _startIndex_
 
 ### Element selection operations
 

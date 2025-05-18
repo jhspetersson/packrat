@@ -795,6 +795,75 @@ public final class Packrat {
     }
 
     /**
+     * Returns fixed-size windows of elements along with their indices.
+     * Each window contains a fixed number of elements and is emitted as a list.
+     * The index starts from 0.
+     *
+     * @param windowSize the size of each window
+     * @param <T> element type
+     * @return a gatherer that produces fixed-size windows of elements along with their indices
+     * @throws IllegalArgumentException if windowSize is not positive
+     */
+    @NonNull
+    public static <T> Gatherer<T, ?, Map.Entry<Long, List<T>>> windowSlidingWithIndex(int windowSize) {
+        return windowSlidingWithIndex(windowSize, Map::entry);
+    }
+
+    /**
+     * Returns fixed-size windows of elements along with their indices.
+     * Each window contains a fixed number of elements and is emitted as a list.
+     * The index starts from the specified startIndex.
+     *
+     * @param windowSize the size of each window
+     * @param startIndex the starting index
+     * @param <T> element type
+     * @return a gatherer that produces fixed-size windows of elements along with their indices starting from the specified index
+     * @throws IllegalArgumentException if windowSize is not positive
+     */
+    @NonNull
+    public static <T> Gatherer<T, ?, Map.Entry<Long, List<T>>> windowSlidingWithIndex(int windowSize, long startIndex) {
+        return windowSlidingWithIndex(windowSize, Map::entry, startIndex);
+    }
+
+    /**
+     * Returns fixed-size windows of elements along with their indices.
+     * Each window contains a fixed number of elements.
+     * The index starts from 0.
+     *
+     * @param windowSize the size of each window
+     * @param mapper the function to map each window with its index to a result
+     * @param <T> element type
+     * @param <R> result type
+     * @return a gatherer that produces fixed-size windows of elements along with their indices, mapped using the provided function
+     * @throws IllegalArgumentException if windowSize is not positive
+     * @throws NullPointerException if the mapper is null
+     */
+    @NonNull
+    public static <T, R> Gatherer<T, ?, R> windowSlidingWithIndex(int windowSize, @NonNull BiFunction<Long, List<T>, ? extends R> mapper) {
+        return windowSlidingWithIndex(windowSize, mapper, 0);
+    }
+
+    /**
+     * Returns fixed-size windows of elements along with their indices.
+     * Each window contains a fixed number of elements.
+     * The index starts from the specified startIndex.
+     *
+     * @param windowSize the size of each window
+     * @param mapper the function to map each window with its index to a result
+     * @param startIndex the starting index
+     * @param <T> element type
+     * @param <R> result type
+     * @return a gatherer that produces fixed-size windows of elements along with their indices starting from the specified index,
+     * mapped using the provided function
+     * @throws IllegalArgumentException if windowSize is not positive
+     * @throws NullPointerException if the mapper is null
+     */
+    @NonNull
+    public static <T, R> Gatherer<T, ?, R> windowSlidingWithIndex(int windowSize, @NonNull BiFunction<Long, List<T>, ? extends R> mapper, long startIndex) {
+        return new WindowSlidingWithIndexGatherer<>(windowSize, mapper, startIndex);
+    }
+
+    /**
      * Returns characters as strings parsed from the stream elements.
      *
      * @param <T> element type
