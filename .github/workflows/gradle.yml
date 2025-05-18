@@ -24,5 +24,8 @@ jobs:
       with:
         gradle-version: '8.14'
 
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+
     - name: Build with Gradle Wrapper
       run: ./gradlew build
