@@ -98,6 +98,7 @@ implementation("io.github.jhspetersson:packrat:0.1.0")
 | [filterWithIndex](#filterwithindex)                            | Filter elements based on their index and a predicate                              |
 | [removeWithIndex](#removewithindex)                            | Remove elements based on their index and a predicate                              |
 | [windowSlidingWithIndex](#windowslidingwithindex)                  | Returns fixed-size windows of elements along with their indices                   |
+| [windowFixedWithIndex](#windowfixedwithindex)                    | Returns fixed-size non-overlapping windows of elements along with their indices  |
 
 #### Element selection operations
 
@@ -777,6 +778,33 @@ However, resulting list contains an original element of type `String`;
 
 `windowSlidingWithIndex(windowSize, mapper)` - returns fixed-size windows of elements along with their indices
 `windowSlidingWithIndex(windowSize, mapper, startIndex)` - returns fixed-size windows of elements along with their indices, the index starts from _startIndex_
+
+#### windowFixedWithIndex
+
+`windowFixedWithIndex(windowSize)` - returns fixed-size non-overlapping windows of elements along with their indices, the index starts from 0
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.windowFixedWithIndex;
+  var numbers = IntStream.rangeClosed(1, 10).boxed();
+  var result = numbers.gather(windowFixedWithIndex(3)).toList();
+  System.out.println(result);
+```
+
+> [0=[1, 2, 3], 1=[4, 5, 6], 2=[7, 8, 9]]
+
+`windowFixedWithIndex(windowSize, startIndex)` - returns fixed-size non-overlapping windows of elements along with their indices, the index starts from _startIndex_
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.windowFixedWithIndex;
+  var numbers = IntStream.rangeClosed(1, 6).boxed();
+  var result = numbers.gather(windowFixedWithIndex(2, 10)).toList();
+  System.out.println(result);
+```
+
+> [10=[1, 2], 11=[3, 4], 12=[5, 6]]
+
+`windowFixedWithIndex(windowSize, mapper)` - returns fixed-size non-overlapping windows of elements along with their indices
+`windowFixedWithIndex(windowSize, mapper, startIndex)` - returns fixed-size non-overlapping windows of elements along with their indices, the index starts from _startIndex_
 
 ### Element selection operations
 
