@@ -105,6 +105,7 @@ implementation("io.github.jhspetersson:packrat:0.1.0")
 | Name                                                           | Description                                                                       |
 |----------------------------------------------------------------|-----------------------------------------------------------------------------------|
 | [sample](#sample)                                              | Sample of the specified size                                                      |
+| [randomFilter](#randomfilter)                                  | Randomly accepts each element with a given probability                            |
 | [nth](#nth)                                                    | Takes nth element from the stream                                                 |
 | [dropNth](#dropnth)                                            | Drops every nth element from the stream                                           |
 | [last](#last)                                                  | Last __n__ elements                                                               |
@@ -820,6 +821,22 @@ However, resulting list contains an original element of type `String`;
 > [0, 8, 27, 33, 65, 66, 88, 90, 93, 96]
 
 `sample(n, maxSpan)` - returns a sample of the specified size from the stream of elements, inspects first __maxSpan__ elements.
+
+#### randomFilter
+
+`randomFilter(probability)` - accepts each incoming element independently with the given probability in the inclusive range [0.0, 1.0].
+
+> [!NOTE]
+> When `probability` is 0.0 no elements pass; when it is 1.0 all elements pass.
+> Elements that are not accepted are skipped; the relative order of accepted elements is preserved.
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.randomFilter;
+  var some = IntStream.range(0, 20).boxed().gather(randomFilter(0.3)).toList();
+  System.out.println(some);
+```
+
+> [3, 6, 9, 14, 15, 18]
 
 #### nth
 

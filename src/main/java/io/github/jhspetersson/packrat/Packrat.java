@@ -1279,6 +1279,22 @@ public final class Packrat {
     }
 
     /**
+     * Randomly filters elements with the given acceptance probability.
+     * <p>
+     * Each incoming element is accepted independently with probability <code>probability</code>
+     * and pushed downstream; otherwise it is skipped.
+     *
+     * @param probability acceptance probability in the inclusive range [0.0, 1.0]
+     * @param <T> element type
+     * @return a gatherer that randomly keeps elements with the given probability
+     * @throws IllegalArgumentException if <code>probability</code> is not in [0.0, 1.0]
+     */
+    @NonNull
+    public static <T> Gatherer<T, ?, T> randomFilter(double probability) {
+        return new RandomFilterGatherer<>(probability);
+    }
+
+    /**
      * Returns every <code>n</code>th element from the stream.
      *
      * @param n take every <code>n</code>th element
