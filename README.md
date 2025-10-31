@@ -25,14 +25,14 @@ Build scripts expect to run on JDK version not lower than 24.
 <dependency>
     <groupId>io.github.jhspetersson</groupId>
     <artifactId>packrat</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
 #### Gradle
 
 ```groovy
-implementation("io.github.jhspetersson:packrat:0.1.0")
+implementation("io.github.jhspetersson:packrat:0.2.0")
 ```
 
 ### Gatherers
