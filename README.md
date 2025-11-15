@@ -127,6 +127,13 @@ implementation("io.github.jhspetersson:packrat:0.2.0")
 | [asGatherer](#asgatherer)                                      | Converts `Collector` into `Gatherer`                                              |
 | [identity](#identity)                                          | Passes elements through unchanged                                                 |
 
+#### Validation operations
+
+| Name                                        | Description                                                                         |
+|---------------------------------------------|-------------------------------------------------------------------------------------|
+| [throwIfNotOrdered](#throwifnotordered)     | Validates that stream is non-decreasing, throws on violation                        |
+| [throwIfNotOrderedBy](#throwifnotorderedBy) | Validates that stream is non-decreasing, uses mapping function, throws on violation |
+
 ### Filtering and mapping operations
 
 #### distinctBy
@@ -986,6 +993,36 @@ However, resulting list contains an original element of type `String`;
 ```
 
 > [0, 1, 2, 3, 4]
+
+### Validation gatherers
+
+#### throwIfNotOrdered
+
+`throwIfNotOrdered()` — validates that the incoming elements are ordered in non-decreasing order, if a violation is detected, an exception is thrown immediately, terminating the pipeline
+
+```java
+import static io.github.jhspetersson.packrat.Packrat.throwIfNotOrdered;
+var result = Stream.of(1, 1, 2, 3, 5)
+        .gather(Packrat.throwIfNotOrdered())
+        .toList();
+```
+
+The stream is ordered, no exception thrown.
+
+#### throwIfNotOrderedBy
+
+`throwIfNotOrderedBy(mapper)` — validates that the incoming mapped elements are ordered in non-decreasing order, if a violation is detected, an exception is thrown immediately, terminating the pipeline
+
+```java
+import static io.github.jhspetersson.packrat.Packrat.throwIfNotOrderedBy;
+record Person(String name, int age) {}
+var people = Stream.of(new Person("Ann", 20), new Person("Bob", 25), new Person("Cara", 25));
+var ordered = people
+        .gather(Packrat.throwIfNotOrderedBy(Person::age))
+        .toList();
+```
+
+The stream is ordered by the age of the employees, no exception thrown.
 
 ### License
 

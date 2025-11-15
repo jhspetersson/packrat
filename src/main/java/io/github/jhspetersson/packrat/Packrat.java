@@ -13,6 +13,7 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Gatherer;
 import java.util.stream.Stream;
@@ -1407,6 +1408,64 @@ public final class Packrat {
     @NonNull
     public static <T> Gatherer<T, ?, T> identity() {
         return new IdentityGatherer<>();
+    }
+
+    /**
+     * Validates that incoming elements are in non-decreasing order and passes them through unchanged.
+     * If a violation is detected, an {@link IllegalStateException} is thrown.
+     *
+     * @param <T> element type which must be {@link Comparable}
+     * @return a gatherer that throws if input is not ordered
+     */
+    @NonNull
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> throwIfNotOrdered() {
+        return new ThrowIfNotOrderedGatherer<>(Function.identity(), IllegalStateException::new);
+    }
+
+    /**
+     * Validates that incoming elements are in non-decreasing order and passes them through unchanged.
+     * If a violation is detected, the supplied exception is thrown.
+     *
+     * @param exceptionSupplier supplier of exception to be thrown on order violation
+     * @param <T> element type which must be {@link Comparable}
+     * @return a gatherer that throws the supplied exception if input is not ordered
+     * @throws NullPointerException if exceptionSupplier is null
+     */
+    @NonNull
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> throwIfNotOrdered(@NonNull Supplier<? extends RuntimeException> exceptionSupplier) {
+        return new ThrowIfNotOrderedGatherer<>(Function.identity(), exceptionSupplier);
+    }
+
+    /**
+     * Validates that incoming elements are in non-decreasing order according to the provided mapper
+     * and passes them through unchanged. If a violation is detected, an {@link IllegalStateException} is thrown.
+     *
+     * @param mapper mapping function to derive comparable keys
+     * @param <T> element type
+     * @param <U> mapped comparable type
+     * @return a gatherer that throws if input is not ordered by the mapped value
+     * @throws NullPointerException if mapper is null
+     */
+    @NonNull
+    public static <T, U extends Comparable<? super U>> Gatherer<T, ?, T> throwIfNotOrderedBy(@NonNull Function<? super T, ? extends U> mapper) {
+        return new ThrowIfNotOrderedGatherer<>(mapper, IllegalStateException::new);
+    }
+
+    /**
+     * Validates that incoming elements are in non-decreasing order according to the provided mapper
+     * and passes them through unchanged. If a violation is detected, the supplied exception is thrown.
+     *
+     * @param mapper mapping function to derive comparable keys
+     * @param exceptionSupplier supplier of exception to be thrown on order violation
+     * @param <T> element type
+     * @param <U> mapped comparable type
+     * @return a gatherer that throws the supplied exception if input is not ordered by the mapped value
+     * @throws NullPointerException if mapper or exceptionSupplier is null
+     */
+    @NonNull
+    public static <T, U extends Comparable<? super U>> Gatherer<T, ?, T> throwIfNotOrderedBy(@NonNull Function<? super T, ? extends U> mapper,
+                                                                                             @NonNull Supplier<? extends RuntimeException> exceptionSupplier) {
+        return new ThrowIfNotOrderedGatherer<>(mapper, exceptionSupplier);
     }
 
     private Packrat() {}
