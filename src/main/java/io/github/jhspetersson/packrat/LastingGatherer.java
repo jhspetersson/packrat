@@ -34,7 +34,7 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
 
     @Override
     public Supplier<State<T>> initializer() {
-        return () -> new State<>(new ArrayDeque<>(), new HashSet<>());
+        return State::new;
     }
 
     @Override
@@ -73,9 +73,9 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
         Deque<T> deque;
         Set<T> elements;
 
-        State(Deque<T> deque, Set<T> elements) {
-            this.deque = deque;
-            this.elements = elements;
+        State() {
+            deque = new ArrayDeque<>();
+            elements = new HashSet<>();
         }
 
         boolean sizeEquals(long size) {
