@@ -1418,8 +1418,8 @@ public final class Packrat {
      * @return a gatherer that throws if input is not ordered
      */
     @NonNull
-    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> throwIfNotOrdered() {
-        return new ThrowIfNotOrderedGatherer<>(Function.identity(), IllegalStateException::new);
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> throwIfNotIncreasingOrEqual() {
+        return throwIfNotIncreasingOrEqual(IllegalStateException::new);
     }
 
     /**
@@ -1432,8 +1432,12 @@ public final class Packrat {
      * @throws NullPointerException if exceptionSupplier is null
      */
     @NonNull
-    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> throwIfNotOrdered(@NonNull Supplier<? extends RuntimeException> exceptionSupplier) {
-        return new ThrowIfNotOrderedGatherer<>(Function.identity(), exceptionSupplier);
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> throwIfNotIncreasingOrEqual(@NonNull Supplier<? extends RuntimeException> exceptionSupplier) {
+        return new ThrowIfNotOrderedGatherer<>(
+                Function.identity(),
+                exceptionSupplier,
+                result -> result <= 0
+        );
     }
 
     /**
@@ -1447,8 +1451,8 @@ public final class Packrat {
      * @throws NullPointerException if mapper is null
      */
     @NonNull
-    public static <T, U extends Comparable<? super U>> Gatherer<T, ?, T> throwIfNotOrderedBy(@NonNull Function<? super T, ? extends U> mapper) {
-        return new ThrowIfNotOrderedGatherer<>(mapper, IllegalStateException::new);
+    public static <T, U extends Comparable<? super U>> Gatherer<T, ?, T> throwIfNotIncreasingOrEqualBy(@NonNull Function<? super T, ? extends U> mapper) {
+        return throwIfNotIncreasingOrEqualBy(mapper, IllegalStateException::new);
     }
 
     /**
@@ -1463,9 +1467,202 @@ public final class Packrat {
      * @throws NullPointerException if mapper or exceptionSupplier is null
      */
     @NonNull
-    public static <T, U extends Comparable<? super U>> Gatherer<T, ?, T> throwIfNotOrderedBy(@NonNull Function<? super T, ? extends U> mapper,
-                                                                                             @NonNull Supplier<? extends RuntimeException> exceptionSupplier) {
-        return new ThrowIfNotOrderedGatherer<>(mapper, exceptionSupplier);
+    public static <T, U extends Comparable<? super U>> Gatherer<T, ?, T> throwIfNotIncreasingOrEqualBy(@NonNull Function<? super T, ? extends U> mapper,
+                                                                                                       @NonNull Supplier<? extends RuntimeException> exceptionSupplier) {
+        return new ThrowIfNotOrderedGatherer<T, U>(
+                mapper,
+                exceptionSupplier,
+                result -> result <= 0
+        );
+    }
+
+    /**
+     * Validates that incoming elements are in strictly increasing order (no equals allowed).
+     * If a violation is detected, an {@link IllegalStateException} is thrown.
+     */
+    @NonNull
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> throwIfNotIncreasing() {
+        return throwIfNotIncreasing(IllegalStateException::new);
+    }
+
+    /**
+     * Strictly increasing order (no equals allowed) with a custom exception supplier.
+     *
+     * @param exceptionSupplier supplier of exception to be thrown on order violation
+     * @param <T> element type which must be {@link Comparable}
+     * @return a gatherer that throws the supplied exception if input is not strictly increasing
+     * @throws NullPointerException if exceptionSupplier is null
+     */
+    @NonNull
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> throwIfNotIncreasing(@NonNull Supplier<? extends RuntimeException> exceptionSupplier) {
+        return new ThrowIfNotOrderedGatherer<>(
+                Function.identity(),
+                exceptionSupplier,
+                result -> result < 0
+        );
+    }
+
+    /**
+     * Strictly increasing order (no equals allowed) validated by a mapped comparable key.
+     * Throws {@link IllegalStateException} on violation.
+     *
+     * @param mapper mapping function to derive comparable keys
+     * @param <T> element type
+     * @param <U> mapped comparable type
+     * @return a gatherer that throws if input is not strictly increasing by the mapped value
+     * @throws NullPointerException if mapper is null
+     */
+    @NonNull
+    public static <T, U extends Comparable<? super U>> Gatherer<T, ?, T> throwIfNotIncreasingBy(@NonNull Function<? super T, ? extends U> mapper) {
+        return throwIfNotIncreasingBy(mapper, IllegalStateException::new);
+    }
+
+    /**
+     * Strictly increasing order (no equals allowed) validated by a mapped comparable key
+     * with a custom exception supplier.
+     *
+     * @param mapper mapping function to derive comparable keys
+     * @param exceptionSupplier supplier of exception to be thrown on order violation
+     * @param <T> element type
+     * @param <U> mapped comparable type
+     * @return a gatherer that throws the supplied exception if input is not strictly increasing by the mapped value
+     * @throws NullPointerException if mapper or exceptionSupplier is null
+     */
+    @NonNull
+    public static <T, U extends Comparable<? super U>> Gatherer<T, ?, T> throwIfNotIncreasingBy(@NonNull Function<? super T, ? extends U> mapper,
+                                                                                                @NonNull Supplier<? extends RuntimeException> exceptionSupplier) {
+        return new ThrowIfNotOrderedGatherer<T, U>(
+                mapper,
+                exceptionSupplier,
+                result -> result < 0
+        );
+    }
+
+    /**
+     * Validates that incoming elements are in strictly decreasing order (no equals allowed).
+     * If a violation is detected, an {@link IllegalStateException} is thrown.
+     */
+    @NonNull
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> throwIfNotDecreasing() {
+        return throwIfNotDecreasing(IllegalStateException::new);
+    }
+
+    /**
+     * Strictly decreasing order (no equals allowed) with a custom exception supplier.
+     *
+     * @param exceptionSupplier supplier of exception to be thrown on order violation
+     * @param <T> element type which must be {@link Comparable}
+     * @return a gatherer that throws the supplied exception if input is not strictly decreasing
+     * @throws NullPointerException if exceptionSupplier is null
+     */
+    @NonNull
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> throwIfNotDecreasing(@NonNull Supplier<? extends RuntimeException> exceptionSupplier) {
+        return new ThrowIfNotOrderedGatherer<>(
+                Function.identity(),
+                exceptionSupplier,
+                result -> result > 0
+        );
+    }
+
+    /**
+     * Strictly decreasing order (no equals allowed) validated by a mapped comparable key.
+     * Throws {@link IllegalStateException} on violation.
+     *
+     * @param mapper mapping function to derive comparable keys
+     * @param <T> element type
+     * @param <U> mapped comparable type
+     * @return a gatherer that throws if input is not strictly decreasing by the mapped value
+     * @throws NullPointerException if mapper is null
+     */
+    @NonNull
+    public static <T, U extends Comparable<? super U>> Gatherer<T, ?, T> throwIfNotDecreasingBy(@NonNull Function<? super T, ? extends U> mapper) {
+        return throwIfNotDecreasingBy(mapper, IllegalStateException::new);
+    }
+
+    /**
+     * Strictly decreasing order (no equals allowed) validated by a mapped comparable key
+     * with a custom exception supplier.
+     *
+     * @param mapper mapping function to derive comparable keys
+     * @param exceptionSupplier supplier of exception to be thrown on order violation
+     * @param <T> element type
+     * @param <U> mapped comparable type
+     * @return a gatherer that throws the supplied exception if input is not strictly decreasing by the mapped value
+     * @throws NullPointerException if mapper or exceptionSupplier is null
+     */
+    @NonNull
+    public static <T, U extends Comparable<? super U>> Gatherer<T, ?, T> throwIfNotDecreasingBy(@NonNull Function<? super T, ? extends U> mapper,
+                                                                                                @NonNull Supplier<? extends RuntimeException> exceptionSupplier) {
+        return new ThrowIfNotOrderedGatherer<T, U>(
+                mapper,
+                exceptionSupplier,
+                result -> result > 0
+        );
+    }
+
+    /**
+     * Validates that incoming elements are in non-increasing order (decreasing or equal).
+     * If a violation is detected, an {@link IllegalStateException} is thrown.
+     */
+    @NonNull
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> throwIfNotDecreasingOrEqual() {
+        return throwIfNotDecreasingOrEqual(IllegalStateException::new);
+    }
+
+    /**
+     * Validates that incoming elements are in non-increasing order (decreasing or equal)
+     * and passes them through unchanged. If a violation is detected, the supplied exception is thrown.
+     *
+     * @param exceptionSupplier supplier of exception to be thrown on order violation
+     * @param <T> element type which must be {@link Comparable}
+     * @return a gatherer that throws the supplied exception if input is not ordered
+     * @throws NullPointerException if exceptionSupplier is null
+     */
+    @NonNull
+    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> throwIfNotDecreasingOrEqual(@NonNull Supplier<? extends RuntimeException> exceptionSupplier) {
+        return new ThrowIfNotOrderedGatherer<>(
+                Function.identity(),
+                exceptionSupplier,
+                result -> result >= 0
+        );
+    }
+
+    /**
+     * Validates that incoming elements are in non-increasing order (decreasing or equal)
+     * according to the provided mapper and passes them through unchanged. If a violation
+     * is detected, an {@link IllegalStateException} is thrown.
+     *
+     * @param mapper mapping function to derive comparable keys
+     * @param <T> element type
+     * @param <U> mapped comparable type
+     * @return a gatherer that throws if input is not ordered by the mapped value
+     * @throws NullPointerException if mapper is null
+     */
+    @NonNull
+    public static <T, U extends Comparable<? super U>> Gatherer<T, ?, T> throwIfNotDecreasingOrEqualBy(@NonNull Function<? super T, ? extends U> mapper) {
+        return throwIfNotDecreasingOrEqualBy(mapper, IllegalStateException::new);
+    }
+
+    /**
+     * Validates that incoming elements are in non-increasing order (decreasing or equal)
+     * according to the provided mapper and passes them through unchanged. If a violation
+     * is detected, the supplied exception is thrown.
+     *
+     * @param mapper mapping function to derive comparable keys
+     * @param exceptionSupplier supplier of exception to be thrown on order violation
+     * @param <T> element type
+     * @param <U> mapped comparable type
+     * @return a gatherer that throws the supplied exception if input is not ordered by the mapped value
+     * @throws NullPointerException if mapper or exceptionSupplier is null
+     */
+    @NonNull
+    public static <T, U extends Comparable<? super U>> Gatherer<T, ?, T> throwIfNotDecreasingOrEqualBy(@NonNull Function<? super T, ? extends U> mapper,
+                                                                                                       @NonNull Supplier<? extends RuntimeException> exceptionSupplier) {
+        return new ThrowIfNotOrderedGatherer<T, U>(
+                mapper,
+                exceptionSupplier,
+                result -> result >= 0
+        );
     }
 
     private Packrat() {}

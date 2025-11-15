@@ -90,15 +90,15 @@ implementation("io.github.jhspetersson:packrat:0.2.0")
 
 #### Indexing and zipping operations
 
-| Name                                                           | Description                                                                       |
-|----------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| [zip](#zip)                                                    | Zips values with zipper, leftovers dropped                                        |
-| [mapWithIndex](#zipwithindex) or [zipWithIndex](#zipwithindex) | Maps/zips values with an increasing index                                         |
-| [peekWithIndex](#peekwithindex)                                | Peek at each element with its index                                               |
-| [filterWithIndex](#filterwithindex)                            | Filter elements based on their index and a predicate                              |
-| [removeWithIndex](#removewithindex)                            | Remove elements based on their index and a predicate                              |
-| [windowSlidingWithIndex](#windowslidingwithindex)                  | Returns fixed-size windows of elements along with their indices                   |
-| [windowFixedWithIndex](#windowfixedwithindex)                    | Returns fixed-size non-overlapping windows of elements along with their indices  |
+| Name                                                           | Description                                                                     |
+|----------------------------------------------------------------|---------------------------------------------------------------------------------|
+| [zip](#zip)                                                    | Zips values with zipper, leftovers dropped                                      |
+| [mapWithIndex](#zipwithindex) or [zipWithIndex](#zipwithindex) | Maps/zips values with an increasing index                                       |
+| [peekWithIndex](#peekwithindex)                                | Peek at each element with its index                                             |
+| [filterWithIndex](#filterwithindex)                            | Filter elements based on their index and a predicate                            |
+| [removeWithIndex](#removewithindex)                            | Remove elements based on their index and a predicate                            |
+| [windowSlidingWithIndex](#windowslidingwithindex)              | Returns fixed-size windows of elements along with their indices                 |
+| [windowFixedWithIndex](#windowfixedwithindex)                  | Returns fixed-size non-overlapping windows of elements along with their indices |
 
 #### Element selection operations
 
@@ -129,10 +129,16 @@ implementation("io.github.jhspetersson:packrat:0.2.0")
 
 #### Validation operations
 
-| Name                                        | Description                                                                         |
-|---------------------------------------------|-------------------------------------------------------------------------------------|
-| [throwIfNotOrdered](#throwifnotordered)     | Validates that stream is non-decreasing, throws on violation                        |
-| [throwIfNotOrderedBy](#throwifnotorderedBy) | Validates that stream is non-decreasing, uses mapping function, throws on violation |
+| Name                                                            | Description                                                                              |
+|-----------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| [throwIfNotIncreasing](#throwifnotincreasing)                   | Validates that stream is strictly increasing, throws on violation                        |
+| [throwIfNotIncreasingBy](#throwifnotincreasingby)               | Validates that stream is strictly increasing, uses mapping function, throws on violation |
+| [throwIfNotIncreasingOrEqual](#throwifnotincreasingorequal)     | Validates that stream is non-decreasing, throws on violation                             |
+| [throwIfNotIncreasingOrEqualBy](#throwifnotincreasingorequalBy) | Validates that stream is non-decreasing, uses mapping function, throws on violation      |
+| [throwIfNotDecreasing](#throwifnotdecreasing)                   | Validates that stream is strictly decreasing, throws on violation                        |
+| [throwIfNotDecreasingBy](#throwifnotdecreasingby)               | Validates that stream is strictly decreasing, uses mapping function, throws on violation |
+| [throwIfNotDecreasingOrEqual](#throwifnotdecreasingorequal)     | Validates that stream is non-increasing, throws on violation                             |
+| [throwIfNotDecreasingOrEqualBy](#throwifnotdecreasingorequalby) | Validates that stream is non-increasing, uses mapping function, throws on violation      |
 
 ### Filtering and mapping operations
 
@@ -996,33 +1002,140 @@ However, resulting list contains an original element of type `String`;
 
 ### Validation gatherers
 
-#### throwIfNotOrdered
+#### throwIfNotIncreasingOrEqual
 
-`throwIfNotOrdered()` — validates that the incoming elements are ordered in non-decreasing order, if a violation is detected, an exception is thrown immediately, terminating the pipeline
+`throwIfNotIncreasingOrEqual()` — validates that the incoming elements are ordered in non-decreasing order, if a violation is detected, an exception is thrown immediately, terminating the pipeline
 
 ```java
-import static io.github.jhspetersson.packrat.Packrat.throwIfNotOrdered;
+import static io.github.jhspetersson.packrat.Packrat.throwIfNotIncreasingOrEqual;
 var result = Stream.of(1, 1, 2, 3, 5)
-        .gather(Packrat.throwIfNotOrdered())
+        .gather(Packrat.throwIfNotIncreasingOrEqual())
         .toList();
 ```
 
 The stream is ordered, no exception thrown.
 
-#### throwIfNotOrderedBy
+#### throwIfNotIncreasingOrEqualBy
 
-`throwIfNotOrderedBy(mapper)` — validates that the incoming mapped elements are ordered in non-decreasing order, if a violation is detected, an exception is thrown immediately, terminating the pipeline
+`throwIfNotIncreasingOrEqualBy(mapper)` — validates that the incoming mapped elements are ordered in non-decreasing order, if a violation is detected, an exception is thrown immediately, terminating the pipeline
 
 ```java
-import static io.github.jhspetersson.packrat.Packrat.throwIfNotOrderedBy;
+import static io.github.jhspetersson.packrat.Packrat.throwIfNotIncreasingOrEqualBy;
 record Person(String name, int age) {}
 var people = Stream.of(new Person("Ann", 20), new Person("Bob", 25), new Person("Cara", 25));
 var ordered = people
-        .gather(Packrat.throwIfNotOrderedBy(Person::age))
+        .gather(Packrat.throwIfNotIncreasingOrEqualBy(Person::age))
         .toList();
 ```
 
 The stream is ordered by the age of the employees, no exception thrown.
+
+#### throwIfNotIncreasing
+
+`throwIfNotIncreasing()` — validates that the incoming elements are strictly increasing (no equal neighbors), if a violation is detected, an exception is thrown immediately, terminating the pipeline
+
+```java
+import static io.github.jhspetersson.packrat.Packrat.throwIfNotIncreasing;
+// OK
+var ok = Stream.of(1, 2, 3, 5)
+        .gather(throwIfNotIncreasing())
+        .toList();
+
+// Violates due to equal neighbors (2, 2)
+assertThrows(IllegalStateException.class, () ->
+        Stream.of(1, 2, 2, 3).gather(throwIfNotIncreasing()).toList());
+```
+
+#### throwIfNotIncreasingBy
+
+`throwIfNotIncreasingBy(mapper)` — validates that the incoming elements are strictly increasing by a mapped comparable key (no equal neighbors by the mapped value), if a violation is detected, an exception is thrown immediately, terminating the pipeline
+
+```java
+import static io.github.jhspetersson.packrat.Packrat.throwIfNotIncreasingBy;
+
+record Person(String name, int age) {}
+
+// OK — strictly increasing by age
+var ok = Stream.of(new Person("Ann", 20), new Person("Bob", 25), new Person("Cara", 30))
+        .gather(throwIfNotIncreasingBy(Person::age))
+        .toList();
+
+// Violates due to equal ages (25, 25)
+assertThrows(IllegalStateException.class, () ->
+        Stream.of(new Person("Ann", 20), new Person("Bob", 25), new Person("Cara", 25))
+              .gather(throwIfNotIncreasingBy(Person::age))
+              .toList());
+```
+
+#### throwIfNotDecreasing
+
+`throwIfNotDecreasing()` — validates that the incoming elements are strictly decreasing (no equal neighbors), if a violation is detected, an exception is thrown immediately, terminating the pipeline
+
+```java
+import static io.github.jhspetersson.packrat.Packrat.throwIfNotDecreasing;
+// OK
+var ok = Stream.of(5, 3, 1).gather(throwIfNotDecreasing()).toList();
+
+// Violates due to 3 -> 4 step
+assertThrows(IllegalStateException.class, () ->
+        Stream.of(5, 3, 4).gather(throwIfNotDecreasing()).toList());
+```
+
+#### throwIfNotDecreasingBy
+
+`throwIfNotDecreasingBy(mapper)` — validates that the incoming elements are strictly decreasing by a mapped comparable key (no equal neighbors by the mapped value), if a violation is detected, an exception is thrown immediately, terminating the pipeline
+
+```java
+import static io.github.jhspetersson.packrat.Packrat.throwIfNotDecreasingBy;
+
+record Person(String name, int age) {}
+
+// OK — strictly decreasing by age
+var ok = Stream.of(new Person("Zoe", 30), new Person("Yuri", 25), new Person("Xena", 20))
+        .gather(throwIfNotDecreasingBy(Person::age))
+        .toList();
+
+// Violates due to equal ages (25, 25)
+assertThrows(IllegalStateException.class, () ->
+        Stream.of(new Person("Zoe", 30), new Person("Yuri", 25), new Person("Yara", 25))
+              .gather(throwIfNotDecreasingBy(Person::age))
+              .toList());
+```
+
+#### throwIfNotDecreasingOrEqual
+
+`throwIfNotDecreasingOrEqual()` — validates that the incoming elements are non-increasing (decreasing or equal), if a violation is detected, an exception is thrown immediately, terminating the pipeline
+
+```java
+import static io.github.jhspetersson.packrat.Packrat.throwIfNotDecreasingOrEqual;
+// OK (equal allowed)
+var ok = Stream.of(5, 5, 3, 3, 1).gather(throwIfNotDecreasingOrEqual()).toList();
+
+// Violates due to 3 -> 4 step
+assertThrows(IllegalStateException.class, () ->
+        Stream.of(5, 3, 4).gather(throwIfNotDecreasingOrEqual()).toList());
+```
+
+#### throwIfNotDecreasingOrEqualBy
+
+`throwIfNotDecreasingOrEqualBy(mapper)` — validates that the incoming elements are non-increasing (decreasing or equal) by a mapped comparable key, if a violation is detected, an exception is thrown immediately, terminating the pipeline
+
+```java
+import static io.github.jhspetersson.packrat.Packrat.throwIfNotDecreasingOrEqualBy;
+
+record Person(String name, int age) {}
+
+// OK — non-increasing by age (equals allowed)
+var ok = Stream.of(new Person("Zoe", 30), new Person("Yuri", 25), new Person("Yara", 25))
+        .gather(throwIfNotDecreasingOrEqualBy(Person::age))
+        .toList();
+
+// Violates due to increase by mapped key (25 -> 26)
+assertThrows(IllegalStateException.class, () ->
+        Stream.of(new Person("Zoe", 30), new Person("Yuri", 25), new Person("Xena", 26))
+              .gather(throwIfNotDecreasingOrEqualBy(Person::age))
+              .toList());
+```
 
 ### License
 
