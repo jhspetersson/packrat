@@ -2,6 +2,10 @@
 
 Packrat is a Java library that provides various [Gatherer](https://docs.oracle.com/en/java/javase/22/docs/api/java.base/java/util/stream/Gatherer.html) implementations for the Stream API. Gatherers can enhance streams with custom intermediate operations.
 
+You can think of the gatherers like of the custom `map`, `filter`, etc. stateful operations which you can insert into the usual streams. No need to use external `AtomicLong` for counting, for example.
+
+This library can be used as is or as a source of inspiration for writing your own gatherers.
+
 [Introduction to the Gatherers by Viktor Klang](https://www.youtube.com/watch?v=8fMFa6OqlY8)
 
 ### Availability
