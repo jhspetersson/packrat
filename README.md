@@ -114,6 +114,7 @@ implementation("io.github.jhspetersson:packrat:0.2.1")
 | [dropNth](#dropnth)                                            | Drops every nth element from the stream                                           |
 | [last](#last)                                                  | Last __n__ elements                                                               |
 | [lastUnique](#lastunique)                                      | Last __n__ unique elements                                                        |
+| [lastUniqueBy](#lastuniqueby)                                  | Last __n__ unique elements by a mapping function                                  |
 | [dropLast](#droplast)                                          | Drops last __n__ elements                                                         |
 
 #### Text processing operations
@@ -917,6 +918,29 @@ However, resulting list contains an original element of type `String`;
 ```
 
 > [1, 2, 6]
+
+> [!CAUTION]
+> This gatherer will consume the entire stream before producing any output.
+
+#### lastUniqueBy
+
+`lastUniqueBy(n, mapper)` - returns __n__ last unique elements from the stream determined by the supplied mapping function.
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.lastUniqueBy;
+  record Employee(String name, int age) {}
+  var employees = java.util.List.of(
+          new Employee("Ann Smith", 35),
+          new Employee("John Rodgers", 40),
+          new Employee("Mark Bloom", 21),
+          new Employee("Rebecca Schneider", 24),
+          new Employee("Luke Norman", 21)
+  );
+  var result = employees.stream().gather(lastUniqueBy(3, Employee::age)).toList();
+  System.out.println(result);
+```
+
+> [Employee[name=John Rodgers, age=40], Employee[name=Mark Bloom, age=21], Employee[name=Rebecca Schneider, age=24]]
 
 > [!CAUTION]
 > This gatherer will consume the entire stream before producing any output.

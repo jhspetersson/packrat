@@ -1359,6 +1359,24 @@ public final class Packrat {
     }
 
     /**
+     * Returns last <code>n</code> unique elements determined by the supplied mapper.
+     * Uniqueness is calculated based on the mapped key values, while the original
+     * elements are emitted in the order of their last occurrence.
+     *
+     * @param n count of last unique elements to return
+     * @param mapper mapping function used to determine uniqueness
+     * @param <T> element type
+     * @param <U> mapped key type
+     * @return a gatherer that returns the last <code>n</code> unique elements from the stream,
+     * based on the mapped key
+     * @throws IllegalArgumentException if <code>n</code> is negative
+     */
+    @NonNull
+    public static <T, U> Gatherer<T, ?, T> lastUniqueBy(long n, @NonNull Function<? super T, ? extends U> mapper) {
+        return new LastingGatherer<>(n, true, mapper);
+    }
+
+    /**
      * Drops last element.
      *
      * @param <T> element type
