@@ -17,28 +17,15 @@ import java.util.stream.Gatherer;
  * <p>
  * This gatherer underpins the public APIs {@code Packrat.last(n)}, {@code Packrat.lastUnique(n)}
  * and {@code Packrat.lastUniqueBy(n, mapper)}:
- * <ul>
- *   <li>When constructed with {@code unique == false}, it returns the last {@code n} elements.</li>
- *   <li>When constructed with {@code unique == true}, it returns the last {@code n} elements
- *       that are unique with respect to a key produced by the supplied {@code mapper} function.
- *       The original elements are emitted in the order of their last occurrence; only the
- *       uniqueness check uses the mapped keys.</li>
- * </ul>
- *
  * <p>
  * If {@code n == 0}, no elements are emitted. For {@code n > 0}, the gatherer greedily consumes
  * the entire upstream before producing any output in its {@linkplain #finisher() finisher}.
- * The working memory is bounded by {@code O(n)}: a deque of up to {@code n} elements and, when
- * {@code unique} is enabled, a set of up to {@code n} mapped keys.
- *
  * <p>
  * Null mappers are not permitted. A negative {@code n} results in an
  * {@link IllegalArgumentException}.
  *
  * @param <T> element type
  * @author jhspetersson
- * @implNote This gatherer delays emission until upstream completion and therefore will not
- *           yield any elements to downstream until the source stream is fully traversed.
  */
 class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
     private final long n;
@@ -58,7 +45,7 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
             throw new IllegalArgumentException("n must be a non-negative number");
         }
 
-        Objects.requireNonNull(mapper);
+        Objects.requireNonNull(mapper, "mapper cannot be null");
 
         this.n = n;
         this.unique = unique;
