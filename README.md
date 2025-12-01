@@ -10,16 +10,9 @@ This library can be used as is or as a source of inspiration for writing your ow
 
 ### Availability
 
-> [!IMPORTANT]
-> You will need a very fresh JDK version with preview features enabled to actually use Gatherers.
+Requires JDK **24** or later.
 
-|JEP|JDK|Status|
-|---|---|---|
-|[461](https://openjdk.org/jeps/461)|22|Preview|
-|[473](https://openjdk.org/jeps/473)|23|Second Preview|
-|[485](https://openjdk.org/jeps/485)|24|Final|
-
-Build scripts expect to run on JDK version not lower than 24.
+JDK 22 and 23 support gatherers as a preview feature.
 
 ### Usage
 
