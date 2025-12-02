@@ -5,6 +5,8 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Filters all the elements going in some order specified by the supplied comparator.
  *
@@ -16,7 +18,8 @@ class IncreasingDecreasingGatherer<T> implements Gatherer<T, Void, T> {
     private final Predicate<Integer> predicate;
     private T value;
 
-    IncreasingDecreasingGatherer(Comparator<? super T> comparator, Predicate<Integer> predicate) {
+    IncreasingDecreasingGatherer(@NonNull Comparator<? super T> comparator,
+                                 @NonNull Predicate<Integer> predicate) {
         Objects.requireNonNull(comparator, "comparator cannot be null");
         Objects.requireNonNull(predicate, "predicate cannot be null");
 

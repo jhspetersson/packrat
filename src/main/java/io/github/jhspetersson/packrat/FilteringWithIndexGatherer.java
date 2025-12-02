@@ -5,6 +5,8 @@ import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Filters elements based on their index and a predicate.
  *
@@ -16,11 +18,11 @@ class FilteringWithIndexGatherer<T> implements Gatherer<T, long[], T> {
     private final long startIndex;
     private final boolean invert;
 
-    FilteringWithIndexGatherer(BiPredicate<Long, ? super T> predicate, long startIndex) {
+    FilteringWithIndexGatherer(@NonNull BiPredicate<Long, ? super T> predicate, long startIndex) {
         this(predicate, startIndex, false);
     }
 
-    FilteringWithIndexGatherer(BiPredicate<Long, ? super T> predicate, long startIndex, boolean invert) {
+    FilteringWithIndexGatherer(@NonNull BiPredicate<Long, ? super T> predicate, long startIndex, boolean invert) {
         Objects.requireNonNull(predicate, "predicate cannot be null");
 
         this.predicate = predicate;

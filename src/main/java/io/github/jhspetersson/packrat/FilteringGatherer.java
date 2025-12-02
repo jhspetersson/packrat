@@ -5,6 +5,8 @@ import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Filters all the elements with some predicate or based on their equality to the specific value.
  *
@@ -18,11 +20,11 @@ class FilteringGatherer<T, U> implements Gatherer<T, Void, T> {
     private final BiPredicate<? super U, ? super U> predicate;
     private final boolean invert;
 
-    FilteringGatherer(Function<? super T, ? extends U> mapper, U value, BiPredicate<? super U, ? super U> predicate) {
+    FilteringGatherer(@NonNull Function<? super T, ? extends U> mapper, U value, @NonNull BiPredicate<? super U, ? super U> predicate) {
         this(mapper, value, predicate, false);
     }
 
-    FilteringGatherer(Function<? super T, ? extends U> mapper, U value, BiPredicate<? super U, ? super U> predicate, boolean invert) {
+    FilteringGatherer(@NonNull Function<? super T, ? extends U> mapper, U value, @NonNull BiPredicate<? super U, ? super U> predicate, boolean invert) {
         Objects.requireNonNull(mapper, "mapper cannot be null");
         Objects.requireNonNull(predicate, "predicate cannot be null");
 

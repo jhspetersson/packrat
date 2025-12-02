@@ -9,6 +9,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Returns lists ("chunks") of elements, where each next element is less/greater and, optionally equal than the previous one.
  * Comparison is done with the supplied comparator.
@@ -21,7 +23,8 @@ class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, List<T>, List
     private final Predicate<Integer> predicate;
     private T value;
 
-    IncreasingDecreasingChunksGatherer(Comparator<? super T> comparator, Predicate<Integer> predicate) {
+    IncreasingDecreasingChunksGatherer(@NonNull Comparator<? super T> comparator,
+                                       @NonNull Predicate<Integer> predicate) {
         Objects.requireNonNull(comparator, "comparator cannot be null");
         Objects.requireNonNull(predicate, "predicate cannot be null");
 

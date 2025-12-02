@@ -5,6 +5,8 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Returns elements mapped ("zipped") with an increasing index.
  *
@@ -16,7 +18,7 @@ class ZipWithIndexGatherer<T, U> implements Gatherer<T, long[], U> {
     private final BiFunction<Long, ? super T, ? extends U> mapper;
     private final long startIndex;
 
-    ZipWithIndexGatherer(BiFunction<Long, ? super T, ? extends U> mapper, long startIndex) {
+    ZipWithIndexGatherer(@NonNull BiFunction<Long, ? super T, ? extends U> mapper, long startIndex) {
         Objects.requireNonNull(mapper, "mapper cannot be null");
 
         this.mapper = mapper;

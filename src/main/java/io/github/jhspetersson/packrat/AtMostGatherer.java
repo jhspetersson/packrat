@@ -10,6 +10,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Returns elements that appear at most <code>n</code> times in the stream.
  *
@@ -21,7 +23,7 @@ class AtMostGatherer<T, U> implements Gatherer<T, Map<? super U, List<T>>, T> {
     private final long atMost;
     private final Function<? super T, ? extends U> mapper;
 
-    AtMostGatherer(long atMost, Function<? super T, ? extends U> mapper) {
+    AtMostGatherer(long atMost, @NonNull Function<? super T, ? extends U> mapper) {
         if (atMost < 0) {
             throw new IllegalArgumentException("atMost must be a positive number");
         }

@@ -4,6 +4,8 @@ import java.text.BreakIterator;
 import java.util.Objects;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Returns strings such as graphemes, words, lines or sentences parsed from the stream elements.
  *
@@ -14,11 +16,11 @@ class BreakingGatherer<T> implements Gatherer<T, Void, String> {
     private final BreakIterator breakIterator;
     private final boolean skipBlanks;
 
-    BreakingGatherer(BreakIterator breakIterator) {
+    BreakingGatherer(@NonNull BreakIterator breakIterator) {
         this(breakIterator, false);
     }
 
-    BreakingGatherer(BreakIterator breakIterator, boolean skipBlanks) {
+    BreakingGatherer(@NonNull BreakIterator breakIterator, boolean skipBlanks) {
         Objects.requireNonNull(breakIterator, "breakIterator cannot be null");
 
         this.breakIterator = breakIterator;

@@ -11,6 +11,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * A {@link Gatherer} that buffers the last elements of an upstream stream and emits them
  * at the end of processing.
@@ -40,7 +42,7 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
         this(n, unique, Function.identity());
     }
 
-    LastingGatherer(long n, boolean unique, Function<? super T, ?> mapper) {
+    LastingGatherer(long n, boolean unique, @NonNull Function<? super T, ?> mapper) {
         if (n < 0) {
             throw new IllegalArgumentException("n must be a non-negative number");
         }

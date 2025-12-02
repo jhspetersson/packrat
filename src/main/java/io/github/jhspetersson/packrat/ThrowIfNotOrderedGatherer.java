@@ -6,6 +6,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Validates that incoming elements follow the specified order.
  * <p>
@@ -22,9 +24,9 @@ class ThrowIfNotOrderedGatherer<T, U extends Comparable<? super U>> implements G
     private final Supplier<? extends RuntimeException> exceptionSupplier;
     private final Predicate<Integer> predicate;
 
-    ThrowIfNotOrderedGatherer(Function<? super T, ? extends U> mapper,
-                              Supplier<? extends RuntimeException> exceptionSupplier,
-                              Predicate<Integer> predicate) {
+    ThrowIfNotOrderedGatherer(@NonNull Function<? super T, ? extends U> mapper,
+                              @NonNull Supplier<? extends RuntimeException> exceptionSupplier,
+                              @NonNull Predicate<Integer> predicate) {
         Objects.requireNonNull(mapper, "mapper cannot be null");
         Objects.requireNonNull(exceptionSupplier, "exceptionSupplier cannot be null");
         Objects.requireNonNull(predicate, "predicate cannot be null");

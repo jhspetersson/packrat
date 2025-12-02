@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Provides the result of the supplied collector as a single element into the stream.
  * Effectively converts any Collector into a Gatherer.
@@ -25,7 +27,7 @@ public class CollectingGatherer<T, U, V> implements Gatherer<T, U, V> {
      * @param collector the collector to be used for gathering elements, must not be null
      * @throws NullPointerException if the collector is null
      */
-    public CollectingGatherer(Collector<? super T, U, ? extends V> collector) {
+    public CollectingGatherer(@NonNull Collector<? super T, U, ? extends V> collector) {
         Objects.requireNonNull(collector, "collector cannot be null");
 
         this.collector = collector;

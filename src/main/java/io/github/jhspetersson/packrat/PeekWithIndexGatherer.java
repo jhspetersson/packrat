@@ -5,6 +5,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Peeks at each element along with its index, but passes the original element downstream.
  *
@@ -15,7 +17,7 @@ class PeekWithIndexGatherer<T> implements Gatherer<T, long[], T> {
     private final BiConsumer<Long, ? super T> consumer;
     private final long startIndex;
 
-    PeekWithIndexGatherer(BiConsumer<Long, ? super T> consumer, long startIndex) {
+    PeekWithIndexGatherer(@NonNull BiConsumer<Long, ? super T> consumer, long startIndex) {
         Objects.requireNonNull(consumer, "consumer cannot be null");
 
         this.consumer = consumer;

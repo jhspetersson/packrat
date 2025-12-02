@@ -9,6 +9,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Returns lists ("chunks") of elements, where all elements in a chunk are equal after applying the mapper function.
  *
@@ -22,11 +24,12 @@ class EqualChunksGatherer<T, U> implements Gatherer<T, List<T>, List<T>> {
     private U currentValue;
     private boolean first = true;
 
-    EqualChunksGatherer(Function<? super T, ? extends U> mapper) {
+    EqualChunksGatherer(@NonNull Function<? super T, ? extends U> mapper) {
         this(mapper, null);
     }
 
-    EqualChunksGatherer(Function<? super T, ? extends U> mapper, Comparator<? super U> comparator) {
+    EqualChunksGatherer(@NonNull Function<? super T, ? extends U> mapper,
+                        Comparator<? super U> comparator) {
         Objects.requireNonNull(mapper, "mapper cannot be null");
         this.mapper = mapper;
         this.comparator = comparator;

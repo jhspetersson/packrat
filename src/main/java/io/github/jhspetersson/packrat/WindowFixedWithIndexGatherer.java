@@ -7,6 +7,8 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Returns fixed-size non-overlapping windows of elements along with their indices.
  * Each window contains a fixed number of elements and is emitted as a list.
@@ -28,7 +30,7 @@ class WindowFixedWithIndexGatherer<T, R> implements Gatherer<T, WindowFixedWithI
      * @param mapper the function to map each window with its index to a result
      * @param startIndex the starting index
      */
-    WindowFixedWithIndexGatherer(int windowSize, BiFunction<Long, List<T>, ? extends R> mapper, long startIndex) {
+    WindowFixedWithIndexGatherer(int windowSize, @NonNull BiFunction<Long, List<T>, ? extends R> mapper, long startIndex) {
         if (windowSize <= 0) {
             throw new IllegalArgumentException("windowSize must be positive");
         }

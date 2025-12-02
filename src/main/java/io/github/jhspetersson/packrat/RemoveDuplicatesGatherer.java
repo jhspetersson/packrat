@@ -7,6 +7,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Removes consecutive duplicates from a stream based on a mapping function.
  * Only adjacent elements that have equal mapped values will be considered duplicates.
@@ -19,7 +21,7 @@ import java.util.stream.Gatherer;
 public class RemoveDuplicatesGatherer<T, U> implements Gatherer<T, List<U>, T> {
     private final Function<? super T, ? extends U> mapper;
 
-    RemoveDuplicatesGatherer(Function<? super T, ? extends U> mapper) {
+    RemoveDuplicatesGatherer(@NonNull Function<? super T, ? extends U> mapper) {
         Objects.requireNonNull(mapper, "mapper cannot be null");
         this.mapper = mapper;
     }

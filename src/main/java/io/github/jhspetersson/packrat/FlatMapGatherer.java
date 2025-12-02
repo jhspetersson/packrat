@@ -6,6 +6,8 @@ import java.util.function.Predicate;
 import java.util.stream.Gatherer;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Optionally flattens elements mapped to streams depending on the supplied predicate.
  *
@@ -16,7 +18,8 @@ class FlatMapGatherer<T> implements Gatherer<T, Void, T> {
     private final Function<? super T, Stream<? extends T>> mapper;
     private final Predicate<? super T> predicate;
 
-    FlatMapGatherer(Function<? super T, Stream<? extends T>> mapper, Predicate<? super T> predicate) {
+    FlatMapGatherer(@NonNull Function<? super T, Stream<? extends T>> mapper,
+                    @NonNull Predicate<? super T> predicate) {
         Objects.requireNonNull(mapper, "mapper cannot be null");
         Objects.requireNonNull(predicate, "predicate cannot be null");
 

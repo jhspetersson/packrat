@@ -5,6 +5,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Returns elements with optional mapping applied to the specified number of them.
  *
@@ -16,7 +18,7 @@ class MappingGatherer<T> implements Gatherer<T, Long[], T> {
     private final long mapN;
     private final Function<? super T, ? extends T> mapper;
 
-    MappingGatherer(long skipN, long mapN, Function<? super T, ? extends T> mapper) {
+    MappingGatherer(long skipN, long mapN, @NonNull Function<? super T, ? extends T> mapper) {
         Objects.requireNonNull(mapper, "mapper cannot be null");
 
         this.skipN = skipN;

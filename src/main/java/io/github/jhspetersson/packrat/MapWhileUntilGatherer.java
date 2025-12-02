@@ -6,6 +6,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Maps the elements until the condition holds (or not, if is inverted)
  *
@@ -17,7 +19,7 @@ class MapWhileUntilGatherer<T> implements Gatherer<T, boolean[], T> {
     private final Predicate<? super T> whilePredicate;
     private final Predicate<? super T> untilPredicate;
 
-    MapWhileUntilGatherer(Function<? super T, ? extends T> mapper, Predicate<? super T> whilePredicate) {
+    MapWhileUntilGatherer(@NonNull Function<? super T, ? extends T> mapper, Predicate<? super T> whilePredicate) {
         this(mapper, whilePredicate, null);
     }
 

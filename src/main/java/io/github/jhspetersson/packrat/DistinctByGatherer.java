@@ -7,6 +7,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Returns elements with distinct values that result from a mapping by the supplied function.
  *
@@ -17,7 +19,7 @@ import java.util.stream.Gatherer;
 class DistinctByGatherer<T, U> implements Gatherer<T, Set<? super U>, T> {
     private final Function<? super T, ? extends U> mapper;
 
-    DistinctByGatherer(Function<? super T, ? extends U> mapper) {
+    DistinctByGatherer(@NonNull Function<? super T, ? extends U> mapper) {
         Objects.requireNonNull(mapper, "mapper cannot be null");
 
         this.mapper = mapper;

@@ -5,6 +5,8 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Filters Map.Entry elements using a BiPredicate that tests the key and value of each entry.
  *
@@ -16,11 +18,11 @@ class FilterEntriesGatherer<K, V> implements Gatherer<Map.Entry<K, V>, Void, Map
     private final BiPredicate<? super K, ? super V> predicate;
     private final boolean invert;
 
-    FilterEntriesGatherer(BiPredicate<? super K, ? super V> predicate) {
+    FilterEntriesGatherer(@NonNull BiPredicate<? super K, ? super V> predicate) {
         this(predicate, false);
     }
 
-    FilterEntriesGatherer(BiPredicate<? super K, ? super V> predicate, boolean invert) {
+    FilterEntriesGatherer(@NonNull BiPredicate<? super K, ? super V> predicate, boolean invert) {
         Objects.requireNonNull(predicate, "predicate cannot be null");
 
         this.predicate = predicate;

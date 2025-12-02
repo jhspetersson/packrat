@@ -8,6 +8,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Outputs the greatest or the smallest element in the stream, comparing is done after mapping function applied.
  *
@@ -20,7 +22,9 @@ class MinMaxGatherer<T, U> implements Gatherer<T, MinMaxGatherer.State<T, U>, T>
     private final Comparator<? super U> comparator;
     private final Predicate<Integer> predicate;
 
-    MinMaxGatherer(Function<? super T, ? extends U> mapper, Comparator<? super U> comparator, Predicate<Integer> predicate) {
+    MinMaxGatherer(@NonNull Function<? super T, ? extends U> mapper,
+                   @NonNull Comparator<? super U> comparator,
+                   @NonNull Predicate<Integer> predicate) {
         Objects.requireNonNull(mapper, "mapper cannot be null");
         Objects.requireNonNull(comparator, "comparator cannot be null");
         Objects.requireNonNull(predicate, "predicate cannot be null");

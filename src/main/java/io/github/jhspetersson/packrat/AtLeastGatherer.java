@@ -9,6 +9,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Returns distinct elements that appear at least <code>n</code> times in the stream.
  *
@@ -20,7 +22,7 @@ class AtLeastGatherer<T, U> implements Gatherer<T, Map<? super U, List<T>>, T> {
     private final long atLeast;
     private final Function<? super T, ? extends U> mapper;
 
-    AtLeastGatherer(long atLeast, Function<? super T, ? extends U> mapper) {
+    AtLeastGatherer(long atLeast, @NonNull Function<? super T, ? extends U> mapper) {
         if (atLeast < 0) {
             throw new IllegalArgumentException("atLeast must be a non-negative number");
         }

@@ -9,6 +9,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Collects the entire stream into a list, applies some consumer to this list and then passes all the elements down the stream.
  *
@@ -18,7 +20,7 @@ import java.util.stream.Gatherer;
 class IntoListGatherer<T> implements Gatherer<T, List<T>, T> {
     private final Consumer<List<T>> consumer;
 
-    IntoListGatherer(Consumer<List<T>> consumer) {
+    IntoListGatherer(@NonNull Consumer<List<T>> consumer) {
         Objects.requireNonNull(consumer, "consumer cannot be null");
 
         this.consumer = consumer;
