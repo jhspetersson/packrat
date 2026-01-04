@@ -3,7 +3,6 @@ package io.github.jhspetersson.packrat;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -17,7 +16,7 @@ public class IdentityGathererTest {
         var original = new ArrayList<Integer>();
         IntStream.range(0, 100).forEach(original::add);
 
-        var result = original.stream().gather(new IdentityGatherer<>()).toList();
+        var result = original.stream().gather(Packrat.identity()).toList();
 
         assertEquals(original.size(), result.size());
         for (int i = 0; i < original.size(); i++) {
@@ -29,7 +28,7 @@ public class IdentityGathererTest {
     void identityEmptyTest() {
         var original = new ArrayList<Integer>();
 
-        var result = original.stream().gather(new IdentityGatherer<>()).toList();
+        var result = original.stream().gather(Packrat.identity()).toList();
 
         assertTrue(result.isEmpty());
     }
@@ -40,7 +39,7 @@ public class IdentityGathererTest {
         var original = new ArrayList<Integer>();
         IntStream.range(0, size).forEach(original::add);
 
-        var result = original.parallelStream().gather(new IdentityGatherer<>()).toList();
+        var result = original.parallelStream().gather(Packrat.identity()).toList();
 
         assertEquals(size, result.size());
         assertEquals(size, Set.copyOf(result).size());
@@ -68,7 +67,6 @@ public class IdentityGathererTest {
 
     @Test
     void identityViaPackratIdentityTest() {
-        // Test the IdentityGatherer through Packrat.identity()
         var original = new ArrayList<Integer>();
         IntStream.range(0, 10).forEach(original::add);
 
