@@ -1497,6 +1497,9 @@ public final class Packrat {
     /**
      * Validates that incoming elements are in strictly increasing order (no equals allowed).
      * If a violation is detected, an {@link IllegalStateException} is thrown.
+     *
+     * @param <T> element type which must be {@link Comparable}
+     * @return a gatherer that throws if input is not ordered
      */
     @NonNull
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> throwIfNotIncreasing() {
@@ -1559,6 +1562,9 @@ public final class Packrat {
     /**
      * Validates that incoming elements are in strictly decreasing order (no equals allowed).
      * If a violation is detected, an {@link IllegalStateException} is thrown.
+     *
+     * @param <T> element type which must be {@link Comparable}
+     * @return a gatherer that throws if input is not ordered
      */
     @NonNull
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> throwIfNotDecreasing() {
@@ -1621,6 +1627,9 @@ public final class Packrat {
     /**
      * Validates that incoming elements are in non-increasing order (decreasing or equal).
      * If a violation is detected, an {@link IllegalStateException} is thrown.
+     *
+     * @param <T> element type which must be {@link Comparable}
+     * @return a gatherer that throws if input is not ordered
      */
     @NonNull
     public static <T extends Comparable<? super T>> Gatherer<T, ?, T> throwIfNotDecreasingOrEqual() {
