@@ -12,7 +12,7 @@ import java.util.stream.Gatherer;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Collects the entire stream into a list, applies some consumer to this list and then passes all the elements down the stream.
+ * Collects the entire stream into a list, applies some consumer to this list, and then passes all the elements down the stream.
  *
  * @param <T> element type
  * @author jhspetersson

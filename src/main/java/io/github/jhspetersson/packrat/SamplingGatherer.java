@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
 /**
- * Returns sample of the specified size from the stream.
+ * Returns a sample of the specified size from the stream.
  *
  * @param <T> element type
  * @author jhspetersson
@@ -24,11 +24,11 @@ class SamplingGatherer<T> implements Gatherer<T, SamplingGatherer.State<T>, T> {
         }
 
         if (maxSpan <= 0) {
-            throw new IllegalArgumentException("n must be a positive number");
+            throw new IllegalArgumentException("maxSpan must be greater than zero");
         }
 
         if (n >= maxSpan) {
-            throw new IllegalArgumentException("n must be less than minSpan");
+            throw new IllegalArgumentException("n must be less than maxSpan");
         }
 
         this.n = n;

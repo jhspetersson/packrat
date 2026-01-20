@@ -929,7 +929,7 @@ public final class Packrat {
      * @param <R> result type
      * @return a gatherer that produces fixed-size non-overlapping windows of elements along with their indices starting from the specified index,
      * mapped using the provided function
-     * @throws IllegalArgumentException if windowSize is not positive
+     * @throws IllegalArgumentException if windowSize is not greater than zero
      * @throws NullPointerException if the mapper is null
      */
     @NonNull
@@ -1271,7 +1271,7 @@ public final class Packrat {
      * @param <T> element type
      * @return sampling gatherer
      * @throws IllegalArgumentException if <code>n</code> is negative
-     * @throws IllegalArgumentException if <code>maxSpan</code> is not positive
+     * @throws IllegalArgumentException if <code>maxSpan</code> is not greater than zero
      * @throws IllegalArgumentException if <code>maxSpan</code> is less or equal <code>n</code>
      */
     @NonNull

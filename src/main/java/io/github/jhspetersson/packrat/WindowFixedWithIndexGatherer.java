@@ -32,7 +32,7 @@ class WindowFixedWithIndexGatherer<T, R> implements Gatherer<T, WindowFixedWithI
      */
     WindowFixedWithIndexGatherer(int windowSize, @NonNull BiFunction<Long, List<T>, ? extends R> mapper, long startIndex) {
         if (windowSize <= 0) {
-            throw new IllegalArgumentException("windowSize must be positive");
+            throw new IllegalArgumentException("windowSize must be greater than zero");
         }
         Objects.requireNonNull(mapper, "mapper cannot be null");
 

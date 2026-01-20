@@ -7,7 +7,7 @@ import java.util.stream.Gatherer;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Returns strings such as graphemes, words, lines or sentences parsed from the stream elements.
+ * Returns strings such as graphemes, words, lines, or sentences parsed from the stream elements.
  *
  * @param <T> element type
  * @author jhspetersson
