@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'io.github.jhspetersson'
-version = '0.2.1'
+version = '0.2.2'
 
 java {
     toolchain {
@@ -18,9 +18,9 @@ repositories {
 
 dependencies {
     compileOnly 'org.jspecify:jspecify:1.0.0'
-    testImplementation platform('org.junit:junit-bom:6.0.2')
+    testImplementation platform('org.junit:junit-bom:6.0.3')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.1'
+    testImplementation 'com.tngtech.archunit:archunit:1.4.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
