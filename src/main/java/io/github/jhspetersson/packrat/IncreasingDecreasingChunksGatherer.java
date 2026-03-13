@@ -18,10 +18,9 @@ import org.jspecify.annotations.NonNull;
  * @param <T> element type
  * @author jhspetersson
  */
-class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, List<T>, List<T>> {
+class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, IncreasingDecreasingChunksGatherer.State<T>, List<T>> {
     private final Comparator<? super T> comparator;
     private final Predicate<Integer> predicate;
-    private T value;
 
     IncreasingDecreasingChunksGatherer(@NonNull Comparator<? super T> comparator,
                                        @NonNull Predicate<Integer> predicate) {
@@ -33,25 +32,25 @@ class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, List<T>, List
     }
 
     @Override
-    public Supplier<List<T>> initializer() {
-        return ArrayList::new;
+    public Supplier<State<T>> initializer() {
+        return State::new;
     }
 
     @Override
-    public Integrator<List<T>, T, List<T>> integrator() {
+    public Integrator<State<T>, T, List<T>> integrator() {
         return Integrator.of((state, element, downstream) -> {
-            if (value == null) {
-                value = element;
-                state.add(element);
+            if (state.value == null) {
+                state.value = element;
+                state.chunk.add(element);
             } else {
-                var result = comparator.compare(value, element);
-                value = element;
+                var result = comparator.compare(state.value, element);
+                state.value = element;
                 if (predicate.test(result)) {
-                    state.add(element);
+                    state.chunk.add(element);
                 } else {
-                    var chunk = List.copyOf(state);
-                    state.clear();
-                    state.add(element);
+                    var chunk = List.copyOf(state.chunk);
+                    state.chunk.clear();
+                    state.chunk.add(element);
                     return downstream.push(chunk);
                 }
             }
@@ -61,12 +60,17 @@ class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, List<T>, List
     }
 
     @Override
-    public BiConsumer<List<T>, Downstream<? super List<T>>> finisher() {
+    public BiConsumer<State<T>, Downstream<? super List<T>>> finisher() {
         return (state, downstream) -> {
-            if (!state.isEmpty()) {
-                var chunk = List.copyOf(state);
+            if (!state.chunk.isEmpty()) {
+                var chunk = List.copyOf(state.chunk);
                 downstream.push(chunk);
             }
         };
+    }
+
+    static class State<T> {
+        final List<T> chunk = new ArrayList<>();
+        T value;
     }
 }
