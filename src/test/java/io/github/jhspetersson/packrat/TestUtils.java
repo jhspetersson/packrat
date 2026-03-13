@@ -17,7 +17,7 @@ class TestUtils {
 
     static boolean isOrdered(List<Integer> list) {
         var prev = list.getFirst();
-        for (var i = 1; i < list.size() - 1; i++) {
+        for (var i = 1; i < list.size(); i++) {
             if (list.get(i) <= prev) {
                 return false;
             }
