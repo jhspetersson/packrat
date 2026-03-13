@@ -3,6 +3,7 @@ package io.github.jhspetersson.packrat;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
 import org.jspecify.annotations.NonNull;
@@ -13,10 +14,9 @@ import org.jspecify.annotations.NonNull;
  * @param <T> element type
  * @author jhspetersson
  */
-class IncreasingDecreasingGatherer<T> implements Gatherer<T, Void, T> {
+class IncreasingDecreasingGatherer<T> implements Gatherer<T, IncreasingDecreasingGatherer.State<T>, T> {
     private final Comparator<? super T> comparator;
     private final Predicate<Integer> predicate;
-    private T value;
 
     IncreasingDecreasingGatherer(@NonNull Comparator<? super T> comparator,
                                  @NonNull Predicate<Integer> predicate) {
@@ -28,20 +28,29 @@ class IncreasingDecreasingGatherer<T> implements Gatherer<T, Void, T> {
     }
 
     @Override
-    public Integrator<Void, T, T> integrator() {
-        return Integrator.of((_, element, downstream) -> {
-            if (value == null) {
-                value = element;
+    public Supplier<State<T>> initializer() {
+        return State::new;
+    }
+
+    @Override
+    public Integrator<State<T>, T, T> integrator() {
+        return Integrator.of((state, element, downstream) -> {
+            if (state.value == null) {
+                state.value = element;
                 return downstream.push(element);
             }
 
-            var result = comparator.compare(value, element);
+            var result = comparator.compare(state.value, element);
             if (predicate.test(result)) {
-                value = element;
+                state.value = element;
                 return downstream.push(element);
             }
 
             return !downstream.isRejecting();
         });
+    }
+
+    static class State<T> {
+        T value;
     }
 }
