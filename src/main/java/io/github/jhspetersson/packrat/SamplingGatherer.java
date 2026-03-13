@@ -20,7 +20,7 @@ class SamplingGatherer<T> implements Gatherer<T, SamplingGatherer.State<T>, T> {
 
     SamplingGatherer(int n, int maxSpan) {
         if (n < 0) {
-            throw new IllegalArgumentException("n must be a positive number");
+            throw new IllegalArgumentException("n must be a non-negative number");
         }
 
         if (maxSpan <= 0) {
