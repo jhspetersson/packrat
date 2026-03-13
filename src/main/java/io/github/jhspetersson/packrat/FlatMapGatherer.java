@@ -31,12 +31,13 @@ class FlatMapGatherer<T> implements Gatherer<T, Void, T> {
     public Integrator<Void, T, T> integrator() {
         return Integrator.of((_, element, downstream) -> {
             if (predicate.test(element)) {
-                var stream = mapper.apply(element);
-                for (var it = stream.iterator(); it.hasNext(); ) {
-                    var elem = it.next();
-                    var res = downstream.push(elem);
-                    if (!res) {
-                        return false;
+                try (var stream = mapper.apply(element)) {
+                    for (var it = stream.iterator(); it.hasNext(); ) {
+                        var elem = it.next();
+                        var res = downstream.push(elem);
+                        if (!res) {
+                            return false;
+                        }
                     }
                 }
                 return !downstream.isRejecting();
