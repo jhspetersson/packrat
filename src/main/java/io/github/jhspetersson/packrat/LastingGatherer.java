@@ -67,6 +67,7 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
 
         return Integrator.ofGreedy((state, element, downstream) -> {
             if (state.containsElement(element)) {
+                state.moveToEnd(element);
                 return true;
             }
 
@@ -112,6 +113,12 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
             if (!unique) return false;
             var mappedElement = mapper.apply(element);
             return mappedElements.contains(mappedElement);
+        }
+
+        void moveToEnd(T element) {
+            var mappedElement = mapper.apply(element);
+            deque.removeIf(e -> Objects.equals(mapper.apply(e), mappedElement));
+            deque.add(element);
         }
 
         void addElement(T element) {
