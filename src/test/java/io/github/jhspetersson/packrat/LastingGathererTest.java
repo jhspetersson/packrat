@@ -58,8 +58,8 @@ public class LastingGathererTest {
 
         assertEquals(List.of(
                 new Employee("John Rodgers", 40),
-                new Employee("Mark Bloom", 21),
-                new Employee("Rebecca Schneider", 24)
+                new Employee("Rebecca Schneider", 24),
+                new Employee("Luke Norman", 21)
         ), result);
     }
 
