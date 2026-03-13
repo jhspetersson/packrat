@@ -18,11 +18,9 @@ import org.jspecify.annotations.NonNull;
  * @param <U> mapped type for comparison
  * @author jhspetersson
  */
-class EqualChunksGatherer<T, U> implements Gatherer<T, List<T>, List<T>> {
+class EqualChunksGatherer<T, U> implements Gatherer<T, EqualChunksGatherer.State<T, U>, List<T>> {
     private final Function<? super T, ? extends U> mapper;
     private final Comparator<? super U> comparator;
-    private U currentValue;
-    private boolean first = true;
 
     EqualChunksGatherer(@NonNull Function<? super T, ? extends U> mapper) {
         this(mapper, null);
@@ -36,34 +34,34 @@ class EqualChunksGatherer<T, U> implements Gatherer<T, List<T>, List<T>> {
     }
 
     @Override
-    public Supplier<List<T>> initializer() {
-        return ArrayList::new;
+    public Supplier<State<T, U>> initializer() {
+        return State::new;
     }
 
     @Override
-    public Integrator<List<T>, T, List<T>> integrator() {
+    public Integrator<State<T, U>, T, List<T>> integrator() {
         return Integrator.of((state, element, downstream) -> {
             var mappedValue = mapper.apply(element);
 
-            if (first) {
-                first = false;
-                currentValue = mappedValue;
-                state.add(element);
+            if (state.first) {
+                state.first = false;
+                state.currentValue = mappedValue;
+                state.chunk.add(element);
             } else {
                 boolean areEqual;
                 if (comparator != null) {
-                    areEqual = comparator.compare(currentValue, mappedValue) == 0;
+                    areEqual = comparator.compare(state.currentValue, mappedValue) == 0;
                 } else {
-                    areEqual = Objects.equals(currentValue, mappedValue);
+                    areEqual = Objects.equals(state.currentValue, mappedValue);
                 }
 
                 if (areEqual) {
-                    state.add(element);
+                    state.chunk.add(element);
                 } else {
-                    var chunk = List.copyOf(state);
-                    state.clear();
-                    state.add(element);
-                    currentValue = mappedValue;
+                    var chunk = List.copyOf(state.chunk);
+                    state.chunk.clear();
+                    state.chunk.add(element);
+                    state.currentValue = mappedValue;
                     return downstream.push(chunk);
                 }
             }
@@ -73,12 +71,18 @@ class EqualChunksGatherer<T, U> implements Gatherer<T, List<T>, List<T>> {
     }
 
     @Override
-    public BiConsumer<List<T>, Downstream<? super List<T>>> finisher() {
+    public BiConsumer<State<T, U>, Downstream<? super List<T>>> finisher() {
         return (state, downstream) -> {
-            if (!state.isEmpty()) {
-                var chunk = List.copyOf(state);
+            if (!state.chunk.isEmpty()) {
+                var chunk = List.copyOf(state.chunk);
                 downstream.push(chunk);
             }
         };
+    }
+
+    static class State<T, U> {
+        final List<T> chunk = new ArrayList<>();
+        U currentValue;
+        boolean first = true;
     }
 }
