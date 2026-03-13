@@ -27,7 +27,7 @@ class TestUtils {
     }
 
     static boolean isOrderedSequence(List<Integer> list) {
-        for (var i = 0; i < list.size() - 1; i++) {
+        for (var i = 0; i < list.size(); i++) {
             if (i != list.get(i)) {
                 return false;
             }
