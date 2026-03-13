@@ -19,7 +19,7 @@ import org.jspecify.annotations.NonNull;
  * @param <U> mapped element type
  * @author jhspetersson
  */
-class AtMostGatherer<T, U> implements Gatherer<T, Map<? super U, List<T>>, T> {
+class AtMostGatherer<T, U> implements Gatherer<T, AtMostGatherer.State<T, U>, T> {
     private final long atMost;
     private final Function<? super T, ? extends U> mapper;
 
@@ -34,35 +34,36 @@ class AtMostGatherer<T, U> implements Gatherer<T, Map<? super U, List<T>>, T> {
     }
 
     @Override
-    public Supplier<Map<? super U, List<T>>> initializer() {
-        return HashMap::new;
+    public Supplier<State<T, U>> initializer() {
+        return State::new;
     }
 
     @Override
-    public Integrator<Map<? super U, List<T>>, T, T> integrator() {
+    public Integrator<State<T, U>, T, T> integrator() {
         return Integrator.ofGreedy((state, element, downstream) -> {
             var mappedValue = mapper.apply(element);
-            var elementList = state.computeIfAbsent(mappedValue, _ -> new ArrayList<>());
-            if (elementList.size() <= atMost) {
-                elementList.add(element);
-            }
+            state.elements.add(element);
+            state.counts.merge(mappedValue, 1L, Long::sum);
             return !downstream.isRejecting();
         });
     }
 
     @Override
-    public BiConsumer<Map<? super U, List<T>>, Downstream<? super T>> finisher() {
+    public BiConsumer<State<T, U>, Downstream<? super T>> finisher() {
         return (state, downstream) -> {
-            for (var entry : state.entrySet()) {
-                var elementList = entry.getValue();
-                if (elementList.size() <= atMost) {
-                    for (var element : elementList) {
-                        if (!downstream.push(element)) {
-                            return;
-                        }
+            for (var element : state.elements) {
+                var mappedValue = mapper.apply(element);
+                if (state.counts.get(mappedValue) <= atMost) {
+                    if (!downstream.push(element)) {
+                        return;
                     }
                 }
             }
         };
+    }
+
+    static class State<T, U> {
+        final List<T> elements = new ArrayList<>();
+        final Map<U, Long> counts = new HashMap<>();
     }
 }
