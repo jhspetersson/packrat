@@ -18,17 +18,9 @@ import java.util.stream.Gatherer;
 class SamplingGatherer<T> implements Gatherer<T, SamplingGatherer.State<T>, T> {
     private final int n;
 
-    SamplingGatherer(int n, int maxSpan) {
+    SamplingGatherer(int n) {
         if (n < 0) {
             throw new IllegalArgumentException("n must be a non-negative number");
-        }
-
-        if (maxSpan <= 0) {
-            throw new IllegalArgumentException("maxSpan must be greater than zero");
-        }
-
-        if (n >= maxSpan) {
-            throw new IllegalArgumentException("n must be less than maxSpan");
         }
 
         this.n = n;

@@ -1252,31 +1252,11 @@ public final class Packrat {
      * @param n sample size
      * @param <T> element type
      * @return sampling gatherer
+     * @throws IllegalArgumentException if <code>n</code> is negative
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> sample(int n) {
-        var maxSpan = n < 512
-                ? 1024
-                : n < Integer.MAX_VALUE / 2
-                    ? n * 2
-                    : n + (Integer.MAX_VALUE - n) / 2;
-        return sample(n, maxSpan);
-    }
-
-    /**
-     * Returns a sample of the specified size from the stream of elements.
-     *
-     * @param n sample size
-     * @param maxSpan maximum count of the elements to inspect
-     * @param <T> element type
-     * @return sampling gatherer
-     * @throws IllegalArgumentException if <code>n</code> is negative
-     * @throws IllegalArgumentException if <code>maxSpan</code> is not greater than zero
-     * @throws IllegalArgumentException if <code>maxSpan</code> is less or equal <code>n</code>
-     */
-    @NonNull
-    public static <T> Gatherer<T, ?, T> sample(int n, int maxSpan) {
-        return new SamplingGatherer<>(n, maxSpan);
+        return new SamplingGatherer<>(n);
     }
 
     /**

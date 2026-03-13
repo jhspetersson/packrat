@@ -833,8 +833,6 @@ However, resulting list contains an original element of type `String`;
 ```
 > [0, 8, 27, 33, 65, 66, 88, 90, 93, 96]
 
-`sample(n, maxSpan)` - returns a sample of the specified size from the stream of elements, inspects first __maxSpan__ elements.
-
 #### randomFilter
 
 `randomFilter(probability)` - accepts each incoming element independently with the given probability in the inclusive range [0.0, 1.0].
