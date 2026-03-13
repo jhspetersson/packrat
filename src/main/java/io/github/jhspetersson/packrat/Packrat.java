@@ -1322,6 +1322,42 @@ public final class Packrat {
     }
 
     /**
+     * Returns elements at even indices (0, 2, 4, ...).
+     *
+     * <pre>
+     *   var result = List.of("a", "b", "c", "d", "e").stream().gather(Packrat.even()).toList();
+     *   System.out.println(result);
+     *
+     *   [a, c, e]
+     * </pre>
+     *
+     * @param <T> element type
+     * @return a gatherer that returns elements at even indices
+     */
+    @NonNull
+    public static <T> Gatherer<T, ?, T> even() {
+        return filterWithIndex((index, _) -> index % 2 == 0);
+    }
+
+    /**
+     * Returns elements at odd indices (1, 3, 5, ...).
+     *
+     * <pre>
+     *   var result = List.of("a", "b", "c", "d", "e").stream().gather(Packrat.odd()).toList();
+     *   System.out.println(result);
+     *
+     *   [b, d]
+     * </pre>
+     *
+     * @param <T> element type
+     * @return a gatherer that returns elements at odd indices
+     */
+    @NonNull
+    public static <T> Gatherer<T, ?, T> odd() {
+        return filterWithIndex((index, _) -> index % 2 != 0);
+    }
+
+    /**
      * Returns last element.
      *
      * @param <T> element type

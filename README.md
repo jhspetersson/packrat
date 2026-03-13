@@ -105,6 +105,8 @@ implementation("io.github.jhspetersson:packrat:0.2.1")
 | [randomFilter](#randomfilter)                                  | Randomly accepts each element with a given probability                            |
 | [nth](#nth)                                                    | Takes nth element from the stream                                                 |
 | [dropNth](#dropnth)                                            | Drops every nth element from the stream                                           |
+| [even](#even)                                                  | Returns elements at even indices (0, 2, 4, ...)                                   |
+| [odd](#odd)                                                    | Returns elements at odd indices (1, 3, 5, ...)                                    |
 | [last](#last)                                                  | Last __n__ elements                                                               |
 | [lastUnique](#lastunique)                                      | Last __n__ unique elements                                                        |
 | [lastUniqueBy](#lastuniqueby)                                  | Last __n__ unique elements by a mapping function                                  |
@@ -874,6 +876,30 @@ However, resulting list contains an original element of type `String`;
 ```
 
 > [1, 2, 4, 5, 7, 8, 10]
+
+#### even
+
+`even()` - returns elements at even indices (0, 2, 4, ...)
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.even;
+  var result = List.of("a", "b", "c", "d", "e").stream().gather(even()).toList();
+  System.out.println(result);
+```
+
+> [a, c, e]
+
+#### odd
+
+`odd()` - returns elements at odd indices (1, 3, 5, ...)
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.odd;
+  var result = List.of("a", "b", "c", "d", "e").stream().gather(odd()).toList();
+  System.out.println(result);
+```
+
+> [b, d]
 
 #### last
 
