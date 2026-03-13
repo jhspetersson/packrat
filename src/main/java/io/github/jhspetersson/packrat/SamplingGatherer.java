@@ -1,6 +1,7 @@
 package io.github.jhspetersson.packrat;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiConsumer;
@@ -16,23 +17,13 @@ import java.util.stream.Gatherer;
  */
 class SamplingGatherer<T> implements Gatherer<T, SamplingGatherer.State<T>, T> {
     private final int n;
-    private final int maxSpan;
 
     SamplingGatherer(int n, int maxSpan) {
         if (n < 0) {
             throw new IllegalArgumentException("n must be a non-negative number");
         }
 
-        if (maxSpan <= 0) {
-            throw new IllegalArgumentException("maxSpan must be greater than zero");
-        }
-
-        if (n >= maxSpan) {
-            throw new IllegalArgumentException("n must be less than maxSpan");
-        }
-
         this.n = n;
-        this.maxSpan = maxSpan;
     }
 
     @Override
@@ -45,15 +36,14 @@ class SamplingGatherer<T> implements Gatherer<T, SamplingGatherer.State<T>, T> {
         var random = ThreadLocalRandom.current();
         return Integrator.of((state, element, downstream) -> {
             if (state.list.size() < n) {
-                state.list.add(element);
-            } else if (state.counter <= maxSpan - n) {
-                if (random.nextDouble(1.0, 2.0) <= 1.1) {
-                    var remove = random.nextInt(state.list.size());
-                    state.list.remove(remove);
-                    state.list.add(element);
+                state.list.add(new IndexedElement<>(state.counter, element));
+            } else {
+                var j = random.nextInt(state.counter + 1);
+                if (j < n) {
+                    state.list.set(j, new IndexedElement<>(state.counter, element));
                 }
-                state.counter++;
             }
+            state.counter++;
             return !downstream.isRejecting();
         });
     }
@@ -69,19 +59,22 @@ class SamplingGatherer<T> implements Gatherer<T, SamplingGatherer.State<T>, T> {
     @Override
     public BiConsumer<State<T>, Downstream<? super T>> finisher() {
         return (state, downstream) -> {
-            for (var element : state.list) {
-                if (!downstream.push(element)) {
+            state.list.sort(Comparator.comparingInt(IndexedElement::index));
+            for (var entry : state.list) {
+                if (!downstream.push(entry.element())) {
                     break;
                 }
             }
         };
     }
 
+    record IndexedElement<T>(int index, T element) {}
+
     static class State<T> {
-        List<T> list;
+        List<IndexedElement<T>> list;
         int counter;
 
-        public State(List<T> list, int counter) {
+        public State(List<IndexedElement<T>> list, int counter) {
             this.list = list;
             this.counter = counter;
         }
