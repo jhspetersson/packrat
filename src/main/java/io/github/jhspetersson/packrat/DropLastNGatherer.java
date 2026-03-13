@@ -1,7 +1,7 @@
 package io.github.jhspetersson.packrat;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
@@ -24,7 +24,7 @@ class DropLastNGatherer<T> implements Gatherer<T, Deque<T>, T> {
 
     @Override
     public Supplier<Deque<T>> initializer() {
-        return () -> new FixedSizeDeque<>((int) Math.max(n, 16));
+        return ArrayDeque::new;
     }
 
     @Override
@@ -33,23 +33,12 @@ class DropLastNGatherer<T> implements Gatherer<T, Deque<T>, T> {
             return Integrator.of((_, element, downstream) -> downstream.push(element));
         }
 
-        return Integrator.ofGreedy((deque, element, downstream) -> {
-            deque.add(element);
+        return Integrator.of((deque, element, downstream) -> {
+            deque.addLast(element);
+            if (deque.size() > n) {
+                return downstream.push(deque.removeFirst());
+            }
             return !downstream.isRejecting();
         });
-    }
-
-    @Override
-    public BiConsumer<Deque<T>, Downstream<? super T>> finisher() {
-        return (deque, downstream) -> {
-            var elementsToSkip = (int) Math.min(n, deque.size());
-            var elementsToProcess = deque.size() - elementsToSkip;
-
-            for (var i = 0; i < elementsToProcess; i++) {
-                if (!downstream.push(deque.removeFirst())) {
-                    break;
-                }
-            }
-        };
     }
 }
