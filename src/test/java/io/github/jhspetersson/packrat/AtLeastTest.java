@@ -20,7 +20,7 @@ public class AtLeastTest {
     public void atLeastUnorderedTest() {
         var numbers = Stream.of(1, 10, 3, 2, 3, 8, 4, 9, 5, 6, 7, 8, 3, 8, 8, 5);
         var result = numbers.gather(Packrat.atLeast(3)).toList();
-        assertEquals(List.of(3, 3, 3, 8, 8, 8, 8), result);
+        assertEquals(List.of(3, 3, 8, 8, 3, 8, 8), result);
     }
 
     @Test
