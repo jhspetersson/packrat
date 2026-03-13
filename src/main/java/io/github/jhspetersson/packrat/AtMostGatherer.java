@@ -25,7 +25,7 @@ class AtMostGatherer<T, U> implements Gatherer<T, Map<? super U, List<T>>, T> {
 
     AtMostGatherer(long atMost, @NonNull Function<? super T, ? extends U> mapper) {
         if (atMost < 0) {
-            throw new IllegalArgumentException("atMost must be a positive number");
+            throw new IllegalArgumentException("atMost must be a non-negative number");
         }
         Objects.requireNonNull(mapper, "mapper cannot be null");
 
