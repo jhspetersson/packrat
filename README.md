@@ -959,7 +959,7 @@ However, resulting list contains an original element of type `String`;
   System.out.println(result);
 ```
 
-> [Employee[name=John Rodgers, age=40], Employee[name=Mark Bloom, age=21], Employee[name=Rebecca Schneider, age=24]]
+> [Employee[name=John Rodgers, age=40], Employee[name=Rebecca Schneider, age=24], Employee[name=Luke Norman, age=21]]
 
 > [!CAUTION]
 > This gatherer will consume the entire stream before producing any output.
