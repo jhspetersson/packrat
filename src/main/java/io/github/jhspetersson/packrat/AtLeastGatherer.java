@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
@@ -18,7 +19,7 @@ import org.jspecify.annotations.NonNull;
  * @param <U> mapped element type
  * @author jhspetersson
  */
-class AtLeastGatherer<T, U> implements Gatherer<T, Map<? super U, List<T>>, T> {
+class AtLeastGatherer<T, U> implements Gatherer<T, AtLeastGatherer.State<T, U>, T> {
     private final long atLeast;
     private final Function<? super T, ? extends U> mapper;
 
@@ -33,31 +34,36 @@ class AtLeastGatherer<T, U> implements Gatherer<T, Map<? super U, List<T>>, T> {
     }
 
     @Override
-    public Supplier<Map<? super U, List<T>>> initializer() {
-        return HashMap::new;
+    public Supplier<State<T, U>> initializer() {
+        return State::new;
     }
 
     @Override
-    public Integrator<Map<? super U, List<T>>, T, T> integrator() {
-        return Integrator.of((state, element, downstream) -> {
+    public Integrator<State<T, U>, T, T> integrator() {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             var mappedValue = mapper.apply(element);
-            var elementList = state.computeIfAbsent(mappedValue, _ -> new ArrayList<>());
-            var count = elementList.size();
-            if (count + 1 == atLeast) {
-                for (var t : elementList) {
-                    var res = downstream.push(t);
-                    if (!res) {
-                        return false;
-                    }
-                }
-                elementList.add(element);
-                return downstream.push(element);
-            } else if (count + 1 > atLeast) {
-                return downstream.push(element);
-            } else {
-                elementList.add(element);
-            }
+            state.elements.add(element);
+            state.counts.merge(mappedValue, 1L, Long::sum);
             return !downstream.isRejecting();
         });
+    }
+
+    @Override
+    public BiConsumer<State<T, U>, Downstream<? super T>> finisher() {
+        return (state, downstream) -> {
+            for (var element : state.elements) {
+                var mappedValue = mapper.apply(element);
+                if (state.counts.get(mappedValue) >= atLeast) {
+                    if (!downstream.push(element)) {
+                        return;
+                    }
+                }
+            }
+        };
+    }
+
+    static class State<T, U> {
+        final List<T> elements = new ArrayList<>();
+        final Map<U, Long> counts = new HashMap<>();
     }
 }
