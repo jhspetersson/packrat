@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
@@ -46,14 +45,6 @@ class SamplingGatherer<T> implements Gatherer<T, SamplingGatherer.State<T>, T> {
             state.counter++;
             return !downstream.isRejecting();
         });
-    }
-
-    @Override
-    public BinaryOperator<State<T>> combiner() {
-        return (state, state2) -> {
-            state.list.addAll(state2.list);
-            return state;
-        };
     }
 
     @Override
