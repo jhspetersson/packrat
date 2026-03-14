@@ -1,6 +1,7 @@
 package io.github.jhspetersson.packrat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +15,7 @@ import org.jspecify.annotations.NonNull;
 /**
  * Returns lists ("chunks") of elements, where each next element is less/greater and, optionally equal than the previous one.
  * Comparison is done with the supplied comparator.
+ * Null elements are supported when a null-safe comparator is provided.
  *
  * @param <T> element type
  * @author jhspetersson
@@ -39,7 +41,8 @@ class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, IncreasingDec
     @Override
     public Integrator<State<T>, T, List<T>> integrator() {
         return Integrator.of((state, element, downstream) -> {
-            if (state.value == null) {
+            if (state.first) {
+                state.first = false;
                 state.value = element;
                 state.chunk.add(element);
             } else {
@@ -48,7 +51,7 @@ class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, IncreasingDec
                 if (predicate.test(result)) {
                     state.chunk.add(element);
                 } else {
-                    var chunk = List.copyOf(state.chunk);
+                    var chunk = Collections.unmodifiableList(new ArrayList<>(state.chunk));
                     state.chunk.clear();
                     state.chunk.add(element);
                     return downstream.push(chunk);
@@ -63,7 +66,7 @@ class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, IncreasingDec
     public BiConsumer<State<T>, Downstream<? super List<T>>> finisher() {
         return (state, downstream) -> {
             if (!state.chunk.isEmpty()) {
-                var chunk = List.copyOf(state.chunk);
+                var chunk = Collections.unmodifiableList(new ArrayList<>(state.chunk));
                 downstream.push(chunk);
             }
         };
@@ -72,5 +75,6 @@ class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, IncreasingDec
     static class State<T> {
         final List<T> chunk = new ArrayList<>();
         T value;
+        boolean first = true;
     }
 }
