@@ -7,9 +7,9 @@ import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
 /**
- * Optimized gatherer for left rotation of elements in a stream.
- * It saves the first N elements (where N is the rotation distance) and then
- * outputs the rest of the elements first, followed by the saved elements.
+ * Rotates elements to the left by the given distance.
+ * The distance is taken modulo the stream size, so distances larger
+ * than the stream length are handled correctly.
  *
  * @param <T> element type
  * @author jhspetersson
@@ -46,9 +46,20 @@ class RotateLeftGatherer<T> implements Gatherer<T, List<T>, T> {
     @Override
     public BiConsumer<List<T>, Downstream<? super T>> finisher() {
         return (state, downstream) -> {
-            for (var element : state) {
-                if (!downstream.push(element)) {
-                    break;
+            if (state.isEmpty()) {
+                return;
+            }
+
+            var start = state.size() < distance ? distance % state.size() : 0;
+
+            for (var i = start; i < state.size(); i++) {
+                if (!downstream.push(state.get(i))) {
+                    return;
+                }
+            }
+            for (var i = 0; i < start; i++) {
+                if (!downstream.push(state.get(i))) {
+                    return;
                 }
             }
         };
