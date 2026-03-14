@@ -10,9 +10,7 @@ This library can be used as is or as a source of inspiration for writing your ow
 
 ### Availability
 
-Requires JDK **24** or later.
-
-JDK 22 and 23 support gatherers as a preview feature.
+Requires JDK **25** or later.
 
 ### Usage
 
