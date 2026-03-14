@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static io.github.jhspetersson.packrat.TestUtils.isOrderedSequence;
 import static io.github.jhspetersson.packrat.TestUtils.isReverseOrderedSequence;
@@ -68,5 +69,17 @@ public class IntoListTest {
         var after2 = before.stream().gather(Packrat.rotate(-4)).toList();
 
         assertEquals(List.of(4, 5, 6, 7, 8, 9, 0, 1, 2, 3), after2);
+    }
+
+    @Test
+    void rotateLeftByMoreThanStreamSize() {
+        var result = Stream.of(1, 2, 3).gather(Packrat.rotate(-4)).toList();
+        assertEquals(List.of(2, 3, 1), result);
+    }
+
+    @Test
+    void rotateLeftByStreamSizePlusTwo() {
+        var result = Stream.of(1, 2, 3, 4, 5).gather(Packrat.rotate(-7)).toList();
+        assertEquals(List.of(3, 4, 5, 1, 2), result);
     }
 }

@@ -43,4 +43,20 @@ public class AtLeastTest {
         var result = numbers.gather(Packrat.atLeast(3)).toList();
         assertEquals(List.of(1, 1, 1), result);
     }
+
+    @Test
+    void atLeastShouldPreserveOriginalOrder() {
+        var result = Stream.of("a", "b", "a", "b")
+                .gather(Packrat.atLeast(2))
+                .toList();
+        assertEquals(List.of("a", "b", "a", "b"), result);
+    }
+
+    @Test
+    void atLeastShouldPreserveOrderWithThreeGroups() {
+        var result = Stream.of("x", "y", "z", "x", "y", "z")
+                .gather(Packrat.atLeast(2))
+                .toList();
+        assertEquals(List.of("x", "y", "z", "x", "y", "z"), result);
+    }
 }

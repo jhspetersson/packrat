@@ -2,6 +2,8 @@ package io.github.jhspetersson.packrat;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -38,5 +40,35 @@ public class IncreasingDecreasingTest {
         var result = numbers.gather(Packrat.decreasingOrEqual()).toList();
 
         assertEquals(List.of(20, 17, 15, 11, 11, 9, 7, 7, 0), result);
+    }
+
+    @Test
+    void decreasingWithNullFirstElement() {
+        var result = Stream.of((Integer) null, 5, 3, 7)
+                .gather(Packrat.decreasing(Comparator.nullsFirst(Comparator.naturalOrder())))
+                .toList();
+        assertEquals(Collections.singletonList(null), result);
+    }
+
+    @Test
+    void increasingGathererShouldBeReusable() {
+        var gatherer = Packrat.<Integer>increasing();
+
+        var result1 = Stream.of(1, 2, 3).gather(gatherer).toList();
+        assertEquals(List.of(1, 2, 3), result1);
+
+        var result2 = Stream.of(1, 2, 3).gather(gatherer).toList();
+        assertEquals(List.of(1, 2, 3), result2);
+    }
+
+    @Test
+    void decreasingGathererShouldBeReusable() {
+        var gatherer = Packrat.<Integer>decreasing();
+
+        var result1 = Stream.of(3, 2, 1).gather(gatherer).toList();
+        assertEquals(List.of(3, 2, 1), result1);
+
+        var result2 = Stream.of(3, 2, 1).gather(gatherer).toList();
+        assertEquals(List.of(3, 2, 1), result2);
     }
 }
