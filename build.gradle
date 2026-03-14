@@ -10,6 +10,8 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(25)
     }
+    withSourcesJar()
+    withJavadocJar()
 }
 
 repositories {
@@ -35,28 +37,13 @@ jar {
     }
 }
 
-tasks.register('sourcesJar', Jar) {
-    archiveClassifier.set('sources')
-    from sourceSets.main.allSource
-}
-
-tasks.register('javadocJar', Jar) {
-    archiveClassifier.set('javadoc')
-    from tasks.javadoc
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
-
 publishing {
     publications {
-        myPublication(MavenPublication) {
+        maven(MavenPublication) {
             from components.java
 
             pom {
-                name = "${project.name}"
+                name = project.name
                 description = 'Gatherers library for Java Stream API'
                 url = 'https://github.com/jhspetersson/packrat'
 
@@ -83,25 +70,10 @@ publishing {
             }
         }
     }
-
-    repositories {
-        maven {
-            url = layout.buildDirectory.dir('fake-repo')
-        }
-    }
 }
 
-tasks.register('generatePom', GenerateMavenPom) {
-    group = 'build'
-    description = 'Generates the POM file without publishing.'
-    destination = file("${layout.buildDirectory.asFile.get()}/libs/${rootProject.name}-${project.version}.pom")
-    pom = publishing.publications.myPublication.pom
-
-    doLast {
-        println "POM file written to: ${destination}"
-    }
+tasks.named('generatePomFileForMavenPublication') {
+    destination = file("${layout.buildDirectory.dir('libs').get()}/${project.name}-${project.version}.pom")
 }
 
-build.finalizedBy {
-    tasks.generatePom
-}
+build.finalizedBy generatePomFileForMavenPublication
