@@ -10,6 +10,7 @@ import org.jspecify.annotations.NonNull;
 
 /**
  * Filters all the elements going in some order specified by the supplied comparator.
+ * Null elements are supported when a null-safe comparator is provided.
  *
  * @param <T> element type
  * @author jhspetersson
@@ -35,7 +36,8 @@ class IncreasingDecreasingGatherer<T> implements Gatherer<T, IncreasingDecreasin
     @Override
     public Integrator<State<T>, T, T> integrator() {
         return Integrator.of((state, element, downstream) -> {
-            if (state.value == null) {
+            if (state.first) {
+                state.first = false;
                 state.value = element;
                 return downstream.push(element);
             }
@@ -52,5 +54,6 @@ class IncreasingDecreasingGatherer<T> implements Gatherer<T, IncreasingDecreasin
 
     static class State<T> {
         T value;
+        boolean first = true;
     }
 }
