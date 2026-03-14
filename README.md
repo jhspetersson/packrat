@@ -22,14 +22,14 @@ JDK 22 and 23 support gatherers as a preview feature.
 <dependency>
     <groupId>io.github.jhspetersson</groupId>
     <artifactId>packrat</artifactId>
-    <version>0.2.1</version>
+    <version>0.2.2</version>
 </dependency>
 ```
 
 #### Gradle
 
 ```groovy
-implementation("io.github.jhspetersson:packrat:0.2.1")
+implementation("io.github.jhspetersson:packrat:0.2.2")
 ```
 
 ### Gatherers
