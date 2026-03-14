@@ -180,4 +180,26 @@ class ThrowIfNotOrderedTest {
                 Stream.of(5, 3, 4).gather(Packrat.throwIfNotDecreasingOrEqual()).toList()
         );
     }
+
+    @Test
+    void nullMappedFirstElementSkipsDecreasingValidation() {
+        assertThrows(Exception.class, () ->
+                Stream.of(1, 2)
+                        .gather(Packrat.throwIfNotDecreasingBy(
+                                i -> i == 1 ? null : i,
+                                () -> new IllegalStateException("not decreasing")))
+                        .toList()
+        );
+    }
+
+    @Test
+    void nullMappedFirstElementSkipsIncreasingValidation() {
+        assertThrows(Exception.class, () ->
+                Stream.of(5, 3)
+                        .gather(Packrat.throwIfNotIncreasingBy(
+                                i -> i == 5 ? null : i,
+                                () -> new IllegalStateException("not increasing")))
+                        .toList()
+        );
+    }
 }

@@ -64,4 +64,25 @@ public class SamplingTest {
         assertTrue(isOrdered(after));
         assertEquals(100, after.size());
     }
+
+    @Test
+    void sampleParallelShouldReturnExactlyNElements() {
+        var result = IntStream.range(0, 10_000).boxed()
+                .parallel()
+                .gather(Packrat.sample(5))
+                .toList();
+        assertEquals(5, result.size());
+    }
+
+    @Test
+    void sampleParallelResultsShouldBeWithinRange() {
+        var result = IntStream.range(0, 10_000).boxed()
+                .parallel()
+                .gather(Packrat.sample(10))
+                .toList();
+        assertEquals(10, result.size());
+        for (var value : result) {
+            assertTrue(value >= 0 && value < 10_000);
+        }
+    }
 }

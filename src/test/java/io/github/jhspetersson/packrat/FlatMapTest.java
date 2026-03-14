@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -90,5 +91,34 @@ public class FlatMapTest {
     public void nullChecksTest() {
         assertThrows(NullPointerException.class, () -> Packrat.flatMapIf(null, _ -> true), "Null mapper should throw NullPointerException");
         assertThrows(NullPointerException.class, () -> Packrat.flatMapIf(_ -> Stream.empty(), null), "Null predicate should throw NullPointerException");
+    }
+
+    @Test
+    void flatMapIfShouldCloseStreams() {
+        var closeCount = new AtomicInteger(0);
+
+        Stream.of(1, 2, 3)
+                .gather(Packrat.flatMapIf(
+                        i -> Stream.of(i, i * 10).onClose(closeCount::incrementAndGet),
+                        i -> true
+                ))
+                .toList();
+
+        assertEquals(3, closeCount.get());
+    }
+
+    @Test
+    void flatMapIfShouldCloseStreamOnEarlyTermination() {
+        var closeCount = new AtomicInteger(0);
+
+        Stream.of(1, 2, 3)
+                .gather(Packrat.flatMapIf(
+                        i -> Stream.of(i, i * 10).onClose(closeCount::incrementAndGet),
+                        i -> true
+                ))
+                .limit(1)
+                .toList();
+
+        assertEquals(1, closeCount.get());
     }
 }
