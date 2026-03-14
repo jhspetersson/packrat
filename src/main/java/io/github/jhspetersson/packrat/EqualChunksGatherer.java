@@ -1,6 +1,7 @@
 package io.github.jhspetersson.packrat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +14,7 @@ import org.jspecify.annotations.NonNull;
 
 /**
  * Returns lists ("chunks") of elements, where all elements in a chunk are equal after applying the mapper function.
+ * Null elements are supported when equality is determined via {@link Objects#equals}.
  *
  * @param <T> element type
  * @param <U> mapped type for comparison
@@ -58,7 +60,7 @@ class EqualChunksGatherer<T, U> implements Gatherer<T, EqualChunksGatherer.State
                 if (areEqual) {
                     state.chunk.add(element);
                 } else {
-                    var chunk = List.copyOf(state.chunk);
+                    var chunk = Collections.unmodifiableList(new ArrayList<>(state.chunk));
                     state.chunk.clear();
                     state.chunk.add(element);
                     state.currentValue = mappedValue;
@@ -74,7 +76,7 @@ class EqualChunksGatherer<T, U> implements Gatherer<T, EqualChunksGatherer.State
     public BiConsumer<State<T, U>, Downstream<? super List<T>>> finisher() {
         return (state, downstream) -> {
             if (!state.chunk.isEmpty()) {
-                var chunk = List.copyOf(state.chunk);
+                var chunk = Collections.unmodifiableList(new ArrayList<>(state.chunk));
                 downstream.push(chunk);
             }
         };
