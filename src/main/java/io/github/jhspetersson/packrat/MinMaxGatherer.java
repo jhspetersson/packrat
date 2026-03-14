@@ -12,6 +12,7 @@ import org.jspecify.annotations.NonNull;
 
 /**
  * Outputs the greatest or the smallest element in the stream, comparing is done after mapping function applied.
+ * Null elements are supported as long as the mapper produces a non-null comparable value.
  *
  * @param <T> element type
  * @param <U> mapped element type
@@ -61,9 +62,8 @@ class MinMaxGatherer<T, U> implements Gatherer<T, MinMaxGatherer.State<T, U>, T>
     @Override
     public BiConsumer<State<T, U>, Downstream<? super T>> finisher() {
         return (state, downstream) -> {
-            var element = state.element;
-            if (element != null) {
-                downstream.push(element);
+            if (state.mappedElement != null) {
+                downstream.push(state.element);
             }
         };
     }
