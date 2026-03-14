@@ -13,7 +13,7 @@ import org.jspecify.annotations.NonNull;
  * <p>
  * Elements are passed downstream unchanged. If an element violates the order relative to the
  * previous element, an exception supplied by the provided supplier is thrown immediately
- * and the pipeline fails.
+ * and the pipeline fails. The mapper must not return null values.
  *
  * @param <T> element type
  * @param <U> mapped comparable type used for order validation
@@ -45,12 +45,13 @@ class ThrowIfNotOrderedGatherer<T, U extends Comparable<? super U>> implements G
     public Integrator<State<U>, T, T> integrator() {
         return Integrator.of((state, element, downstream) -> {
             var mapped = mapper.apply(element);
-            if (state.prev != null) {
+            if (!state.first) {
                 var result = state.prev.compareTo(mapped);
                 if (!predicate.test(result)) {
                     throw exceptionSupplier.get();
                 }
             }
+            state.first = false;
             state.prev = mapped;
             return downstream.push(element);
         });
@@ -58,5 +59,6 @@ class ThrowIfNotOrderedGatherer<T, U extends Comparable<? super U>> implements G
 
     static class State<U> {
         private U prev;
+        private boolean first = true;
     }
 }
