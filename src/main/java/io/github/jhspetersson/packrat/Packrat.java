@@ -1219,9 +1219,9 @@ public final class Packrat {
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> rotate(int distance) {
-        if (distance < 0) {
+        if (distance < 0 && distance != Integer.MIN_VALUE) {
             return new RotateLeftGatherer<>(-distance);
-        } else if (distance > 0) {
+        } else if (distance != 0) {
             return new IntoListGatherer<>(list -> Collections.rotate(list, distance));
         } else {
             return new IdentityGatherer<>();
