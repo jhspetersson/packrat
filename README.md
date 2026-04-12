@@ -20,14 +20,20 @@ Requires JDK **25** or later.
 <dependency>
     <groupId>io.github.jhspetersson</groupId>
     <artifactId>packrat</artifactId>
-    <version>0.2.2</version>
+    <version>0.2.3</version>
 </dependency>
 ```
 
-#### Gradle
+#### Gradle (Groovy DSL)
 
 ```groovy
-implementation("io.github.jhspetersson:packrat:0.2.2")
+implementation 'io.github.jhspetersson:packrat:0.2.3'
+```
+
+#### Gradle (Kotlin DSL)
+
+```kotlin
+implementation("io.github.jhspetersson:packrat:0.2.3")
 ```
 
 ### Gatherers
