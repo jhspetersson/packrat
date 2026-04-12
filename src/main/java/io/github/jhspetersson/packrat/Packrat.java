@@ -1417,6 +1417,60 @@ public final class Packrat {
     }
 
     /**
+     * Drops the last <code>n</code> unique elements.
+     * The final occurrence of each of the last <code>n</code> unique elements in the stream is removed,
+     * while all other elements are emitted in their original order.
+     *
+     * @param n count of last unique elements to drop
+     * @param <T> element type
+     * @return a gatherer that drops the last <code>n</code> unique elements from the stream
+     * @throws IllegalArgumentException if <code>n</code> is negative
+     */
+    @NonNull
+    public static <T> Gatherer<T, ?, T> dropLastUnique(long n) {
+        return new DropLastingGatherer<>(n, false, Function.identity());
+    }
+
+    /**
+     * Drops the last <code>n</code> unique elements determined by the supplied mapper.
+     * Uniqueness is calculated based on the mapped key values. Only the final occurrence
+     * of each of the last <code>n</code> unique keys is dropped, while all other elements
+     * are emitted in their original order.
+     *
+     * @param n count of last unique elements to drop
+     * @param mapper mapping function used to determine uniqueness
+     * @param <T> element type
+     * @param <U> mapped key type
+     * @return a gatherer that drops the last <code>n</code> unique elements from the stream,
+     * based on the mapped key
+     * @throws IllegalArgumentException if <code>n</code> is negative
+     * @throws NullPointerException if mapper is null
+     */
+    @NonNull
+    public static <T, U> Gatherer<T, ?, T> dropLastUniqueBy(long n, @NonNull Function<? super T, ? extends U> mapper) {
+        return new DropLastingGatherer<>(n, false, mapper);
+    }
+
+    /**
+     * Drops every element whose mapped key matches one of the last <code>n</code> unique keys
+     * encountered in the stream. Unlike {@link #dropLastUniqueBy(long, Function)}, which removes
+     * only the final occurrence of each matching key, this method removes all occurrences.
+     *
+     * @param n count of trailing unique keys whose elements should be dropped
+     * @param mapper mapping function used to determine keys
+     * @param <T> element type
+     * @param <U> mapped key type
+     * @return a gatherer that drops every element whose key is among the last <code>n</code>
+     * unique keys in the stream
+     * @throws IllegalArgumentException if <code>n</code> is negative
+     * @throws NullPointerException if mapper is null
+     */
+    @NonNull
+    public static <T, U> Gatherer<T, ?, T> dropLastBy(long n, @NonNull Function<? super T, ? extends U> mapper) {
+        return new DropLastingGatherer<>(n, true, mapper);
+    }
+
+    /**
      * Provides the result of the supplied collector as a single element into the stream.
      * Effectively converts any Collector into a Gatherer.
      *

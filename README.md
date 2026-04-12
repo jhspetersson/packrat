@@ -109,6 +109,9 @@ implementation("io.github.jhspetersson:packrat:0.2.2")
 | [lastUnique](#lastunique)                                      | Last __n__ unique elements                                                        |
 | [lastUniqueBy](#lastuniqueby)                                  | Last __n__ unique elements by a mapping function                                  |
 | [dropLast](#droplast)                                          | Drops last __n__ elements                                                         |
+| [dropLastUnique](#droplastunique)                              | Drops last __n__ unique elements                                                  |
+| [dropLastUniqueBy](#droplastuniqueby)                          | Drops last __n__ unique elements by a mapping function                            |
+| [dropLastBy](#droplastby)                                      | Drops every element whose key is among the last __n__ unique keys                 |
 
 #### Text processing operations
 
@@ -973,6 +976,59 @@ However, resulting list contains an original element of type `String`;
 ```
 
 > [0, 1, 2, 3, 4, 5, 6]
+
+> [!CAUTION]
+> This gatherer will consume the entire stream before producing any output.
+
+#### dropLastUnique
+
+`dropLastUnique(n)` - drops the last __n__ unique elements from the stream. Only the final occurrence of each of the last __n__ unique elements is removed; all other elements are emitted in their original order.
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.dropLastUnique;
+  var integers = List.of(1, 2, 3, 4, 5, 4, 1, 1, 1, 2, 2, 6).stream().gather(dropLastUnique(3)).toList();
+  System.out.println(integers);
+```
+
+> [1, 2, 3, 4, 5, 4, 1, 1, 2]
+
+> [!CAUTION]
+> This gatherer will consume the entire stream before producing any output.
+
+#### dropLastUniqueBy
+
+`dropLastUniqueBy(n, mapper)` - drops the last __n__ unique elements from the stream determined by the supplied mapping function. Only the final occurrence of each of the last __n__ unique keys is removed.
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.dropLastUniqueBy;
+  record Employee(String name, int age) {}
+  var employees = List.of(
+      new Employee("Ann Smith", 35),
+      new Employee("John Rodgers", 40),
+      new Employee("Mark Bloom", 21),
+      new Employee("Rebecca Schneider", 24),
+      new Employee("Luke Norman", 21)
+  );
+  var result = employees.stream().gather(dropLastUniqueBy(3, Employee::age)).toList();
+  System.out.println(result);
+```
+
+> [Employee[name=Ann Smith, age=35], Employee[name=Mark Bloom, age=21]]
+
+> [!CAUTION]
+> This gatherer will consume the entire stream before producing any output.
+
+#### dropLastBy
+
+`dropLastBy(n, mapper)` - drops every element whose mapped key matches one of the last __n__ unique keys encountered in the stream. Unlike `dropLastUniqueBy`, which drops only the final occurrence of each matching key, this method drops all occurrences.
+
+```java
+  import static io.github.jhspetersson.packrat.Packrat.dropLastBy;
+  var integers = List.of(1, 2, 3, 4, 5, 4, 1, 1, 1, 2, 2, 6).stream().gather(dropLastBy(3, Function.identity())).toList();
+  System.out.println(integers);
+```
+
+> [3, 4, 5, 4]
 
 > [!CAUTION]
 > This gatherer will consume the entire stream before producing any output.
