@@ -12,7 +12,7 @@ import org.jspecify.annotations.NonNull;
 
 /**
  * Outputs the greatest or the smallest element in the stream, comparing is done after mapping function applied.
- * Null elements are supported as long as the mapper produces a non-null comparable value.
+ * Null elements and null mapped values are supported as long as the supplied comparator is null-aware.
  *
  * @param <T> element type
  * @param <U> mapped element type
@@ -44,14 +44,14 @@ class MinMaxGatherer<T, U> implements Gatherer<T, MinMaxGatherer.State<T, U>, T>
     public Integrator<State<T, U>, T, T> integrator() {
         return Integrator.ofGreedy((state, element, downstream) -> {
             var mappedValue = mapper.apply(element);
-            var stateMappedElement = state.mappedElement;
-            if (stateMappedElement != null) {
-                var result = comparator.compare(mappedValue, stateMappedElement);
+            if (state.hasValue) {
+                var result = comparator.compare(mappedValue, state.mappedElement);
                 if (predicate.test(result)) {
                     state.element = element;
                     state.mappedElement = mappedValue;
                 }
             } else {
+                state.hasValue = true;
                 state.element = element;
                 state.mappedElement = mappedValue;
             }
@@ -62,13 +62,14 @@ class MinMaxGatherer<T, U> implements Gatherer<T, MinMaxGatherer.State<T, U>, T>
     @Override
     public BiConsumer<State<T, U>, Downstream<? super T>> finisher() {
         return (state, downstream) -> {
-            if (state.mappedElement != null) {
+            if (state.hasValue) {
                 downstream.push(state.element);
             }
         };
     }
 
     static class State<T, U> {
+        boolean hasValue;
         T element;
         U mappedElement;
     }
