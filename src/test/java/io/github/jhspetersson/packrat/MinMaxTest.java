@@ -67,7 +67,7 @@ public class MinMaxTest {
     @Test
     void minByWithNullsFirstComparatorReturnsNull() {
         var result = Stream.of(null, "a")
-                .gather(Packrat.minBy(s -> s, Comparator.nullsFirst(Comparator.naturalOrder())))
+                .gather(Packrat.minBy(s -> s, Comparator.<String>nullsFirst(Comparator.naturalOrder())))
                 .toList();
         assertEquals(1, result.size());
         assertNull(result.getFirst());
@@ -76,7 +76,7 @@ public class MinMaxTest {
     @Test
     void maxByWithNullsLastComparatorReturnsNull() {
         var result = Stream.of("a", null)
-                .gather(Packrat.maxBy(s -> s, Comparator.nullsLast(Comparator.naturalOrder())))
+                .gather(Packrat.maxBy(s -> s, Comparator.<String>nullsLast(Comparator.naturalOrder())))
                 .toList();
         assertEquals(1, result.size());
         assertNull(result.getFirst());
@@ -85,7 +85,7 @@ public class MinMaxTest {
     @Test
     void minByWithNullMappedValueNotFirst() {
         var result = Stream.of("a", null, "b")
-                .gather(Packrat.minBy(s -> s, Comparator.nullsFirst(Comparator.naturalOrder())))
+                .gather(Packrat.minBy(s -> s, Comparator.<String>nullsFirst(Comparator.naturalOrder())))
                 .toList();
         assertEquals(1, result.size());
         assertNull(result.getFirst());
