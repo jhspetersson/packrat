@@ -1,7 +1,7 @@
 package io.github.jhspetersson.packrat;
 
-import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
@@ -24,7 +24,7 @@ class DropLastNGatherer<T> implements Gatherer<T, Deque<T>, T> {
 
     @Override
     public Supplier<Deque<T>> initializer() {
-        return ArrayDeque::new;
+        return LinkedList::new;
     }
 
     @Override

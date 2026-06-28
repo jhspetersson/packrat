@@ -3,8 +3,10 @@ package io.github.jhspetersson.packrat;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static io.github.jhspetersson.packrat.TestUtils.getEmployees;
 import static io.github.jhspetersson.packrat.TestUtils.isOrderedSequence;
@@ -108,6 +110,15 @@ public class LastNTest {
     @Test
     public void nullMapperThrows() {
         assertThrows(NullPointerException.class, () -> new LastingGatherer<Employee>(3, true, null));
+    }
+
+    @Test
+    void lastWithNullElements() {
+        var after = Stream.of("a", null, "b", null, "c")
+                .gather(Packrat.last(2))
+                .toList();
+
+        assertEquals(Arrays.asList(null, "c"), after);
     }
 
     @Test

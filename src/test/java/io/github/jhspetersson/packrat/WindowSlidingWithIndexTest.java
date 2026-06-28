@@ -2,6 +2,7 @@ package io.github.jhspetersson.packrat;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -27,6 +28,19 @@ public class WindowSlidingWithIndexTest {
         assertEquals(List.of(8, 9, 10), result.get(7).getValue());
     }
     
+    @Test
+    public void windowSlidingWithIndexNullElementsTest() {
+        var result = Stream.of("a", null, "b").gather(Packrat.windowSlidingWithIndex(2)).toList();
+
+        assertEquals(2, result.size());
+
+        assertEquals(0L, result.get(0).getKey());
+        assertEquals(Arrays.asList("a", null), result.get(0).getValue());
+
+        assertEquals(1L, result.get(1).getKey());
+        assertEquals(Arrays.asList(null, "b"), result.get(1).getValue());
+    }
+
     @Test
     public void windowSlidingWithIndexCustomStartTest() {
         var numbers = IntStream.rangeClosed(1, 5).boxed();

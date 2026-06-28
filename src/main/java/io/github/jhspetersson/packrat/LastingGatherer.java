@@ -1,9 +1,9 @@
 package io.github.jhspetersson.packrat;
 
-import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -99,7 +99,7 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
         final Function<? super T, ?> mapper;
 
         State(boolean unique, Function<? super T, ?> mapper) {
-            this.deque = new ArrayDeque<>();
+            this.deque = new LinkedList<>();
             this.mappedElements = new HashSet<>();
             this.unique = unique;
             this.mapper = mapper;

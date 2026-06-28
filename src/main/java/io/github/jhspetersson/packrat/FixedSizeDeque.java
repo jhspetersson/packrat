@@ -1,13 +1,15 @@
 package io.github.jhspetersson.packrat;
 
-import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * A fixed-size deque implementation that automatically removes the oldest element
  * when the maximum size is reached and a new element is added.
+ * <p>
+ * Backed by a {@link LinkedList} so that {@code null} elements are permitted.
  *
  * @param <E> the type of elements held in this deque
  * @author jhspetersson
@@ -27,7 +29,7 @@ public class FixedSizeDeque<E> implements Deque<E> {
         }
 
         this.maxSize = maxSize;
-        this.delegate = new ArrayDeque<>(maxSize);
+        this.delegate = new LinkedList<>();
     }
 
     @Override

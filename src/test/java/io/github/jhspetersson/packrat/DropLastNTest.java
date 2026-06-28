@@ -3,8 +3,10 @@ package io.github.jhspetersson.packrat;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static io.github.jhspetersson.packrat.TestUtils.isOrderedSequence;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -92,6 +94,15 @@ public class DropLastNTest {
         assertEquals(95, result.size());
         assertEquals(0, result.getFirst());
         assertEquals(94, result.getLast());
+    }
+
+    @Test
+    void dropLastWithNullElements() {
+        var after = Stream.of("a", null, "b", null, "c")
+                .gather(Packrat.dropLast(2))
+                .toList();
+
+        assertEquals(Arrays.asList("a", null, "b"), after);
     }
 
     @Test
