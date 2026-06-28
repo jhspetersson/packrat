@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -77,5 +78,26 @@ public class AtMostTest {
                 .gather(Packrat.atMost(1))
                 .toList();
         assertEquals(List.of("cherry", "apple", "banana", "date"), result);
+    }
+
+    @Test
+    void atMostByWithFreshKeysShouldNotThrow() {
+        var result = Stream.of("a")
+                .gather(Packrat.atMostBy(1, s -> new Object()))
+                .toList();
+        assertEquals(List.of("a"), result);
+    }
+
+    @Test
+    void atMostByShouldInvokeMapperOncePerElement() {
+        var calls = new AtomicInteger();
+        var result = Stream.of("aa", "bb", "c", "dd")
+                .gather(Packrat.atMostBy(1, s -> {
+                    calls.incrementAndGet();
+                    return s.length();
+                }))
+                .toList();
+        assertEquals(List.of("c"), result);
+        assertEquals(4, calls.get());
     }
 }

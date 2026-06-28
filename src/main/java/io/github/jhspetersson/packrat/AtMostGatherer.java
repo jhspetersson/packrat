@@ -42,7 +42,7 @@ class AtMostGatherer<T, U> implements Gatherer<T, AtMostGatherer.State<T, U>, T>
     public Integrator<State<T, U>, T, T> integrator() {
         return Integrator.ofGreedy((state, element, downstream) -> {
             var mappedValue = mapper.apply(element);
-            state.elements.add(element);
+            state.elements.add(new Entry<>(element, mappedValue));
             state.counts.merge(mappedValue, 1L, Long::sum);
             return !downstream.isRejecting();
         });
@@ -51,10 +51,9 @@ class AtMostGatherer<T, U> implements Gatherer<T, AtMostGatherer.State<T, U>, T>
     @Override
     public BiConsumer<State<T, U>, Downstream<? super T>> finisher() {
         return (state, downstream) -> {
-            for (var element : state.elements) {
-                var mappedValue = mapper.apply(element);
-                if (state.counts.get(mappedValue) <= atMost) {
-                    if (!downstream.push(element)) {
+            for (var entry : state.elements) {
+                if (state.counts.get(entry.mappedValue()) <= atMost) {
+                    if (!downstream.push(entry.element())) {
                         return;
                     }
                 }
@@ -62,8 +61,10 @@ class AtMostGatherer<T, U> implements Gatherer<T, AtMostGatherer.State<T, U>, T>
         };
     }
 
+    record Entry<T, U>(T element, U mappedValue) {}
+
     static class State<T, U> {
-        final List<T> elements = new ArrayList<>();
+        final List<Entry<T, U>> elements = new ArrayList<>();
         final Map<U, Long> counts = new HashMap<>();
     }
 }

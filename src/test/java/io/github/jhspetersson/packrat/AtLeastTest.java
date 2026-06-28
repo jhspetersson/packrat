@@ -3,6 +3,7 @@ package io.github.jhspetersson.packrat;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,5 +59,26 @@ public class AtLeastTest {
                 .gather(Packrat.atLeast(2))
                 .toList();
         assertEquals(List.of("x", "y", "z", "x", "y", "z"), result);
+    }
+
+    @Test
+    void atLeastByWithFreshKeysShouldNotThrow() {
+        var result = Stream.of("a")
+                .gather(Packrat.atLeastBy(1, s -> new Object()))
+                .toList();
+        assertEquals(List.of("a"), result);
+    }
+
+    @Test
+    void atLeastByShouldInvokeMapperOncePerElement() {
+        var calls = new AtomicInteger();
+        var result = Stream.of("aa", "bb", "c", "dd")
+                .gather(Packrat.atLeastBy(2, s -> {
+                    calls.incrementAndGet();
+                    return s.length();
+                }))
+                .toList();
+        assertEquals(List.of("aa", "bb", "dd"), result);
+        assertEquals(4, calls.get());
     }
 }
