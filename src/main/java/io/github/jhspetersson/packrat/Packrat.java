@@ -605,7 +605,7 @@ public final class Packrat {
      * @throws NullPointerException if the mapper or predicate is null
      */
     @NonNull
-    public static <T> Gatherer<T, ?, ?> flatMapIf(@NonNull Function<? super T, Stream<? extends T>> mapper, @NonNull Predicate<? super T> predicate) {
+    public static <T> Gatherer<T, ?, T> flatMapIf(@NonNull Function<? super T, Stream<? extends T>> mapper, @NonNull Predicate<? super T> predicate) {
         return new FlatMapGatherer<>(mapper, predicate);
     }
 

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Gatherer;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -105,6 +106,23 @@ public class FlatMapTest {
                 .toList();
 
         assertEquals(3, closeCount.get());
+    }
+
+    @Test
+    public void resultElementTypeIsPreservedTest() {
+        var result = Stream.of("ABC", "D")
+                .gather(Packrat.flatMapIf(s -> Arrays.stream(s.split("")), s -> s.length() > 1))
+                .map(String::toLowerCase)
+                .toList();
+        assertEquals(List.of("a", "b", "c", "d"), result);
+    }
+
+    @Test
+    public void gathererTypeIsAssignableTest() {
+        Gatherer<String, ?, String> gatherer =
+                Packrat.flatMapIf(s -> Arrays.stream(s.split("")), s -> s.length() > 1);
+        var result = Stream.of("ABC", "D").gather(gatherer).toList();
+        assertEquals(List.of("A", "B", "C", "D"), result);
     }
 
     @Test
