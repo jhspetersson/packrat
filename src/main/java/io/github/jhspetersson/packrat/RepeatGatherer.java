@@ -12,7 +12,7 @@ import java.util.stream.Gatherer;
  * @param <T> element type
  * @author jhspetersson
  */
-public class RepeatGatherer<T> implements Gatherer<T, List<T>, T> {
+class RepeatGatherer<T> implements Gatherer<T, List<T>, T> {
     private final long n;
 
     /**
@@ -21,7 +21,7 @@ public class RepeatGatherer<T> implements Gatherer<T, List<T>, T> {
      * @param n how many times to repeat the stream, value equal to zero effectively empties the stream
      * @throws IllegalArgumentException if <code>n</code> is negative
      */
-    public RepeatGatherer(long n) {
+    RepeatGatherer(long n) {
         if (n < 0) {
             throw new IllegalArgumentException("n must be a non-negative number");
         }

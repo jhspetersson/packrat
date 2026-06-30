@@ -6,6 +6,8 @@ import com.tngtech.archunit.core.domain.JavaMethod;
 import com.tngtech.archunit.core.domain.JavaMethodCall;
 import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.core.importer.ImportOption;
+import com.tngtech.archunit.lang.ArchRule;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayDeque;
@@ -13,7 +15,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Gatherer;
 
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -95,6 +100,45 @@ public class PackratArchTest {
         }
 
         assertTrue(unused.isEmpty(), message.toString());
+    }
+
+    /**
+     * Only {@code Packrat} is intended public API. Every other class in the package
+     * (gatherer implementations and internal helpers such as {@code FixedSizeDeque})
+     * must stay package-private so they do not leak into the published surface.
+     */
+    @Test
+    void onlyPackratIsPublic() {
+        JavaClasses mainClasses = new ClassFileImporter()
+                .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
+                .importPackages("io.github.jhspetersson.packrat");
+
+        ArchRule rule = noClasses()
+                .that().haveSimpleNameNotEndingWith("Packrat")
+                .and().areTopLevelClasses()
+                .should().bePublic()
+                .because("only Packrat is intended public API; helper and gatherer classes must stay package-private");
+
+        rule.check(mainClasses);
+    }
+
+    /**
+     * All {@link Gatherer} implementations are exposed only through {@code Packrat}
+     * factory methods that return the {@code Gatherer} interface, so the concrete
+     * implementation classes must never be public.
+     */
+    @Test
+    void gathererImplementationsAreNotPublic() {
+        JavaClasses mainClasses = new ClassFileImporter()
+                .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
+                .importPackages("io.github.jhspetersson.packrat");
+
+        ArchRule rule = noClasses()
+                .that().areAssignableTo(Gatherer.class)
+                .should().bePublic()
+                .because("gatherer implementations are only returned via the Gatherer interface from Packrat");
+
+        rule.check(mainClasses);
     }
 
     private static String signatureOf(JavaMethod m) {

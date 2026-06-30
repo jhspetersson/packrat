@@ -14,7 +14,7 @@ import java.util.LinkedList;
  * @param <E> the type of elements held in this deque
  * @author jhspetersson
  */
-public class FixedSizeDeque<E> implements Deque<E> {
+class FixedSizeDeque<E> implements Deque<E> {
     private final Deque<E> delegate;
     private final int maxSize;
 

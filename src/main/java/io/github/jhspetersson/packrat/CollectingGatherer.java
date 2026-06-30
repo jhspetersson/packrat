@@ -18,7 +18,7 @@ import org.jspecify.annotations.NonNull;
  * @param <V> result type
  * @author jhspetersson
  */
-public class CollectingGatherer<T, U, V> implements Gatherer<T, U, V> {
+class CollectingGatherer<T, U, V> implements Gatherer<T, U, V> {
     private final Collector<? super T, U, ? extends V> collector;
 
     /**
@@ -27,7 +27,7 @@ public class CollectingGatherer<T, U, V> implements Gatherer<T, U, V> {
      * @param collector the collector to be used for gathering elements, must not be null
      * @throws NullPointerException if the collector is null
      */
-    public CollectingGatherer(@NonNull Collector<? super T, U, ? extends V> collector) {
+    CollectingGatherer(@NonNull Collector<? super T, U, ? extends V> collector) {
         Objects.requireNonNull(collector, "collector cannot be null");
 
         this.collector = collector;

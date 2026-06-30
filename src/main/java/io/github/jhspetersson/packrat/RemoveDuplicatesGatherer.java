@@ -18,7 +18,7 @@ import org.jspecify.annotations.NonNull;
  * @param <U> mapped element type
  * @author jhspetersson
  */
-public class RemoveDuplicatesGatherer<T, U> implements Gatherer<T, List<U>, T> {
+class RemoveDuplicatesGatherer<T, U> implements Gatherer<T, List<U>, T> {
     private final Function<? super T, ? extends U> mapper;
 
     RemoveDuplicatesGatherer(@NonNull Function<? super T, ? extends U> mapper) {
