@@ -28,4 +28,19 @@ public class RandomFilterTest {
         var result = IntStream.range(0, n).boxed().gather(Packrat.randomFilter(0.5)).toList();
         assertTrue(isOrdered(result));
     }
+
+    @Test
+    void zeroProbabilityPassesNoneTest() {
+        int n = 10_000;
+        var result = IntStream.range(0, n).boxed().gather(Packrat.randomFilter(0.0)).toList();
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void oneProbabilityPassesAllTest() {
+        int n = 10_000;
+        var result = IntStream.range(0, n).boxed().gather(Packrat.randomFilter(1.0)).toList();
+        assertEquals(n, result.size());
+        assertEquals(IntStream.range(0, n).boxed().toList(), result);
+    }
 }
