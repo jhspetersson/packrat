@@ -575,6 +575,7 @@ public final class Packrat {
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> mapWhile(@NonNull Function<? super T, ? extends T> mapper, @NonNull Predicate<? super T> predicate) {
+        Objects.requireNonNull(predicate, "predicate cannot be null");
         return new MapWhileUntilGatherer<>(mapper, predicate);
     }
 
@@ -590,6 +591,7 @@ public final class Packrat {
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> mapUntil(@NonNull Function<? super T, ? extends T> mapper, @NonNull Predicate<? super T> predicate) {
+        Objects.requireNonNull(predicate, "predicate cannot be null");
         return new MapWhileUntilGatherer<>(mapper, null, predicate);
     }
 
