@@ -2,7 +2,9 @@ package io.github.jhspetersson.packrat;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -10,6 +12,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FilterEntriesTest {
+    @Test
+    public void filterEntriesShouldDropNullElements() {
+        var entries = Arrays.asList(Map.entry("a", 1), null, Map.entry("b", 2));
+
+        var result = entries.stream()
+                .gather(Packrat.filterEntries((_, _) -> true))
+                .toList();
+
+        assertEquals(List.of(Map.entry("a", 1), Map.entry("b", 2)), result);
+    }
+
+    @Test
+    public void removeEntriesShouldKeepNullElements() {
+        var entries = Arrays.asList(Map.entry("a", 1), null, Map.entry("b", 2));
+
+        var result = entries.stream()
+                .gather(Packrat.removeEntries((_, _) -> false))
+                .toList();
+
+        assertEquals(entries, result);
+    }
+
     @Test
     public void filterEntriesTest() {
         var map = new HashMap<String, Integer>();
