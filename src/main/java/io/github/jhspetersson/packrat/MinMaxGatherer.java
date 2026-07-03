@@ -3,6 +3,7 @@ package io.github.jhspetersson.packrat;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -57,6 +58,22 @@ class MinMaxGatherer<T, U> implements Gatherer<T, MinMaxGatherer.State<T, U>, T>
             }
             return !downstream.isRejecting();
         });
+    }
+
+    @Override
+    public BinaryOperator<State<T, U>> combiner() {
+        return (left, right) -> {
+            if (!left.hasValue) {
+                return right;
+            }
+            if (!right.hasValue) {
+                return left;
+            }
+
+            var result = comparator.compare(right.mappedElement, left.mappedElement);
+            // on a tie the earlier (left) element wins, matching sequential evaluation
+            return predicate.test(result) ? right : left;
+        };
     }
 
     @Override

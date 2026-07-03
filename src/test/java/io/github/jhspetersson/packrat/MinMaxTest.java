@@ -3,6 +3,10 @@ package io.github.jhspetersson.packrat;
 import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Gatherer;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,6 +14,32 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MinMaxTest {
+    @Test
+    void combinerShouldPickWinner() {
+        var gatherer = new MinMaxGatherer<Integer, Integer>(Function.identity(), Comparator.naturalOrder(), cmp -> cmp > 0);
+        var integrator = gatherer.integrator();
+        Gatherer.Downstream<Integer> downstream = _ -> true;
+
+        var left = gatherer.initializer().get();
+        var right = gatherer.initializer().get();
+        integrator.integrate(left, 5, downstream);
+        integrator.integrate(right, 7, downstream);
+
+        var combined = gatherer.combiner().apply(left, right);
+
+        assertEquals(7, combined.element);
+    }
+
+    @Test
+    void maxByParallelTest() {
+        var result = IntStream.range(0, 100_000).boxed()
+                .parallel()
+                .gather(Packrat.maxBy(Function.identity()))
+                .toList();
+
+        assertEquals(List.of(99_999), result);
+    }
+
     @Test
     void emptyTest() {
         var check = Stream.empty().gather(Packrat.minBy(element -> Long.parseLong(element.toString()))).toList();
