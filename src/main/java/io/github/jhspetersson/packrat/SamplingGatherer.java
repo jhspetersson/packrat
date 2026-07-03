@@ -27,7 +27,7 @@ class SamplingGatherer<T> implements Gatherer<T, SamplingGatherer.State<T>, T> {
 
     @Override
     public Supplier<State<T>> initializer() {
-        return () -> new State<>(new ArrayList<>(), 0);
+        return () -> new State<>(new ArrayList<>(), 0L);
     }
 
     @Override
@@ -37,9 +37,9 @@ class SamplingGatherer<T> implements Gatherer<T, SamplingGatherer.State<T>, T> {
             if (state.list.size() < n) {
                 state.list.add(new IndexedElement<>(state.counter, element));
             } else {
-                var j = random.nextInt(state.counter + 1);
+                var j = random.nextLong(state.counter + 1);
                 if (j < n) {
-                    state.list.set(j, new IndexedElement<>(state.counter, element));
+                    state.list.set((int) j, new IndexedElement<>(state.counter, element));
                 }
             }
             state.counter++;
@@ -50,7 +50,7 @@ class SamplingGatherer<T> implements Gatherer<T, SamplingGatherer.State<T>, T> {
     @Override
     public BiConsumer<State<T>, Downstream<? super T>> finisher() {
         return (state, downstream) -> {
-            state.list.sort(Comparator.comparingInt(IndexedElement::index));
+            state.list.sort(Comparator.comparingLong(IndexedElement::index));
             for (var entry : state.list) {
                 if (!downstream.push(entry.element())) {
                     break;
@@ -59,13 +59,13 @@ class SamplingGatherer<T> implements Gatherer<T, SamplingGatherer.State<T>, T> {
         };
     }
 
-    record IndexedElement<T>(int index, T element) {}
+    record IndexedElement<T>(long index, T element) {}
 
     static class State<T> {
         List<IndexedElement<T>> list;
-        int counter;
+        long counter;
 
-        public State(List<IndexedElement<T>> list, int counter) {
+        public State(List<IndexedElement<T>> list, long counter) {
             this.list = list;
             this.counter = counter;
         }

@@ -4,10 +4,12 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Gatherer;
 import java.util.stream.IntStream;
 
 import static io.github.jhspetersson.packrat.TestUtils.isOrdered;
 import static io.github.jhspetersson.packrat.TestUtils.isOrderedSequence;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -63,6 +65,24 @@ public class SamplingTest {
 
         assertTrue(isOrdered(after));
         assertEquals(100, after.size());
+    }
+
+    @Test
+    void sampleShouldSurviveMoreThanMaxIntElements() {
+        var gatherer = new SamplingGatherer<Integer>(5);
+        var state = gatherer.initializer().get();
+        var integrator = gatherer.integrator();
+        Gatherer.Downstream<Integer> downstream = _ -> true;
+
+        for (var i = 0; i < 5; i++) {
+            integrator.integrate(state, i, downstream);
+        }
+
+        // simulate having already consumed 2^31 - 1 elements
+        state.counter = Integer.MAX_VALUE;
+
+        assertDoesNotThrow(() -> integrator.integrate(state, 42, downstream));
+        assertEquals(5, state.list.size());
     }
 
     @Test
