@@ -11,6 +11,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AtLeastTest {
     @Test
+    public void atLeastOneShouldStreamLazily() {
+        var result = org.junit.jupiter.api.Assertions.assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
+                Stream.iterate(0, i -> i + 1).gather(Packrat.atLeast(1)).limit(3).toList());
+
+        assertEquals(List.of(0, 1, 2), result);
+    }
+
+    @Test
     public void atLeastTest() {
         var numbers = Stream.of(1, 2, 3, 3, 3, 4, 5, 5, 6, 7, 8, 8, 8, 8, 9, 10);
         var result = numbers.gather(Packrat.atLeast(3)).toList();

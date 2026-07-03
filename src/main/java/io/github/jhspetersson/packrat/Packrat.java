@@ -67,6 +67,16 @@ public final class Packrat {
      */
     @NonNull
     public static <T, U> Gatherer<T, ?, T> atLeastBy(long n, @NonNull Function<? super T, ? extends U> mapper) {
+        if (n < 0) {
+            throw new IllegalArgumentException("atLeast must be a non-negative number");
+        }
+        Objects.requireNonNull(mapper, "mapper cannot be null");
+
+        // every element trivially appears at least once, no need to buffer the stream
+        if (n <= 1) {
+            return identity();
+        }
+
         return new AtLeastGatherer<>(n, mapper);
     }
 
@@ -96,6 +106,16 @@ public final class Packrat {
      */
     @NonNull
     public static <T, U> Gatherer<T, ?, T> atMostBy(long n, @NonNull Function<? super T, ? extends U> mapper) {
+        if (n < 0) {
+            throw new IllegalArgumentException("atMost must be a non-negative number");
+        }
+        Objects.requireNonNull(mapper, "mapper cannot be null");
+
+        // no element can appear at most zero times, no need to buffer the stream
+        if (n == 0) {
+            return empty();
+        }
+
         return new AtMostGatherer<>(n, mapper);
     }
 

@@ -13,6 +13,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AtMostTest {
     @Test
+    public void atMostZeroShouldNotBufferTheStream() {
+        var result = org.junit.jupiter.api.Assertions.assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
+                Stream.iterate(0, i -> i + 1).gather(Packrat.atMost(0)).toList());
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     public void atMostTest() {
         var numbers = Stream.of(1, 2, 3, 3, 3, 4, 5, 5, 6, 7, 8, 8, 8, 8, 9, 10);
         var result = numbers.gather(Packrat.atMost(2)).toList();
