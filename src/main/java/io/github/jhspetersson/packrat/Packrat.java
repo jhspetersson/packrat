@@ -504,7 +504,24 @@ public final class Packrat {
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> repeat(long n) {
+        if (n < 0) {
+            throw new IllegalArgumentException("n must be a non-negative number");
+        }
+        if (n == 0) {
+            return empty();
+        }
+        if (n == 1) {
+            return new IdentityGatherer<>();
+        }
+
         return new RepeatGatherer<>(n);
+    }
+
+    /**
+     * Returns a gatherer that discards all elements and short-circuits immediately.
+     */
+    private static <T> Gatherer<T, ?, T> empty() {
+        return Gatherer.of(Gatherer.Integrator.of((_, _, _) -> false));
     }
 
     /**
