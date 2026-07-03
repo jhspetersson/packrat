@@ -13,7 +13,7 @@ import org.jspecify.annotations.NonNull;
  * @param <T> element type
  * @author jhspetersson
  */
-class MappingGatherer<T> implements Gatherer<T, Long[], T> {
+class MappingGatherer<T> implements Gatherer<T, long[], T> {
     private final long skipN;
     private final long mapN;
     private final Function<? super T, ? extends T> mapper;
@@ -27,12 +27,12 @@ class MappingGatherer<T> implements Gatherer<T, Long[], T> {
     }
 
     @Override
-    public Supplier<Long[]> initializer() {
-        return () -> new Long[] { 0L, 0L };
+    public Supplier<long[]> initializer() {
+        return () -> new long[2];
     }
 
     @Override
-    public Integrator<Long[], T, T> integrator() {
+    public Integrator<long[], T, T> integrator() {
         return Integrator.of((state, element, downstream) -> {
             if (skipN > 0 && state[0] < skipN) {
                 state[0] += 1;
