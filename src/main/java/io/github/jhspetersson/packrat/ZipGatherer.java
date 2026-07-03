@@ -51,7 +51,7 @@ class ZipGatherer<T, U, V> implements Gatherer<T, ZipGatherer.State<U>, V> {
 
     @Override
     public Integrator<State<U>, T, V> integrator() {
-        return Integrator.ofGreedy((state, element, downstream) -> {
+        return Integrator.of((state, element, downstream) -> {
             if (state.iterator.hasNext()) {
                 var mappedValue = mapper.apply(element, state.iterator.next());
                 return downstream.push(mappedValue);

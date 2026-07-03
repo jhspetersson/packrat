@@ -2,13 +2,17 @@ package io.github.jhspetersson.packrat;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ZipTest {
     @Test
@@ -97,6 +101,28 @@ public class ZipTest {
         assertEquals(names.size(), users.size());
         assertEquals(new User("Anna", 20), users.getFirst());
         assertEquals(new User("Monica", 60), users.getLast());
+    }
+
+    @Test
+    public void zipShouldShortCircuitWhenSourceExhausted() {
+        var pulled = new AtomicInteger();
+
+        var result = Stream.iterate(1, i -> i + 1)
+                .limit(1000)
+                .peek(_ -> pulled.incrementAndGet())
+                .gather(Packrat.zip(List.of("a", "b", "c"), (i, s) -> s + i))
+                .toList();
+
+        assertEquals(List.of("a1", "b2", "c3"), result);
+        assertTrue(pulled.get() <= 4, "upstream pulled " + pulled.get() + " elements");
+    }
+
+    @Test
+    public void zipShouldTerminateOnInfiniteStream() {
+        var result = assertTimeoutPreemptively(Duration.ofSeconds(5), () ->
+                Stream.iterate(0, i -> i + 1).gather(Packrat.zip(List.of("a", "b", "c"))).toList());
+
+        assertEquals(3, result.size());
     }
 
     @Test
