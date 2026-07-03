@@ -1,11 +1,10 @@
 package io.github.jhspetersson.packrat;
 
 import java.util.Deque;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -66,16 +65,7 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
         }
 
         return Integrator.ofGreedy((state, element, downstream) -> {
-            if (state.containsElement(element)) {
-                state.moveToEnd(element);
-                return true;
-            }
-
-            if (state.sizeEquals(n)) {
-                state.removeElement();
-            }
-
-            state.addElement(element);
+            state.addElement(element, n);
 
             return !downstream.isRejecting();
         });
@@ -93,53 +83,37 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
     }
 
     static class State<T> implements Iterable<T> {
-        Deque<T> deque;
-        Set<Object> mappedElements;
+        final Deque<T> deque;
+        final LinkedHashMap<Object, T> lastByKey;
         final boolean unique;
         final Function<? super T, ?> mapper;
 
         State(boolean unique, Function<? super T, ?> mapper) {
-            this.deque = new LinkedList<>();
-            this.mappedElements = new HashSet<>();
+            this.deque = unique ? null : new LinkedList<>();
+            this.lastByKey = unique ? new LinkedHashMap<>() : null;
             this.unique = unique;
             this.mapper = mapper;
         }
 
-        boolean sizeEquals(long size) {
-            return deque.size() == size;
-        }
-
-        boolean containsElement(T element) {
-            if (!unique) return false;
-            var mappedElement = mapper.apply(element);
-            return mappedElements.contains(mappedElement);
-        }
-
-        void moveToEnd(T element) {
-            var mappedElement = mapper.apply(element);
-            deque.removeIf(e -> Objects.equals(mapper.apply(e), mappedElement));
-            deque.add(element);
-        }
-
-        void addElement(T element) {
-            deque.add(element);
+        void addElement(T element, long n) {
             if (unique) {
                 var mappedElement = mapper.apply(element);
-                mappedElements.add(mappedElement);
-            }
-        }
-
-        void removeElement() {
-            var removedElement = deque.removeFirst();
-            if (unique) {
-                var mappedElement = mapper.apply(removedElement);
-                mappedElements.remove(mappedElement);
+                lastByKey.remove(mappedElement);
+                lastByKey.put(mappedElement, element);
+                if (lastByKey.size() > n) {
+                    lastByKey.pollFirstEntry();
+                }
+            } else {
+                if (deque.size() == n) {
+                    deque.removeFirst();
+                }
+                deque.add(element);
             }
         }
 
         @Override
         public Iterator<T> iterator() {
-            return deque.iterator();
+            return unique ? lastByKey.values().iterator() : deque.iterator();
         }
     }
 }

@@ -12,9 +12,25 @@ import static io.github.jhspetersson.packrat.TestUtils.getEmployees;
 import static io.github.jhspetersson.packrat.TestUtils.isOrderedSequence;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LastNTest {
+    @Test
+    public void lastUniqueShouldNotBeQuadratic() {
+        var result = assertTimeoutPreemptively(java.time.Duration.ofSeconds(10), () ->
+                IntStream.range(0, 1_000_000)
+                        .map(i -> i % 5_000)
+                        .boxed()
+                        .gather(Packrat.lastUnique(10_000))
+                        .toList());
+
+        assertEquals(5_000, result.size());
+        // order of last occurrence: 995_000 .. 999_999 map to 0 .. 4_999
+        assertEquals(0, result.getFirst());
+        assertEquals(4_999, result.getLast());
+    }
+
     @Test
     public void lastTest() {
         var before = new ArrayList<Integer>();
