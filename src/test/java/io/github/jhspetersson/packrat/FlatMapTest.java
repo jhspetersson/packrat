@@ -14,6 +14,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FlatMapTest {
     @Test
+    public void nullMapperResultActsAsEmptyStream() {
+        var result = Stream.of(1, 2, 3)
+                .gather(Packrat.flatMapIf(_ -> null, e -> e % 2 == 0))
+                .toList();
+
+        assertEquals(List.of(1, 3), result);
+    }
+
+    @Test
     public void flatMapIfTest() {
         var strings = Stream.of("A", "B", "CDE", "FG", "H", "IJ", "KL", "M", "NOP");
         var result = strings.gather(Packrat.flatMapIf(s -> Arrays.stream(s.split("")), s -> s.length() >= 3)).toList();
