@@ -1,6 +1,7 @@
 package io.github.jhspetersson.packrat;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +43,15 @@ class AtMostGatherer<T, U> implements Gatherer<T, AtMostGatherer.State<T, U>, T>
     public Integrator<State<T, U>, T, T> integrator() {
         return Integrator.ofGreedy((state, element, downstream) -> {
             var mappedValue = mapper.apply(element);
-            state.elements.add(new Entry<>(element, mappedValue));
-            state.counts.merge(mappedValue, 1L, Long::sum);
+            var count = state.counts.merge(mappedValue, 1L, Long::sum);
+            if (count <= atMost) {
+                state.elementsByKey.computeIfAbsent(mappedValue, _ -> new ArrayList<>())
+                        .add(new IndexedElement<>(state.index, element));
+            } else {
+                // the key is disqualified for good, its buffered elements can never be emitted
+                state.elementsByKey.remove(mappedValue);
+            }
+            state.index++;
             return !downstream.isRejecting();
         });
     }
@@ -51,20 +59,25 @@ class AtMostGatherer<T, U> implements Gatherer<T, AtMostGatherer.State<T, U>, T>
     @Override
     public BiConsumer<State<T, U>, Downstream<? super T>> finisher() {
         return (state, downstream) -> {
-            for (var entry : state.elements) {
-                if (state.counts.get(entry.mappedValue()) <= atMost) {
-                    if (!downstream.push(entry.element())) {
-                        return;
-                    }
+            var elements = new ArrayList<IndexedElement<T>>();
+            for (var keyElements : state.elementsByKey.values()) {
+                elements.addAll(keyElements);
+            }
+            elements.sort(Comparator.comparingLong(IndexedElement::index));
+
+            for (var entry : elements) {
+                if (!downstream.push(entry.element())) {
+                    return;
                 }
             }
         };
     }
 
-    record Entry<T, U>(T element, U mappedValue) {}
+    record IndexedElement<T>(long index, T element) {}
 
     static class State<T, U> {
-        final List<Entry<T, U>> elements = new ArrayList<>();
+        final Map<U, List<IndexedElement<T>>> elementsByKey = new HashMap<>();
         final Map<U, Long> counts = new HashMap<>();
+        long index;
     }
 }
