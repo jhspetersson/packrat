@@ -6,8 +6,17 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MappingTest {
+    @Test
+    public void negativeArgumentsShouldThrow() {
+        assertThrows(IllegalArgumentException.class, () -> Packrat.skipAndMapN(0, -2, n -> n));
+        assertThrows(IllegalArgumentException.class, () -> Packrat.skipAndMapN(-1, 2, n -> n));
+        assertThrows(IllegalArgumentException.class, () -> Packrat.mapN(-1, n -> n));
+        assertThrows(IllegalArgumentException.class, () -> Packrat.skipAndMap(-1, n -> n));
+    }
+
     @Test
     public void mapFirstTest() {
         var mapped = IntStream.rangeClosed(1, 10).boxed().gather(Packrat.mapFirst(n -> n * 10)).toList();

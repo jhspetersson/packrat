@@ -527,6 +527,7 @@ public final class Packrat {
      * @param mapper mapping function
      * @param <T> element type
      * @return a gatherer that maps the first <code>mapN</code> elements in the stream using the provided function
+     * @throws IllegalArgumentException if <code>mapN</code> is negative
      * @throws NullPointerException if the mapper is null
      */
     @NonNull
@@ -541,11 +542,16 @@ public final class Packrat {
      * @param mapper mapping function
      * @param <T> element type
      * @return a gatherer that maps all elements after skipping the first <code>skipN</code> elements
+     * @throws IllegalArgumentException if <code>skipN</code> is negative
      * @throws NullPointerException if the mapper is null
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> skipAndMap(long skipN, @NonNull Function<? super T, ? extends T> mapper) {
-        return skipAndMapN(skipN, -1L, mapper);
+        if (skipN < 0) {
+            throw new IllegalArgumentException("skipN must be a non-negative number");
+        }
+
+        return new MappingGatherer<>(skipN, -1L, mapper);
     }
 
     /**
@@ -556,10 +562,18 @@ public final class Packrat {
      * @param mapper mapping function
      * @param <T> element type
      * @return a gatherer that maps <code>mapN</code> elements after skipping <code>skipN</code> elements
+     * @throws IllegalArgumentException if <code>skipN</code> or <code>mapN</code> is negative
      * @throws NullPointerException if the mapper is null
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> skipAndMapN(long skipN, long mapN, @NonNull Function<? super T, ? extends T> mapper) {
+        if (skipN < 0) {
+            throw new IllegalArgumentException("skipN must be a non-negative number");
+        }
+        if (mapN < 0) {
+            throw new IllegalArgumentException("mapN must be a non-negative number");
+        }
+
         return new MappingGatherer<>(skipN, mapN, mapper);
     }
 
