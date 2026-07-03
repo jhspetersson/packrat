@@ -52,6 +52,10 @@ class DropLastingGatherer<T> implements Gatherer<T, DropLastingGatherer.State<T>
 
     @Override
     public Integrator<State<T>, T, T> integrator() {
+        if (n == 0) {
+            return Integrator.of((_, element, downstream) -> downstream.push(element));
+        }
+
         return Integrator.ofGreedy((state, element, downstream) -> {
             state.elements.add(element);
             var key = mapper.apply(element);
@@ -65,11 +69,6 @@ class DropLastingGatherer<T> implements Gatherer<T, DropLastingGatherer.State<T>
     public BiConsumer<State<T>, Downstream<? super T>> finisher() {
         return (state, downstream) -> {
             if (n == 0) {
-                for (var element : state.elements) {
-                    if (!downstream.push(element)) {
-                        return;
-                    }
-                }
                 return;
             }
 

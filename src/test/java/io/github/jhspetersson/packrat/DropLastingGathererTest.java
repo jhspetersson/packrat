@@ -50,6 +50,22 @@ public class DropLastingGathererTest {
     }
 
     @Test
+    public void dropLastUniqueZeroShouldStreamLazily() {
+        var result = org.junit.jupiter.api.Assertions.assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
+                Stream.iterate(0, i -> i + 1).gather(Packrat.dropLastUnique(0)).limit(3).toList());
+
+        assertEquals(List.of(0, 1, 2), result);
+    }
+
+    @Test
+    public void dropLastByZeroShouldStreamLazily() {
+        var result = org.junit.jupiter.api.Assertions.assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
+                Stream.iterate(0, i -> i + 1).gather(Packrat.dropLastBy(0, Function.identity())).limit(3).toList());
+
+        assertEquals(List.of(0, 1, 2), result);
+    }
+
+    @Test
     public void dropLastUniqueEmptyTest() {
         var result = Stream.<Integer>of()
                 .gather(Packrat.dropLastUnique(3))
