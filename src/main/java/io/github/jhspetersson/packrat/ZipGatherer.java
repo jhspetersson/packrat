@@ -2,6 +2,7 @@ package io.github.jhspetersson.packrat;
 
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
@@ -20,6 +21,7 @@ import org.jspecify.annotations.NonNull;
 class ZipGatherer<T, U, V> implements Gatherer<T, ZipGatherer.State<U>, V> {
     private final Supplier<Iterator<? extends U>> iteratorSupplier;
     private final BiFunction<? super T, ? super U, ? extends V> mapper;
+    private final Runnable closeHandler;
 
     ZipGatherer(@NonNull Iterable<? extends U> input,
                 @NonNull BiFunction<? super T, ? super U, ? extends V> mapper) {
@@ -28,11 +30,17 @@ class ZipGatherer<T, U, V> implements Gatherer<T, ZipGatherer.State<U>, V> {
 
         this.iteratorSupplier = input::iterator;
         this.mapper = mapper;
+        this.closeHandler = null;
     }
 
     ZipGatherer(@NonNull Stream<? extends U> input,
                 @NonNull BiFunction<? super T, ? super U, ? extends V> mapper) {
-        this(input.iterator(), mapper);
+        Objects.requireNonNull(input, "input cannot be null");
+        Objects.requireNonNull(mapper, "mapper cannot be null");
+
+        this.iteratorSupplier = input::iterator;
+        this.mapper = mapper;
+        this.closeHandler = input::close;
     }
 
     ZipGatherer(@NonNull Iterator<? extends U> iterator,
@@ -42,6 +50,7 @@ class ZipGatherer<T, U, V> implements Gatherer<T, ZipGatherer.State<U>, V> {
 
         this.iteratorSupplier = () -> iterator;
         this.mapper = mapper;
+        this.closeHandler = null;
     }
 
     @Override
@@ -58,6 +67,15 @@ class ZipGatherer<T, U, V> implements Gatherer<T, ZipGatherer.State<U>, V> {
             }
             return false;
         });
+    }
+
+    @Override
+    public BiConsumer<State<U>, Downstream<? super V>> finisher() {
+        return (_, _) -> {
+            if (closeHandler != null) {
+                closeHandler.run();
+            }
+        };
     }
 
     static class State<U> {

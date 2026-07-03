@@ -10,7 +10,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -123,6 +126,26 @@ public class ZipTest {
                 Stream.iterate(0, i -> i + 1).gather(Packrat.zip(List.of("a", "b", "c"))).toList());
 
         assertEquals(3, result.size());
+    }
+
+    @Test
+    public void zipShouldCloseSuppliedStream() {
+        var closed = new AtomicBoolean();
+        var ages = Stream.of(20, 30, 40).onClose(() -> closed.set(true));
+
+        List.of("Anna", "Mike", "Sandra").stream().gather(Packrat.zip(ages, User::new)).toList();
+
+        assertTrue(closed.get());
+    }
+
+    @Test
+    public void zipWithStreamShouldThrowOnReuse() {
+        var gatherer = Packrat.zip(Stream.of(10, 20, 30), (Integer a, Integer b) -> a + b);
+
+        var result = Stream.of(1, 2, 3).gather(gatherer).toList();
+        assertEquals(List.of(11, 22, 33), result);
+
+        assertThrows(IllegalStateException.class, () -> Stream.of(4, 5, 6).gather(gatherer).toList());
     }
 
     @Test

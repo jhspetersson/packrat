@@ -642,6 +642,8 @@ public final class Packrat {
 
     /**
      * Returns map entries from elements of the stream mapped ("zipped") with the values from some other stream.
+     * The supplied stream is consumed lazily and closed when the gathering finishes,
+     * so the returned gatherer can only be used once.
      *
      * @param input iterable
      * @param <T> element type
@@ -657,6 +659,8 @@ public final class Packrat {
 
     /**
      * Returns elements mapped ("zipped") with the values from some other stream.
+     * The supplied stream is consumed lazily and closed when the gathering finishes,
+     * so the returned gatherer can only be used once.
      *
      * @param input stream
      * @param mapper zipping function
