@@ -13,7 +13,7 @@ import java.util.stream.Gatherer;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Returns distinct elements that appear at least <code>n</code> times in the stream.
+ * Returns all occurrences of elements that appear at least <code>n</code> times in the stream.
  *
  * @param <T> element type
  * @param <U> mapped element type

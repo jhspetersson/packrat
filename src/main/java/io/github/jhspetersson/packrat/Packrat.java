@@ -42,7 +42,7 @@ public final class Packrat {
     }
 
     /**
-     * Returns distinct elements that appear at least <code>n</code> times in the stream.
+     * Returns all occurrences of elements that appear at least <code>n</code> times in the stream.
      *
      * @param n at least how many times the element has to appear in the stream
      * @param <T> element type
@@ -55,7 +55,7 @@ public final class Packrat {
     }
 
     /**
-     * Returns distinct elements mapped by the supplied function that appear at least <code>n</code> times in the stream.
+     * Returns all occurrences of elements whose mapped values appear at least <code>n</code> times in the stream.
      *
      * @param n at least how many times the element has to appear in the stream
      * @param mapper mapping function
@@ -375,7 +375,7 @@ public final class Packrat {
     }
 
     /**
-     * Returns lists ("chunks") of elements, where each next element is greater than the previous one.
+     * Returns lists ("chunks") of elements, where each next element is greater or equal than the previous one.
      * Comparison is done with the supplied comparator.
      *
      * @param comparator comparator

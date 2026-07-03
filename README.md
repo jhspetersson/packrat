@@ -86,7 +86,7 @@ implementation("io.github.jhspetersson:packrat:0.2.3")
 | [decreasingOrEqualChunks](#decreasingorequalchunks)            | Lists of decreasing or equal values                                               |
 | [nCopies](#ncopies)                                            | Copies every element __n__ times                                                  |
 | [repeat](#repeat)                                              | Collects the whole stream and repeats it __n__ times                              |
-| [atLeast](#atleast)                                            | Distinct values that appear at least __n__ times                                  |
+| [atLeast](#atleast)                                            | All occurrences of values that appear at least __n__ times                                  |
 | [atMost](#atmost)                                              | Distinct values that appear at most __n__ times                                   |
 
 #### Indexing and zipping operations
@@ -588,7 +588,7 @@ However, resulting list contains an original element of type `String`;
 
 #### atLeast
 
-`atLeast(n)` - returns distinct elements that appear at least __n__ times in the stream
+`atLeast(n)` - returns all occurrences of elements that appear at least __n__ times in the stream
 
 ```java
   import static io.github.jhspetersson.packrat.Packrat.atLeast;
