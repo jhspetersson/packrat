@@ -87,6 +87,21 @@ public class DropLastingGathererTest {
     }
 
     @Test
+    public void dropLastByShouldInvokeMapperOncePerElement() {
+        var count = new java.util.concurrent.atomic.AtomicInteger();
+
+        var result = Stream.of("a", "b", "c", "a", "b")
+                .gather(Packrat.dropLastBy(1, s -> {
+                    count.incrementAndGet();
+                    return s;
+                }))
+                .toList();
+
+        assertEquals(List.of("a", "c", "a"), result);
+        assertEquals(5, count.get());
+    }
+
+    @Test
     public void dropLastUniqueByOneTest() {
         var result = getEmployees()
                 .gather(Packrat.dropLastUniqueBy(1, Employee::age))

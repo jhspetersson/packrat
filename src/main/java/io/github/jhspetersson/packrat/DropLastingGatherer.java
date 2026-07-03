@@ -59,6 +59,9 @@ class DropLastingGatherer<T> implements Gatherer<T, DropLastingGatherer.State<T>
         return Integrator.ofGreedy((state, element, downstream) -> {
             state.elements.add(element);
             var key = mapper.apply(element);
+            if (dropAllOccurrences) {
+                state.keys.add(key);
+            }
             state.lastIndexByKey.remove(key);
             state.lastIndexByKey.put(key, state.elements.size() - 1);
             return !downstream.isRejecting();
@@ -83,12 +86,12 @@ class DropLastingGatherer<T> implements Gatherer<T, DropLastingGatherer.State<T>
                     dropKeys.add(e.getKey());
                 }
 
-                for (var element : state.elements) {
-                    if (dropKeys.contains(mapper.apply(element))) {
+                for (var i = 0; i < state.elements.size(); i++) {
+                    if (dropKeys.contains(state.keys.get(i))) {
                         continue;
                     }
 
-                    if (!downstream.push(element)) {
+                    if (!downstream.push(state.elements.get(i))) {
                         return;
                     }
                 }
@@ -114,6 +117,7 @@ class DropLastingGatherer<T> implements Gatherer<T, DropLastingGatherer.State<T>
 
     static class State<T> {
         final List<T> elements = new ArrayList<>();
+        final List<Object> keys = new ArrayList<>();
         final LinkedHashMap<Object, Integer> lastIndexByKey = new LinkedHashMap<>();
     }
 }
