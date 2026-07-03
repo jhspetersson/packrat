@@ -9,7 +9,7 @@ import java.util.stream.Gatherer;
  * @param <T> element type
  * @author jhspetersson
  */
-class DropNthGatherer<T> implements Gatherer<T, int[], T> {
+class DropNthGatherer<T> implements Gatherer<T, long[], T> {
     private final int n;
 
     DropNthGatherer(int n) {
@@ -21,12 +21,12 @@ class DropNthGatherer<T> implements Gatherer<T, int[], T> {
     }
 
     @Override
-    public Supplier<int[]> initializer() {
-        return () -> new int[1];
+    public Supplier<long[]> initializer() {
+        return () -> new long[1];
     }
 
     @Override
-    public Integrator<int[], T, T> integrator() {
+    public Integrator<long[], T, T> integrator() {
         return Integrator.of((state, element, downstream) -> {
             if (++state[0] % n != 0) {
                 return downstream.push(element);
