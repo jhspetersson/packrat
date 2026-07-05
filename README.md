@@ -73,7 +73,7 @@ implementation("io.github.jhspetersson:packrat:0.2.3")
 | [skipAndMap](#skipandmap)                                      | Skips __n__ elements, maps others                                                 |
 | [skipAndMapN](#skipandmapn)                                    | Skips __skipN__ elements, maps __mapN__ others                                    | 
 | [mapWhile](#mapwhile)                                          | Maps elements using the supplied function while the predicate evaluates to true.  |
-| [mapUntil](#mapuntil)                                          | Maps elements using the supplied function until the predicate evaluates to false. |
+| [mapUntil](#mapuntil)                                          | Maps elements using the supplied function until the predicate evaluates to true.  |
 
 #### Collection and chunking operations
 
@@ -87,7 +87,7 @@ implementation("io.github.jhspetersson:packrat:0.2.3")
 | [nCopies](#ncopies)                                            | Copies every element __n__ times                                                  |
 | [repeat](#repeat)                                              | Collects the whole stream and repeats it __n__ times                              |
 | [atLeast](#atleast)                                            | All occurrences of values that appear at least __n__ times                                  |
-| [atMost](#atmost)                                              | Distinct values that appear at most __n__ times                                   |
+| [atMost](#atmost)                                              | All occurrences of values that appear at most __n__ times                         |
 
 #### Indexing and zipping operations
 
@@ -439,7 +439,7 @@ However, resulting list contains an original element of type `String`;
 
 #### mapWhile
 
-`mapWhile(predicate, mapper)` - maps elements using the supplied function while the predicate evaluates to true
+`mapWhile(mapper, predicate)` - maps elements using the supplied function while the predicate evaluates to true
 
 ```java
   import static io.github.jhspetersson.packrat.Packrat.mapWhile;
@@ -451,7 +451,7 @@ However, resulting list contains an original element of type `String`;
 
 #### mapUntil
 
-`mapUntil(predicate, mapper)` - maps elements using the supplied function until the predicate evaluates to false
+`mapUntil(mapper, predicate)` - maps elements using the supplied function until the predicate evaluates to true
 
 ```java
   import static io.github.jhspetersson.packrat.Packrat.mapUntil;
@@ -561,7 +561,7 @@ However, resulting list contains an original element of type `String`;
 
 #### nCopies
 
-`nCopies(n)` - returns __n__ copies of every element, __n__ less than or equal to zero effectively empties the stream
+`nCopies(n)` - returns __n__ copies of every element, __n__ equal to zero effectively empties the stream, negative __n__ throws an exception
 
 ```java
   import static io.github.jhspetersson.packrat.Packrat.nCopies;
@@ -600,7 +600,7 @@ However, resulting list contains an original element of type `String`;
 
 #### atMost
 
-`atMost(n)` - returns distinct elements that appear at most __n__ times in the stream
+`atMost(n)` - returns all occurrences of elements that appear at most __n__ times in the stream
 
 ```java
   import static io.github.jhspetersson.packrat.Packrat.atMost;
@@ -610,7 +610,7 @@ However, resulting list contains an original element of type `String`;
 ```
 > [1, 2, 4, 5, 5, 6, 7, 9, 10]
 
-`atMostBy(n, mapper)` - returns distinct elements mapped by the supplied function that appear at most __n__ times in the stream
+`atMostBy(n, mapper)` - returns all occurrences of elements whose mapped values appear at most __n__ times in the stream
 
 ```java
   import static io.github.jhspetersson.packrat.Packrat.atMostBy;
