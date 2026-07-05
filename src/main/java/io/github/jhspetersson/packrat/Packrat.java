@@ -676,6 +676,8 @@ public final class Packrat {
 
     /**
      * Returns map entries from elements of the stream mapped ("zipped") with the values from some other iterable.
+     * <p>Null elements are not supported by this overload, since {@link java.util.Map#entry(Object, Object)}
+     * rejects nulls; use an overload with a mapper for null-friendly zipping.
      *
      * @param input iterable
      * @param <T> element type
@@ -707,13 +709,15 @@ public final class Packrat {
 
     /**
      * Returns map entries from elements of the stream mapped ("zipped") with the values from some other stream.
-     * The supplied stream is consumed lazily and closed when the gathering finishes normally
+     * <p>Null elements are not supported by this overload, since {@link java.util.Map#entry(Object, Object)}
+     * rejects nulls; use an overload with a mapper for null-friendly zipping.
+     * <p>The supplied stream is consumed lazily and closed when the gathering finishes normally
      * (if the pipeline terminates with an exception, the stream is not closed),
      * so the returned gatherer can only be used once.
      *
-     * @param input iterable
+     * @param input stream
      * @param <T> element type
-     * @param <U> supplied iterable element type
+     * @param <U> supplied stream element type
      * @return a gatherer that produces map entries from zipping stream elements with another stream's values
      * @throws NullPointerException if the input stream is null
      * @see java.util.Map.Entry
@@ -744,6 +748,8 @@ public final class Packrat {
 
     /**
      * Returns map entries from elements of the stream mapped ("zipped") with the values from some other iterator.
+     * <p>Null elements are not supported by this overload, since {@link java.util.Map#entry(Object, Object)}
+     * rejects nulls; use an overload with a mapper for null-friendly zipping.
      *
      * @param iterator iterator
      * @param <T> element type
@@ -776,6 +782,8 @@ public final class Packrat {
     /**
      * Returns elements mapped ("zipped") with an increasing index.
      * Output type is {@link java.util.Map.Entry} with a Long key and an element as a value.
+     * <p>Null elements are not supported by this overload, since {@link java.util.Map#entry(Object, Object)}
+     * rejects nulls; use an overload with a mapper for null-friendly zipping.
      *
      * @param <T> element type
      * @return a gatherer that produces map entries from zipping stream elements with their indices
@@ -789,6 +797,8 @@ public final class Packrat {
     /**
      * Returns elements mapped ("zipped") with an increasing index.
      * Output type is {@link java.util.Map.Entry} with a Long key and an element as a value.
+     * <p>Null elements are not supported by this overload, since {@link java.util.Map#entry(Object, Object)}
+     * rejects nulls; use an overload with a mapper for null-friendly zipping.
      *
      * @param startIndex starting index
      * @param <T> element type
@@ -1466,6 +1476,7 @@ public final class Packrat {
      * @return a gatherer that returns the last <code>n</code> unique elements from the stream,
      * based on the mapped key
      * @throws IllegalArgumentException if <code>n</code> is negative
+     * @throws NullPointerException if the mapper is null
      */
     @NonNull
     public static <T, U> Gatherer<T, ?, T> lastUniqueBy(long n, @NonNull Function<? super T, ? extends U> mapper) {
@@ -1582,6 +1593,8 @@ public final class Packrat {
      * Validates that incoming elements are in non-decreasing order and passes them through unchanged.
      * If a violation is detected, an {@link IllegalStateException} is thrown.
      *
+     * <p>Null elements are not supported and result in a {@link NullPointerException}.
+     *
      * @param <T> element type which must be {@link Comparable}
      * @return a gatherer that throws if input is not ordered
      */
@@ -1593,6 +1606,8 @@ public final class Packrat {
     /**
      * Validates that incoming elements are in non-decreasing order and passes them through unchanged.
      * If a violation is detected, the supplied exception is thrown.
+     *
+     * <p>Null elements are not supported and result in a {@link NullPointerException}.
      *
      * @param exceptionSupplier supplier of exception to be thrown on order violation
      * @param <T> element type which must be {@link Comparable}
@@ -1612,6 +1627,8 @@ public final class Packrat {
      * Validates that incoming elements are in non-decreasing order according to the provided mapper
      * and passes them through unchanged. If a violation is detected, an {@link IllegalStateException} is thrown.
      *
+     * <p>Null mapped values are not supported and result in a {@link NullPointerException}.
+     *
      * @param mapper mapping function to derive comparable keys
      * @param <T> element type
      * @param <U> mapped comparable type
@@ -1626,6 +1643,8 @@ public final class Packrat {
     /**
      * Validates that incoming elements are in non-decreasing order according to the provided mapper
      * and passes them through unchanged. If a violation is detected, the supplied exception is thrown.
+     *
+     * <p>Null mapped values are not supported and result in a {@link NullPointerException}.
      *
      * @param mapper mapping function to derive comparable keys
      * @param exceptionSupplier supplier of exception to be thrown on order violation
@@ -1648,6 +1667,8 @@ public final class Packrat {
      * Validates that incoming elements are in strictly increasing order (no equals allowed).
      * If a violation is detected, an {@link IllegalStateException} is thrown.
      *
+     * <p>Null elements are not supported and result in a {@link NullPointerException}.
+     *
      * @param <T> element type which must be {@link Comparable}
      * @return a gatherer that throws if input is not ordered
      */
@@ -1658,6 +1679,8 @@ public final class Packrat {
 
     /**
      * Strictly increasing order (no equals allowed) with a custom exception supplier.
+     *
+     * <p>Null elements are not supported and result in a {@link NullPointerException}.
      *
      * @param exceptionSupplier supplier of exception to be thrown on order violation
      * @param <T> element type which must be {@link Comparable}
@@ -1677,6 +1700,8 @@ public final class Packrat {
      * Strictly increasing order (no equals allowed) validated by a mapped comparable key.
      * Throws {@link IllegalStateException} on violation.
      *
+     * <p>Null mapped values are not supported and result in a {@link NullPointerException}.
+     *
      * @param mapper mapping function to derive comparable keys
      * @param <T> element type
      * @param <U> mapped comparable type
@@ -1691,6 +1716,8 @@ public final class Packrat {
     /**
      * Strictly increasing order (no equals allowed) validated by a mapped comparable key
      * with a custom exception supplier.
+     *
+     * <p>Null mapped values are not supported and result in a {@link NullPointerException}.
      *
      * @param mapper mapping function to derive comparable keys
      * @param exceptionSupplier supplier of exception to be thrown on order violation
@@ -1713,6 +1740,8 @@ public final class Packrat {
      * Validates that incoming elements are in strictly decreasing order (no equals allowed).
      * If a violation is detected, an {@link IllegalStateException} is thrown.
      *
+     * <p>Null elements are not supported and result in a {@link NullPointerException}.
+     *
      * @param <T> element type which must be {@link Comparable}
      * @return a gatherer that throws if input is not ordered
      */
@@ -1723,6 +1752,8 @@ public final class Packrat {
 
     /**
      * Strictly decreasing order (no equals allowed) with a custom exception supplier.
+     *
+     * <p>Null elements are not supported and result in a {@link NullPointerException}.
      *
      * @param exceptionSupplier supplier of exception to be thrown on order violation
      * @param <T> element type which must be {@link Comparable}
@@ -1742,6 +1773,8 @@ public final class Packrat {
      * Strictly decreasing order (no equals allowed) validated by a mapped comparable key.
      * Throws {@link IllegalStateException} on violation.
      *
+     * <p>Null mapped values are not supported and result in a {@link NullPointerException}.
+     *
      * @param mapper mapping function to derive comparable keys
      * @param <T> element type
      * @param <U> mapped comparable type
@@ -1756,6 +1789,8 @@ public final class Packrat {
     /**
      * Strictly decreasing order (no equals allowed) validated by a mapped comparable key
      * with a custom exception supplier.
+     *
+     * <p>Null mapped values are not supported and result in a {@link NullPointerException}.
      *
      * @param mapper mapping function to derive comparable keys
      * @param exceptionSupplier supplier of exception to be thrown on order violation
@@ -1778,6 +1813,8 @@ public final class Packrat {
      * Validates that incoming elements are in non-increasing order (decreasing or equal).
      * If a violation is detected, an {@link IllegalStateException} is thrown.
      *
+     * <p>Null elements are not supported and result in a {@link NullPointerException}.
+     *
      * @param <T> element type which must be {@link Comparable}
      * @return a gatherer that throws if input is not ordered
      */
@@ -1789,6 +1826,8 @@ public final class Packrat {
     /**
      * Validates that incoming elements are in non-increasing order (decreasing or equal)
      * and passes them through unchanged. If a violation is detected, the supplied exception is thrown.
+     *
+     * <p>Null elements are not supported and result in a {@link NullPointerException}.
      *
      * @param exceptionSupplier supplier of exception to be thrown on order violation
      * @param <T> element type which must be {@link Comparable}
@@ -1809,6 +1848,8 @@ public final class Packrat {
      * according to the provided mapper and passes them through unchanged. If a violation
      * is detected, an {@link IllegalStateException} is thrown.
      *
+     * <p>Null mapped values are not supported and result in a {@link NullPointerException}.
+     *
      * @param mapper mapping function to derive comparable keys
      * @param <T> element type
      * @param <U> mapped comparable type
@@ -1824,6 +1865,8 @@ public final class Packrat {
      * Validates that incoming elements are in non-increasing order (decreasing or equal)
      * according to the provided mapper and passes them through unchanged. If a violation
      * is detected, the supplied exception is thrown.
+     *
+     * <p>Null mapped values are not supported and result in a {@link NullPointerException}.
      *
      * @param mapper mapping function to derive comparable keys
      * @param exceptionSupplier supplier of exception to be thrown on order violation
