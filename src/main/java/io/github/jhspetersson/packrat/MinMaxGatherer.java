@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.IntPredicate;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
@@ -22,11 +22,11 @@ import org.jspecify.annotations.NonNull;
 class MinMaxGatherer<T, U> implements Gatherer<T, MinMaxGatherer.State<T, U>, T> {
     private final Function<? super T, ? extends U> mapper;
     private final Comparator<? super U> comparator;
-    private final Predicate<Integer> predicate;
+    private final IntPredicate predicate;
 
     MinMaxGatherer(@NonNull Function<? super T, ? extends U> mapper,
                    @NonNull Comparator<? super U> comparator,
-                   @NonNull Predicate<Integer> predicate) {
+                   @NonNull IntPredicate predicate) {
         Objects.requireNonNull(mapper, "mapper cannot be null");
         Objects.requireNonNull(comparator, "comparator cannot be null");
         Objects.requireNonNull(predicate, "predicate cannot be null");

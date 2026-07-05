@@ -2,7 +2,7 @@ package io.github.jhspetersson.packrat;
 
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.IntPredicate;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
@@ -22,11 +22,11 @@ import org.jspecify.annotations.NonNull;
 class ThrowIfNotOrderedGatherer<T, U extends Comparable<? super U>> implements Gatherer<T, ThrowIfNotOrderedGatherer.State<U>, T> {
     private final Function<? super T, ? extends U> mapper;
     private final Supplier<? extends RuntimeException> exceptionSupplier;
-    private final Predicate<Integer> predicate;
+    private final IntPredicate predicate;
 
     ThrowIfNotOrderedGatherer(@NonNull Function<? super T, ? extends U> mapper,
                               @NonNull Supplier<? extends RuntimeException> exceptionSupplier,
-                              @NonNull Predicate<Integer> predicate) {
+                              @NonNull IntPredicate predicate) {
         Objects.requireNonNull(mapper, "mapper cannot be null");
         Objects.requireNonNull(exceptionSupplier, "exceptionSupplier cannot be null");
         Objects.requireNonNull(predicate, "predicate cannot be null");

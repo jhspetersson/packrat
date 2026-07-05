@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.Predicate;
+import java.util.function.IntPredicate;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
@@ -22,10 +22,10 @@ import org.jspecify.annotations.NonNull;
  */
 class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, IncreasingDecreasingChunksGatherer.State<T>, List<T>> {
     private final Comparator<? super T> comparator;
-    private final Predicate<Integer> predicate;
+    private final IntPredicate predicate;
 
     IncreasingDecreasingChunksGatherer(@NonNull Comparator<? super T> comparator,
-                                       @NonNull Predicate<Integer> predicate) {
+                                       @NonNull IntPredicate predicate) {
         Objects.requireNonNull(comparator, "comparator cannot be null");
         Objects.requireNonNull(predicate, "predicate cannot be null");
 
