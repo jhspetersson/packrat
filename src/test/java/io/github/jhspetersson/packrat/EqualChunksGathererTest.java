@@ -8,8 +8,15 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class EqualChunksGathererTest {
+    @Test
+    void nullComparatorShouldThrow() {
+        assertThrows(NullPointerException.class, () -> Packrat.equalChunks((java.util.Comparator<String>) null));
+        assertThrows(NullPointerException.class, () -> Packrat.equalChunksBy(Function.identity(), null));
+    }
+
     @Test
     void equalChunksTest() {
         var numbers = Stream.of(1, 1, 2, 2, 2, 3, 4, 4, 5, 5, 5, 5, 6);

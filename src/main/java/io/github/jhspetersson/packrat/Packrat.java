@@ -429,6 +429,8 @@ public final class Packrat {
      */
     @NonNull
     public static <T, U> Gatherer<T, ?, List<T>> equalChunksBy(@NonNull Function<? super T, ? extends U> mapper, @NonNull Comparator<? super U> comparator) {
+        Objects.requireNonNull(comparator, "comparator cannot be null");
+
         return new EqualChunksGatherer<>(mapper, comparator);
     }
 
@@ -444,6 +446,8 @@ public final class Packrat {
      */
     @NonNull
     public static <T> Gatherer<T, ?, List<T>> equalChunks(@NonNull Comparator<? super T> comparator) {
+        Objects.requireNonNull(comparator, "comparator cannot be null");
+
         return new EqualChunksGatherer<>(Function.identity(), comparator);
     }
 
