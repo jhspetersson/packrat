@@ -40,8 +40,9 @@ class CollectingGatherer<T, U, V> implements Gatherer<T, U, V> {
 
     @Override
     public Integrator<U, T, V> integrator() {
+        var accumulator = collector.accumulator();
         return Integrator.ofGreedy((state, element, downstream) -> {
-            collector.accumulator().accept(state, element);
+            accumulator.accept(state, element);
             return !downstream.isRejecting();
         });
     }
