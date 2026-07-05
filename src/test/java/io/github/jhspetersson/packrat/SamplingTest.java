@@ -68,6 +68,14 @@ public class SamplingTest {
     }
 
     @Test
+    void sampleZeroShouldNotConsumeTheStream() {
+        var result = org.junit.jupiter.api.Assertions.assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
+                java.util.stream.Stream.iterate(0, i -> i + 1).gather(Packrat.sample(0)).toList());
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     void sampleShouldSurviveMoreThanMaxIntElements() {
         var gatherer = new SamplingGatherer<Integer>(5);
         var state = gatherer.initializer().get();

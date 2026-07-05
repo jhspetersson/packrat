@@ -511,6 +511,16 @@ public final class Packrat {
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> nCopies(long n) {
+        if (n < 0) {
+            throw new IllegalArgumentException("n must be a non-negative number");
+        }
+        if (n == 0) {
+            return empty();
+        }
+        if (n == 1) {
+            return new IdentityGatherer<>();
+        }
+
         return new NCopiesGatherer<>(n);
     }
 
@@ -1313,6 +1323,13 @@ public final class Packrat {
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> sample(int n) {
+        if (n < 0) {
+            throw new IllegalArgumentException("n must be a non-negative number");
+        }
+        if (n == 0) {
+            return empty();
+        }
+
         return new SamplingGatherer<>(n);
     }
 
