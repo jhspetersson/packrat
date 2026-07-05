@@ -104,7 +104,7 @@ public class PackratArchTest {
 
     /**
      * Only {@code Packrat} is intended public API. Every other class in the package
-     * (gatherer implementations and internal helpers such as {@code FixedSizeDeque})
+     * (gatherer implementations and internal helpers such as {@code RingBuffer})
      * must stay package-private so they do not leak into the published surface.
      */
     @Test

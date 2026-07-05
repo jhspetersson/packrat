@@ -1,6 +1,5 @@
 package io.github.jhspetersson.packrat;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -48,19 +47,18 @@ class WindowSlidingWithIndexGatherer<T, R> implements Gatherer<T, WindowSlidingW
     @Override
     public Integrator<State<T>, T, R> integrator() {
         return Integrator.of((state, element, downstream) -> {
-            state.window.add(element);
-            
-            if (!state.windowFilled && state.window.size() == windowSize) {
-                state.windowFilled = true;
+            if (state.window.isFull()) {
+                state.window.removeFirst();
             }
-            
-            if (state.windowFilled) {
-                var windowCopy = new ArrayList<>(state.window);
+            state.window.add(element);
+
+            if (state.window.isFull()) {
+                var windowCopy = state.window.toList();
                 var result = mapper.apply(state.index++, windowCopy);
 
                 return downstream.push(result);
             }
-            
+
             return !downstream.isRejecting();
         });
     }
@@ -71,14 +69,12 @@ class WindowSlidingWithIndexGatherer<T, R> implements Gatherer<T, WindowSlidingW
      * @param <T> element type
      */
     static class State<T> {
-        private final FixedSizeDeque<T> window;
+        private final RingBuffer<T> window;
         private long index;
-        private boolean windowFilled;
 
         State(int windowSize, long startIndex) {
-            this.window = new FixedSizeDeque<>(windowSize);
+            this.window = new RingBuffer<>(windowSize);
             this.index = startIndex;
-            this.windowFilled = false;
         }
     }
 }

@@ -1,7 +1,5 @@
 package io.github.jhspetersson.packrat;
 
-import java.util.Deque;
-import java.util.LinkedList;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
@@ -11,7 +9,7 @@ import java.util.stream.Gatherer;
  * @param <T> element type
  * @author jhspetersson
  */
-class DropLastNGatherer<T> implements Gatherer<T, Deque<T>, T> {
+class DropLastNGatherer<T> implements Gatherer<T, RingBuffer<T>, T> {
     private final long n;
 
     DropLastNGatherer(long n) {
@@ -23,21 +21,23 @@ class DropLastNGatherer<T> implements Gatherer<T, Deque<T>, T> {
     }
 
     @Override
-    public Supplier<Deque<T>> initializer() {
-        return LinkedList::new;
+    public Supplier<RingBuffer<T>> initializer() {
+        return () -> new RingBuffer<>(Math.max(n, 1));
     }
 
     @Override
-    public Integrator<Deque<T>, T, T> integrator() {
+    public Integrator<RingBuffer<T>, T, T> integrator() {
         if (n == 0) {
             return Integrator.of((_, element, downstream) -> downstream.push(element));
         }
 
-        return Integrator.of((deque, element, downstream) -> {
-            deque.addLast(element);
-            if (deque.size() > n) {
-                return downstream.push(deque.removeFirst());
+        return Integrator.of((buffer, element, downstream) -> {
+            if (buffer.isFull()) {
+                var oldest = buffer.removeFirst();
+                buffer.add(element);
+                return downstream.push(oldest);
             }
+            buffer.add(element);
             return !downstream.isRejecting();
         });
     }
