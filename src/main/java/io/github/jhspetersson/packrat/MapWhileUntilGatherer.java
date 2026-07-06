@@ -19,8 +19,8 @@ class MapWhileUntilGatherer<T> implements Gatherer<T, boolean[], T> {
     private final Predicate<? super T> whilePredicate;
     private final Predicate<? super T> untilPredicate;
 
-    MapWhileUntilGatherer(@NonNull Function<? super T, ? extends T> mapper, Predicate<? super T> whilePredicate) {
-        this(mapper, whilePredicate, null);
+    MapWhileUntilGatherer(@NonNull Function<? super T, ? extends T> mapper, @NonNull Predicate<? super T> whilePredicate) {
+        this(mapper, Objects.requireNonNull(whilePredicate, "whilePredicate cannot be null"), null);
     }
 
     MapWhileUntilGatherer(Function<? super T, ? extends T> mapper, Predicate<? super T> whilePredicate, Predicate<? super T> untilPredicate) {

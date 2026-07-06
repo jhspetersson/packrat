@@ -27,6 +27,12 @@ public class MapWhileUntilTest {
     }
 
     @Test
+    public void gathererConstructorNullPredicateThrows() {
+        assertThrows(NullPointerException.class,
+                () -> new MapWhileUntilGatherer<Integer>(n -> n * 10, null));
+    }
+
+    @Test
     public void mapUntilNullPredicateThrows() {
         assertThrows(NullPointerException.class, () -> Packrat.mapUntil(n -> (Integer) n * 10, null));
     }
