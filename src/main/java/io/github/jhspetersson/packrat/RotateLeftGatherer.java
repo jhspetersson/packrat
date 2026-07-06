@@ -31,7 +31,7 @@ class RotateLeftGatherer<T> implements Gatherer<T, List<T>, T> {
 
     @Override
     public Integrator<List<T>, T, T> integrator() {
-        return (state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             if (state.size() < distance) {
                 state.add(element);
             } else {
@@ -40,7 +40,7 @@ class RotateLeftGatherer<T> implements Gatherer<T, List<T>, T> {
                 }
             }
             return !downstream.isRejecting();
-        };
+        });
     }
 
     @Override

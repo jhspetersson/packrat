@@ -28,10 +28,10 @@ class DropLastNGatherer<T> implements Gatherer<T, RingBuffer<T>, T> {
     @Override
     public Integrator<RingBuffer<T>, T, T> integrator() {
         if (n == 0) {
-            return Integrator.of((_, element, downstream) -> downstream.push(element));
+            return Integrator.ofGreedy((_, element, downstream) -> downstream.push(element));
         }
 
-        return Integrator.of((buffer, element, downstream) -> {
+        return Integrator.ofGreedy((buffer, element, downstream) -> {
             if (buffer.isFull()) {
                 var oldest = buffer.removeFirst();
                 buffer.add(element);

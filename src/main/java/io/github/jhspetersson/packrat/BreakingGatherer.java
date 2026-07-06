@@ -35,7 +35,7 @@ class BreakingGatherer<T> implements Gatherer<T, BreakingGatherer.State, String>
 
     @Override
     public Integrator<State, T, String> integrator() {
-        return Integrator.of((state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             if (element == null) {
                 return downstream.push(null);
             } else {
