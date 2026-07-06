@@ -43,7 +43,7 @@ class AtMostGatherer<T, U> implements Gatherer<T, AtMostGatherer.State<T, U>, T>
     public Integrator<State<T, U>, T, T> integrator() {
         return Integrator.ofGreedy((state, element, downstream) -> {
             var mappedValue = mapper.apply(element);
-            var count = state.counts.merge(mappedValue, 1L, Long::sum);
+            var count = ++state.counts.computeIfAbsent(mappedValue, _ -> new long[1])[0];
             if (count <= atMost) {
                 state.elementsByKey.computeIfAbsent(mappedValue, _ -> new ArrayList<>())
                         .add(new IndexedElement<>(state.index, element));
@@ -77,7 +77,7 @@ class AtMostGatherer<T, U> implements Gatherer<T, AtMostGatherer.State<T, U>, T>
 
     static class State<T, U> {
         final Map<U, List<IndexedElement<T>>> elementsByKey = new HashMap<>();
-        final Map<U, Long> counts = new HashMap<>();
+        final Map<U, long[]> counts = new HashMap<>();
         long index;
     }
 }
