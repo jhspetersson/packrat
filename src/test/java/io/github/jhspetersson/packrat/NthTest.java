@@ -55,29 +55,24 @@ public class NthTest {
 
     @Test
     public void nthShouldKeepCadenceBeyondMaxIntElements() {
-        var gatherer = new NthGatherer<Integer>(1_000_000);
-        var state = gatherer.initializer().get();
+        var n = 5;
+        var gatherer = new NthGatherer<Integer>(n);
         var integrator = gatherer.integrator();
 
-        var lastPushPosition = new long[] { -1 };
-        var currentPosition = new long[1];
-        var badGap = new long[] { -1 };
-
+        // simulate having already consumed 2^31 - 3 elements
+        var state = new long[] { Integer.MAX_VALUE - 2 };
+        var taken = new java.util.ArrayList<Long>();
         Gatherer.Downstream<Integer> downstream = _ -> {
-            if (lastPushPosition[0] >= 0 && currentPosition[0] - lastPushPosition[0] != 1_000_000) {
-                badGap[0] = currentPosition[0] - lastPushPosition[0];
-            }
-            lastPushPosition[0] = currentPosition[0];
+            taken.add(state[0]);
             return true;
         };
 
-        var total = (1L << 31) + 2_000_000L;
-        for (var i = 0L; i < total; i++) {
-            currentPosition[0] = i;
+        for (var i = 0; i < 10; i++) {
             integrator.integrate(state, 0, downstream);
         }
 
-        assertEquals(-1, badGap[0], "cadence broke, gap of " + badGap[0]);
+        // taken positions must stay exact multiples of n across the int boundary
+        assertEquals(List.of(2_147_483_650L, 2_147_483_655L), taken);
     }
 
     @Test
