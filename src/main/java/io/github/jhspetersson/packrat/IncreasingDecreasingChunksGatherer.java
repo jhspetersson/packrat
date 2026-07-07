@@ -40,7 +40,7 @@ class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, IncreasingDec
 
     @Override
     public Integrator<State<T>, T, List<T>> integrator() {
-        return Integrator.of((state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             if (state.first) {
                 state.first = false;
                 state.value = element;

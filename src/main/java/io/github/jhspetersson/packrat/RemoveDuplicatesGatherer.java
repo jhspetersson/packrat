@@ -31,7 +31,7 @@ class RemoveDuplicatesGatherer<T, U> implements Gatherer<T, RemoveDuplicatesGath
 
     @Override
     public Integrator<State<U>, T, T> integrator() {
-        return Integrator.of((state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             var mappedValue = mapper.apply(element);
             if (state.hasValue && Objects.equals(state.value, mappedValue)) {
                 return !downstream.isRejecting();

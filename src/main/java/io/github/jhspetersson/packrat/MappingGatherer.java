@@ -33,7 +33,7 @@ class MappingGatherer<T> implements Gatherer<T, long[], T> {
 
     @Override
     public Integrator<long[], T, T> integrator() {
-        return Integrator.of((state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             if (skipN > 0 && state[0] < skipN) {
                 state[0] += 1;
                 return downstream.push(element);

@@ -31,7 +31,7 @@ class FilterEntriesGatherer<K, V> implements Gatherer<Map.Entry<K, V>, Void, Map
 
     @Override
     public Integrator<Void, Map.Entry<K, V>, Map.Entry<K, V>> integrator() {
-        return Integrator.of((_, element, downstream) -> {
+        return Integrator.ofGreedy((_, element, downstream) -> {
             // a null entry cannot satisfy the predicate: filter drops it, remove keeps it
             var testResult = element != null && predicate.test(element.getKey(), element.getValue());
             if (testResult ^ invert) {

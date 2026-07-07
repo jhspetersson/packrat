@@ -33,7 +33,7 @@ class SamplingGatherer<T> implements Gatherer<T, SamplingGatherer.State<T>, T> {
     @Override
     public Integrator<State<T>, T, T> integrator() {
         var random = ThreadLocalRandom.current();
-        return Integrator.of((state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             if (state.list.size() < n) {
                 state.list.add(new IndexedElement<>(state.counter, element));
             } else {

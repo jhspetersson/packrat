@@ -29,7 +29,7 @@ class FlatMapGatherer<T> implements Gatherer<T, Void, T> {
 
     @Override
     public Integrator<Void, T, T> integrator() {
-        return Integrator.of((_, element, downstream) -> {
+        return Integrator.ofGreedy((_, element, downstream) -> {
             if (predicate.test(element)) {
                 var mappedStream = mapper.apply(element);
                 if (mappedStream == null) {

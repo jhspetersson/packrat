@@ -32,7 +32,7 @@ class DistinctByGatherer<T, U> implements Gatherer<T, Set<? super U>, T> {
 
     @Override
     public Integrator<Set<? super U>, T, T> integrator() {
-        return Integrator.of((state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             var mappedValue = mapper.apply(element);
             if (state.add(mappedValue)) {
                 return downstream.push(element);

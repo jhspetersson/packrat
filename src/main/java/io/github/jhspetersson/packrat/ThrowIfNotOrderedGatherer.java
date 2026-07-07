@@ -43,7 +43,7 @@ class ThrowIfNotOrderedGatherer<T, U extends Comparable<? super U>> implements G
 
     @Override
     public Integrator<State<U>, T, T> integrator() {
-        return Integrator.of((state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             var mapped = mapper.apply(element);
             if (!state.first) {
                 var result = state.prev.compareTo(mapped);

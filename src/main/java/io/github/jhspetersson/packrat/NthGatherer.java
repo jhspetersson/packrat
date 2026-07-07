@@ -27,7 +27,7 @@ class NthGatherer<T> implements Gatherer<T, long[], T> {
 
     @Override
     public Integrator<long[], T, T> integrator() {
-        return Integrator.of((state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             if (++state[0] % n == 0) {
                 return downstream.push(element);
             }

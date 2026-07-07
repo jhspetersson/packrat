@@ -37,7 +37,7 @@ class FilteringWithIndexGatherer<T> implements Gatherer<T, long[], T> {
 
     @Override
     public Integrator<long[], T, T> integrator() {
-        return Integrator.of((state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             var currentIndex = state[0]++;
             var testResult = predicate.test(currentIndex, element);
             if (testResult ^ invert) {

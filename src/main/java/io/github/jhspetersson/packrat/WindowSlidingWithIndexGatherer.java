@@ -46,7 +46,7 @@ class WindowSlidingWithIndexGatherer<T, R> implements Gatherer<T, WindowSlidingW
 
     @Override
     public Integrator<State<T>, T, R> integrator() {
-        return Integrator.of((state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             if (state.window.isFull()) {
                 state.window.removeFirst();
             }

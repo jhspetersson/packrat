@@ -31,7 +31,7 @@ class RandomFilterGatherer<T> implements Gatherer<T, Void, T> {
     @Override
     public Integrator<Void, T, T> integrator() {
         var random = ThreadLocalRandom.current();
-        return Integrator.of((_, element, downstream) -> {
+        return Integrator.ofGreedy((_, element, downstream) -> {
             if (random.nextDouble() < probability) {
                 return downstream.push(element);
             }

@@ -35,7 +35,7 @@ class IncreasingDecreasingGatherer<T> implements Gatherer<T, IncreasingDecreasin
 
     @Override
     public Integrator<State<T>, T, T> integrator() {
-        return Integrator.of((state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             if (state.first) {
                 state.first = false;
                 state.value = element;

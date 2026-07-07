@@ -48,7 +48,7 @@ class WindowFixedWithIndexGatherer<T, R> implements Gatherer<T, WindowFixedWithI
 
     @Override
     public Integrator<State<T>, T, R> integrator() {
-        return Integrator.of((state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             state.window.add(element);
             
             if (state.window.size() == windowSize) {

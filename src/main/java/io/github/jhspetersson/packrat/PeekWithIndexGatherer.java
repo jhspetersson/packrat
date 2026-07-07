@@ -31,7 +31,7 @@ class PeekWithIndexGatherer<T> implements Gatherer<T, long[], T> {
 
     @Override
     public Integrator<long[], T, T> integrator() {
-        return Integrator.of((state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             consumer.accept(state[0]++, element);
             return downstream.push(element);
         });

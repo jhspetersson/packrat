@@ -53,7 +53,7 @@ class DropLastingGatherer<T> implements Gatherer<T, DropLastingGatherer.State<T>
     @Override
     public Integrator<State<T>, T, T> integrator() {
         if (n == 0) {
-            return Integrator.of((_, element, downstream) -> downstream.push(element));
+            return Integrator.ofGreedy((_, element, downstream) -> downstream.push(element));
         }
 
         return Integrator.ofGreedy((state, element, downstream) -> {

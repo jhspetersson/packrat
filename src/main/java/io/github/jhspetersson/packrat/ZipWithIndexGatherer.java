@@ -32,7 +32,7 @@ class ZipWithIndexGatherer<T, U> implements Gatherer<T, long[], U> {
 
     @Override
     public Integrator<long[], T, U> integrator() {
-        return Integrator.of((state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             var mappedValue = mapper.apply(state[0]++, element);
             return downstream.push(mappedValue);
         });

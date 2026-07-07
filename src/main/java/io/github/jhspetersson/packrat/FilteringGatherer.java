@@ -36,7 +36,7 @@ class FilteringGatherer<T, U> implements Gatherer<T, Void, T> {
 
     @Override
     public Integrator<Void, T, T> integrator() {
-        return Integrator.of((_, element, downstream) -> {
+        return Integrator.ofGreedy((_, element, downstream) -> {
             var mappedValue = mapper.apply(element);
             var testResult = predicate.test(mappedValue, value);
             if (testResult ^ invert) {

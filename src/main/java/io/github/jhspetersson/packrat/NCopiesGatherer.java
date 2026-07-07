@@ -27,7 +27,7 @@ class NCopiesGatherer<T> implements Gatherer<T, Void, T> {
 
     @Override
     public Integrator<Void, T, T> integrator() {
-        return Integrator.of((_, element, downstream) -> {
+        return Integrator.ofGreedy((_, element, downstream) -> {
             for (var i = 1L; i <= n; i++) {
                 if (!downstream.push(element)) {
                     return false;

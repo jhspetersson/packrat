@@ -42,7 +42,7 @@ class EqualChunksGatherer<T, U> implements Gatherer<T, EqualChunksGatherer.State
 
     @Override
     public Integrator<State<T, U>, T, List<T>> integrator() {
-        return Integrator.of((state, element, downstream) -> {
+        return Integrator.ofGreedy((state, element, downstream) -> {
             var mappedValue = mapper.apply(element);
 
             if (state.first) {
