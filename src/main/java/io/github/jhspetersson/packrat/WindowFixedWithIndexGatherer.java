@@ -3,6 +3,7 @@ package io.github.jhspetersson.packrat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
@@ -13,6 +14,8 @@ import org.jspecify.annotations.NonNull;
  * Returns fixed-size non-overlapping windows of elements along with their indices.
  * Each window contains a fixed number of elements and is emitted as a list.
  * Windows are not sliding but go one after another with a step equal to the window's size.
+ * The final window may contain fewer elements if the stream size is not a multiple of the window size,
+ * matching the behavior of {@link java.util.stream.Gatherers#windowFixed}.
  *
  * @param <T> element type
  * @param <R> result type
@@ -61,6 +64,16 @@ class WindowFixedWithIndexGatherer<T, R> implements Gatherer<T, WindowFixedWithI
             
             return !downstream.isRejecting();
         });
+    }
+
+    @Override
+    public BiConsumer<State<T>, Downstream<? super R>> finisher() {
+        return (state, downstream) -> {
+            if (!state.window.isEmpty()) {
+                var result = mapper.apply(state.index, new ArrayList<>(state.window));
+                downstream.push(result);
+            }
+        };
     }
 
     /**

@@ -14,35 +14,41 @@ public class WindowFixedWithIndexTest {
     public void windowFixedWithIndexTest() {
         var numbers = IntStream.rangeClosed(1, 10).boxed();
         var result = numbers.gather(Packrat.windowFixedWithIndex(3)).toList();
-        
-        assertEquals(3, result.size());
-        
+
+        assertEquals(4, result.size());
+
         assertEquals(0L, result.get(0).getKey());
         assertEquals(List.of(1, 2, 3), result.get(0).getValue());
-        
+
         assertEquals(1L, result.get(1).getKey());
         assertEquals(List.of(4, 5, 6), result.get(1).getValue());
-        
+
         assertEquals(2L, result.get(2).getKey());
         assertEquals(List.of(7, 8, 9), result.get(2).getValue());
+
+        assertEquals(3L, result.get(3).getKey());
+        assertEquals(List.of(10), result.get(3).getValue());
     }
     
     @Test
     public void windowFixedWithIndexRemainingElementsTest() {
         var numbers = IntStream.rangeClosed(1, 11).boxed();
         var result = numbers.gather(Packrat.windowFixedWithIndex(3)).toList();
-        
-        assertEquals(3, result.size());
-        
-        // The last element (11) is not included in any window because it doesn't form a complete window
+
+        assertEquals(4, result.size());
+
+        // The remaining elements form a smaller final window, as with Gatherers.windowFixed
         assertEquals(0L, result.get(0).getKey());
         assertEquals(List.of(1, 2, 3), result.get(0).getValue());
-        
+
         assertEquals(1L, result.get(1).getKey());
         assertEquals(List.of(4, 5, 6), result.get(1).getValue());
-        
+
         assertEquals(2L, result.get(2).getKey());
         assertEquals(List.of(7, 8, 9), result.get(2).getValue());
+
+        assertEquals(3L, result.get(3).getKey());
+        assertEquals(List.of(10, 11), result.get(3).getValue());
     }
     
     @Test
@@ -96,8 +102,11 @@ public class WindowFixedWithIndexTest {
     public void windowFixedWithIndexInsufficientElementsTest() {
         var numbers = Stream.of(1, 2);
         var result = numbers.gather(Packrat.windowFixedWithIndex(3)).toList();
-        
-        assertEquals(0, result.size());
+
+        assertEquals(1, result.size());
+
+        assertEquals(0L, result.get(0).getKey());
+        assertEquals(List.of(1, 2), result.get(0).getValue());
     }
     
     @Test

@@ -775,7 +775,7 @@ However, resulting list contains an original element of type `String`;
 
 #### windowSlidingWithIndex
 
-`windowSlidingWithIndex(windowSize)` - returns fixed-size windows of elements along with their indices, the index starts from 0
+`windowSlidingWithIndex(windowSize)` - returns fixed-size windows of elements along with their indices, the index starts from 0. If the stream contains fewer elements than the window size, a single window containing all of them is emitted (as with `Gatherers.windowSliding`).
 
 ```java
   import static io.github.jhspetersson.packrat.Packrat.windowSlidingWithIndex;
@@ -802,7 +802,7 @@ However, resulting list contains an original element of type `String`;
 
 #### windowFixedWithIndex
 
-`windowFixedWithIndex(windowSize)` - returns fixed-size non-overlapping windows of elements along with their indices, the index starts from 0
+`windowFixedWithIndex(windowSize)` - returns fixed-size non-overlapping windows of elements along with their indices, the index starts from 0. The final window may contain fewer elements if the stream size is not a multiple of the window size (as with `Gatherers.windowFixed`).
 
 ```java
   import static io.github.jhspetersson.packrat.Packrat.windowFixedWithIndex;
@@ -811,7 +811,7 @@ However, resulting list contains an original element of type `String`;
   System.out.println(result);
 ```
 
-> [0=[1, 2, 3], 1=[4, 5, 6], 2=[7, 8, 9]]
+> [0=[1, 2, 3], 1=[4, 5, 6], 2=[7, 8, 9], 3=[10]]
 
 `windowFixedWithIndex(windowSize, startIndex)` - returns fixed-size non-overlapping windows of elements along with their indices, the index starts from _startIndex_
 

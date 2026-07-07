@@ -881,6 +881,7 @@ public final class Packrat {
     /**
      * Returns fixed-size windows of elements along with their indices.
      * Each window contains a fixed number of elements and is emitted as a list.
+     * If the stream contains fewer elements than the window size, a single window containing all of them is emitted.
      * The index starts from 0.
      *
      * @param windowSize the size of each window
@@ -896,6 +897,7 @@ public final class Packrat {
     /**
      * Returns fixed-size windows of elements along with their indices.
      * Each window contains a fixed number of elements and is emitted as a list.
+     * If the stream contains fewer elements than the window size, a single window containing all of them is emitted.
      * The index starts from the specified startIndex.
      *
      * @param windowSize the size of each window
@@ -912,6 +914,7 @@ public final class Packrat {
     /**
      * Returns fixed-size windows of elements along with their indices.
      * Each window contains a fixed number of elements.
+     * If the stream contains fewer elements than the window size, a single window containing all of them is emitted.
      * The index starts from 0.
      *
      * @param windowSize the size of each window
@@ -930,6 +933,7 @@ public final class Packrat {
     /**
      * Returns fixed-size windows of elements along with their indices.
      * Each window contains a fixed number of elements.
+     * If the stream contains fewer elements than the window size, a single window containing all of them is emitted.
      * The index starts from the specified startIndex.
      *
      * @param windowSize the size of each window
@@ -951,6 +955,7 @@ public final class Packrat {
      * Returns fixed-size non-overlapping windows of elements along with their indices.
      * Each window contains a fixed number of elements and is emitted as a list.
      * Windows are not sliding but go one after another with a step equal to the window's size.
+     * The final window may contain fewer elements if the stream size is not a multiple of the window size.
      * The index starts from 0.
      *
      * @param windowSize the size of each window
@@ -967,6 +972,7 @@ public final class Packrat {
      * Returns fixed-size non-overlapping windows of elements along with their indices.
      * Each window contains a fixed number of elements and is emitted as a list.
      * Windows are not sliding but go one after another with a step equal to the window's size.
+     * The final window may contain fewer elements if the stream size is not a multiple of the window size.
      *
      * @param windowSize the size of each window
      * @param startIndex the starting index
@@ -984,6 +990,7 @@ public final class Packrat {
      * Returns fixed-size non-overlapping windows of elements along with their indices.
      * Each window contains a fixed number of elements and is emitted as a list.
      * Windows are not sliding but go one after another with a step equal to the window's size.
+     * The final window may contain fewer elements if the stream size is not a multiple of the window size.
      * The index starts from 0.
      *
      * @param windowSize the size of each window
@@ -1004,6 +1011,7 @@ public final class Packrat {
      * Returns fixed-size non-overlapping windows of elements along with their indices.
      * Each window contains a fixed number of elements and is emitted as a list.
      * Windows are not sliding but go one after another with a step equal to the window's size.
+     * The final window may contain fewer elements if the stream size is not a multiple of the window size.
      *
      * @param windowSize the size of each window
      * @param mapper the function to map each window with its index to a result

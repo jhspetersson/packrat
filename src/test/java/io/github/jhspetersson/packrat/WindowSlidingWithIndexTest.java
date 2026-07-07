@@ -91,8 +91,12 @@ public class WindowSlidingWithIndexTest {
     public void windowSlidingWithIndexInsufficientElementsTest() {
         var numbers = Stream.of(1, 2);
         var result = numbers.gather(Packrat.windowSlidingWithIndex(3)).toList();
-        
-        assertEquals(0, result.size());
+
+        // a single truncated window with all elements, as with Gatherers.windowSliding
+        assertEquals(1, result.size());
+
+        assertEquals(0L, result.get(0).getKey());
+        assertEquals(List.of(1, 2), result.get(0).getValue());
     }
     
     @Test

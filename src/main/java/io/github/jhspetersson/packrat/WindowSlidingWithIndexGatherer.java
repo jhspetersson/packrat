@@ -2,6 +2,7 @@ package io.github.jhspetersson.packrat;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
@@ -11,6 +12,9 @@ import org.jspecify.annotations.NonNull;
 /**
  * Returns fixed-size windows of elements along with their indices.
  * Each window contains a fixed number of elements and is emitted as a list.
+ * If the stream contains fewer elements than the window size, a single window
+ * containing all of them is emitted, matching the behavior of
+ * {@link java.util.stream.Gatherers#windowSliding}.
  *
  * @param <T> element type
  * @param <R> result type
@@ -61,6 +65,17 @@ class WindowSlidingWithIndexGatherer<T, R> implements Gatherer<T, WindowSlidingW
 
             return !downstream.isRejecting();
         });
+    }
+
+    @Override
+    public BiConsumer<State<T>, Downstream<? super R>> finisher() {
+        return (state, downstream) -> {
+            // a non-empty buffer that never filled up means no window has been emitted yet
+            if (state.window.size() > 0 && !state.window.isFull()) {
+                var result = mapper.apply(state.index, state.window.toList());
+                downstream.push(result);
+            }
+        };
     }
 
     /**
