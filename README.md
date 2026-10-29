@@ -651,6 +651,9 @@ However, resulting list contains an original element of type `String`;
 
 > {Mike=30, Anna=20, Sandra=40}
 
+> [!NOTE]
+> A supplied stream containing `flatMap` may buffer a whole inner stream before a downstream `limit` takes effect. Infinite inner streams may not terminate. If the other input is a collection, swap the inputs and reverse the mapper's arguments, e.g. `ages.gather(zip(names, (age, name) -> new User(name, age)))`.
+
 #### zipWithIndex
 
 `zipWithIndex()` - zips current stream with an increasing index into Map entries.

@@ -36,12 +36,9 @@ class FlatMapGatherer<T> implements Gatherer<T, Void, T> {
                     return !downstream.isRejecting();
                 }
                 try (var stream = mappedStream) {
-                    for (var it = stream.iterator(); it.hasNext(); ) {
-                        var elem = it.next();
-                        var res = downstream.push(elem);
-                        if (!res) {
-                            return false;
-                        }
+                    // A terminal operation lets nested flatMap stages observe cancellation.
+                    if (!stream.sequential().allMatch(downstream::push)) {
+                        return false;
                     }
                 }
                 return !downstream.isRejecting();

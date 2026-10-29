@@ -714,6 +714,10 @@ public final class Packrat {
      * <p>The supplied stream is consumed lazily and closed when the gathering finishes normally
      * (if the pipeline terminates with an exception, the stream is not closed),
      * so the returned gatherer can only be used once.
+     * <p>Iterator traversal may buffer an entire inner {@code flatMap} stream before a downstream
+     * {@code limit} takes effect. Infinite inner streams may not terminate. If the other input is
+     * a collection, swap the inputs: use this stream as the main pipeline and zip with the collection,
+     * using a mapper to preserve the original key/value order.
      *
      * @param input stream
      * @param <T> element type
@@ -732,6 +736,10 @@ public final class Packrat {
      * The supplied stream is consumed lazily and closed when the gathering finishes normally
      * (if the pipeline terminates with an exception, the stream is not closed),
      * so the returned gatherer can only be used once.
+     * <p>Iterator traversal may buffer an entire inner {@code flatMap} stream before a downstream
+     * {@code limit} takes effect. Infinite inner streams may not terminate. If the other input is
+     * a collection, swap the inputs: use this stream as the main pipeline and zip with the collection,
+     * reversing the mapper's arguments to preserve the original pairing.
      *
      * @param input stream
      * @param mapper zipping function

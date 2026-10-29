@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Gatherer;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -132,6 +133,24 @@ public class FlatMapTest {
                 Packrat.flatMapIf(s -> Arrays.stream(s.split("")), s -> s.length() > 1);
         var result = Stream.of("ABC", "D").gather(gatherer).toList();
         assertEquals(List.of("A", "B", "C", "D"), result);
+    }
+
+    @Test
+    void flatMapIfShouldShortCircuitNestedFlatMap() {
+        var consumed = new AtomicInteger();
+
+        var result = Stream.of(1, 2, 3)
+                .gather(Packrat.flatMapIf(
+                        i -> Stream.of(i).flatMap(_ -> IntStream.range(0, 1_000)
+                                .peek(_ -> consumed.incrementAndGet())
+                                .boxed()),
+                        _ -> true
+                ))
+                .limit(1)
+                .toList();
+
+        assertEquals(List.of(0), result);
+        assertEquals(1, consumed.get(), "Only the first nested element should be consumed");
     }
 
     @Test
