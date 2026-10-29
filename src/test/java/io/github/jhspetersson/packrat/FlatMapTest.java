@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Gatherer;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -14,6 +15,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FlatMapTest {
+    @Test
+    void flatMapIfAcceptsMapperVariable() {
+        Function<Integer, Stream<Integer>> mapper = i -> Stream.of(i, i * 10);
+        Gatherer<Integer, ?, Integer> gatherer = Packrat.flatMapIf(mapper, i -> i % 2 == 0);
+
+        var result = Stream.of(1, 2, 3).gather(gatherer).toList();
+
+        assertEquals(List.of(1, 2, 20, 3), result);
+    }
+
+    @Test
+    void flatMapIfAcceptsSupertypeMapperReturningSubtypeStream() {
+        Function<Object, Stream<Integer>> mapper = _ -> Stream.of(10, 20);
+        Gatherer<Number, ?, Number> gatherer = Packrat.flatMapIf(mapper, n -> n.intValue() == 2);
+
+        var result = Stream.<Number>of(1.5, 2L, 3.5).gather(gatherer).toList();
+
+        assertEquals(List.of(1.5, 10, 20, 3.5), result);
+    }
+
     @Test
     public void nullMapperResultActsAsEmptyStream() {
         var result = Stream.of(1, 2, 3)
