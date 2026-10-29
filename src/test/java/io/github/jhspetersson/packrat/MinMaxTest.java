@@ -68,6 +68,24 @@ public class MinMaxTest {
     }
 
     @Test
+    void minByAcceptsNonComparableMappedValues() {
+        var result = Stream.of("bb", "a", "ccc")
+                .gather(Packrat.minBy(s -> new Length(s.length()), Comparator.comparingInt(Length::value)))
+                .toList();
+
+        assertEquals(List.of("a"), result);
+    }
+
+    @Test
+    void maxByAcceptsNonComparableMappedValues() {
+        var result = Stream.of("bb", "a", "ccc")
+                .gather(Packrat.maxBy(s -> new Length(s.length()), Comparator.comparingInt(Length::value)))
+                .toList();
+
+        assertEquals(List.of("ccc"), result);
+    }
+
+    @Test
     void maxByReturnsNullElement() {
         var result = Stream.of(null, "b", "a")
                 .gather(Packrat.maxBy(s -> s == null ? "zzz" : s))
@@ -120,4 +138,6 @@ public class MinMaxTest {
         assertEquals(1, result.size());
         assertNull(result.getFirst());
     }
+
+    private record Length(int value) {}
 }

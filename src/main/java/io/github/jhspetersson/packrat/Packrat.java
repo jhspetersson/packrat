@@ -194,7 +194,7 @@ public final class Packrat {
      * @throws NullPointerException if the mapper or comparator is null
      */
     @NonNull
-    public static <T, U extends Comparable<U>> Gatherer<T, ?, T> minBy(@NonNull Function<? super T, ? extends U> mapper, @NonNull Comparator<? super U> comparator) {
+    public static <T, U> Gatherer<T, ?, T> minBy(@NonNull Function<? super T, ? extends U> mapper, @NonNull Comparator<? super U> comparator) {
         return new MinMaxGatherer<>(mapper, comparator, cmp -> cmp < 0);
     }
 
@@ -225,7 +225,7 @@ public final class Packrat {
      * @throws NullPointerException if the mapper or comparator is null
      */
     @NonNull
-    public static <T, U extends Comparable<U>> Gatherer<T, ?, T> maxBy(@NonNull Function<? super T, ? extends U> mapper, @NonNull Comparator<? super U> comparator) {
+    public static <T, U> Gatherer<T, ?, T> maxBy(@NonNull Function<? super T, ? extends U> mapper, @NonNull Comparator<? super U> comparator) {
         return new MinMaxGatherer<>(mapper, comparator, cmp -> cmp > 0);
     }
 
