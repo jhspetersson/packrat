@@ -2,6 +2,7 @@ package io.github.jhspetersson.packrat;
 
 import java.text.BreakIterator;
 import java.util.Objects;
+import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
@@ -61,6 +62,12 @@ class BreakingGatherer<T> implements Gatherer<T, BreakingGatherer.State, String>
             }
             return !downstream.isRejecting();
         });
+    }
+
+    @Override
+    public BinaryOperator<State> combiner() {
+        // Each element resets its iterator and emits all of its results.
+        return (left, _) -> left;
     }
 
     static class State {

@@ -1,19 +1,86 @@
 package io.github.jhspetersson.packrat;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Gatherer;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BreakingTest {
     private static final String TEST_STRING = "Test ✋\uD83C\uDFFF\uD83D\uDC22 日本語しゃべるか \uD83D\uDC69\u200D\uD83D\uDC69\u200D\uD83D\uDC67\u200D\uD83D\uDC67\uD83D\uDC69\u200D\uD83D\uDC69\u200D\uD83D\uDC67\uD83D\uDC68\uD83C\uDFFC\u200D❤️\u200D\uD83D\uDC68\uD83C\uDFFE";
     private static final String JAPANESE_TEXT = "こんにちは世界。日本語のテストです。";
     private static final String FRENCH_TEXT = "Bonjour le monde! C'est un test en français.";
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("textGatherers")
+    void parallelExecutionPreservesOutput(String name, Gatherer<Object, ?, String> gatherer) throws Exception {
+        assertNotSame(Gatherer.defaultCombiner(), gatherer.combiner(),
+                "Text gatherers should support parallel execution");
+
+        var input = IntStream.range(0, 1_024).mapToObj(i -> switch (i % 4) {
+            case 0 -> "Item " + i + ". " + FRENCH_TEXT;
+            case 1 -> TEST_STRING + i;
+            case 2 -> "";
+            default -> null;
+        }).toList();
+        var expected = input.stream().gather(gatherer).toList();
+        var threads = ConcurrentHashMap.<Long>newKeySet();
+        var started = new CountDownLatch(2);
+        Runnable onRead = () -> {
+            if (threads.add(Thread.currentThread().threadId())) {
+                started.countDown();
+                try {
+                    assertTrue(started.await(5, TimeUnit.SECONDS), "Expected two concurrent text workers");
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new AssertionError(e);
+                }
+            }
+        };
+
+        try (var pool = new ForkJoinPool(4)) {
+            var result = pool.submit(() -> input.parallelStream()
+                    .map(text -> text == null ? null : new TrackedText(text, onRead))
+                    .gather(gatherer).toList()).get(10, TimeUnit.SECONDS);
+
+            assertEquals(expected, result);
+            assertTrue(threads.size() > 1, "Text processing should run on multiple worker threads");
+        }
+    }
+
+    static Stream<Arguments> textGatherers() {
+        return Stream.of(
+                Arguments.of("chars", Packrat.chars()),
+                Arguments.of("chars with locale", Packrat.chars(Locale.FRANCE)),
+                Arguments.of("words", Packrat.words()),
+                Arguments.of("words with locale", Packrat.words(Locale.FRANCE)),
+                Arguments.of("sentences", Packrat.sentences()),
+                Arguments.of("sentences with locale", Packrat.sentences(Locale.FRANCE))
+        );
+    }
+
+    private record TrackedText(String text, Runnable onRead) {
+        @Override
+        public String toString() {
+            // BreakingGatherer calls toString, so this observes its processing threads.
+            onRead.run();
+            return text;
+        }
+    }
 
     @Test
     public void charsTest() {
