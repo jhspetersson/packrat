@@ -1,6 +1,7 @@
 package io.github.jhspetersson.packrat;
 
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.BinaryOperator;
 import java.util.stream.Gatherer;
 
 /**
@@ -30,12 +31,16 @@ class RandomFilterGatherer<T> implements Gatherer<T, Void, T> {
 
     @Override
     public Integrator<Void, T, T> integrator() {
-        var random = ThreadLocalRandom.current();
         return Integrator.ofGreedy((_, element, downstream) -> {
-            if (random.nextDouble() < probability) {
+            if (ThreadLocalRandom.current().nextDouble() < probability) {
                 return downstream.push(element);
             }
             return !downstream.isRejecting();
         });
+    }
+
+    @Override
+    public BinaryOperator<Void> combiner() {
+        return (_, _) -> null;
     }
 }

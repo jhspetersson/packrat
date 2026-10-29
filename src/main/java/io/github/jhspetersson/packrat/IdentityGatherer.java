@@ -1,5 +1,6 @@
 package io.github.jhspetersson.packrat;
 
+import java.util.function.BinaryOperator;
 import java.util.stream.Gatherer;
 
 /**
@@ -13,5 +14,10 @@ class IdentityGatherer<T> implements Gatherer<T, Void, T> {
     @Override
     public Integrator<Void, T, T> integrator() {
         return Integrator.ofGreedy((_, element, downstream) -> downstream.push(element));
+    }
+
+    @Override
+    public BinaryOperator<Void> combiner() {
+        return (_, _) -> null;
     }
 }

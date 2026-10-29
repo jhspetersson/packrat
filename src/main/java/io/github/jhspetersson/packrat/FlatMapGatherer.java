@@ -1,6 +1,7 @@
 package io.github.jhspetersson.packrat;
 
 import java.util.Objects;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Gatherer;
@@ -46,5 +47,10 @@ class FlatMapGatherer<T> implements Gatherer<T, Void, T> {
                 return downstream.push(element);
             }
         });
+    }
+
+    @Override
+    public BinaryOperator<Void> combiner() {
+        return (_, _) -> null;
     }
 }

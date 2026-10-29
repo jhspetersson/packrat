@@ -2,6 +2,7 @@ package io.github.jhspetersson.packrat;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BinaryOperator;
 import java.util.function.BiPredicate;
 import java.util.stream.Gatherer;
 
@@ -39,5 +40,10 @@ class FilterEntriesGatherer<K, V> implements Gatherer<Map.Entry<K, V>, Void, Map
             }
             return !downstream.isRejecting();
         });
+    }
+
+    @Override
+    public BinaryOperator<Void> combiner() {
+        return (_, _) -> null;
     }
 }

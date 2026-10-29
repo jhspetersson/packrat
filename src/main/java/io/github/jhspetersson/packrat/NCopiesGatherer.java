@@ -1,5 +1,6 @@
 package io.github.jhspetersson.packrat;
 
+import java.util.function.BinaryOperator;
 import java.util.stream.Gatherer;
 
 /**
@@ -35,5 +36,10 @@ class NCopiesGatherer<T> implements Gatherer<T, Void, T> {
             }
             return !downstream.isRejecting();
         });
+    }
+
+    @Override
+    public BinaryOperator<Void> combiner() {
+        return (_, _) -> null;
     }
 }
