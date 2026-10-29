@@ -1,13 +1,80 @@
 package io.github.jhspetersson.packrat;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Gatherer;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ThrowIfNotOrderedTest {
+
+    @ParameterizedTest
+    @MethodSource("orderingValidators")
+    void nullSingletonThrows(Gatherer<Integer, ?, Integer> validator) {
+        assertThrows(NullPointerException.class, () ->
+                Stream.of((Integer) null).gather(validator).toList());
+    }
+
+    @ParameterizedTest
+    @MethodSource("orderingValidators")
+    void initialNullThrowsBeforeLimit(Gatherer<Integer, ?, Integer> validator) {
+        assertThrows(NullPointerException.class, () ->
+                Stream.of(null, 1).gather(validator).limit(1).toList());
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullMappedValidators")
+    void nullMappedSingletonThrows(Gatherer<Integer, ?, Integer> validator) {
+        assertThrows(NullPointerException.class, () ->
+                Stream.of(1).gather(validator).toList());
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullMappedValidators")
+    void initialNullMappedValueThrowsBeforeLimit(Gatherer<Integer, ?, Integer> validator) {
+        assertThrows(NullPointerException.class, () ->
+                Stream.of(1, 2).gather(validator).limit(1).toList());
+    }
+
+    private static Stream<Gatherer<Integer, ?, Integer>> orderingValidators() {
+        return Stream.of(
+                Packrat.throwIfNotIncreasing(),
+                Packrat.throwIfNotIncreasingOrEqual(),
+                Packrat.throwIfNotDecreasing(),
+                Packrat.throwIfNotDecreasingOrEqual(),
+                Packrat.throwIfNotIncreasing(IllegalArgumentException::new),
+                Packrat.throwIfNotIncreasingOrEqual(IllegalArgumentException::new),
+                Packrat.throwIfNotDecreasing(IllegalArgumentException::new),
+                Packrat.throwIfNotDecreasingOrEqual(IllegalArgumentException::new));
+    }
+
+    private static Stream<Gatherer<Integer, ?, Integer>> nullMappedValidators() {
+        Function<Integer, Integer> mapper = i -> i == 1 ? null : i;
+        return Stream.of(
+                Packrat.throwIfNotIncreasingBy(mapper),
+                Packrat.throwIfNotIncreasingOrEqualBy(mapper),
+                Packrat.throwIfNotDecreasingBy(mapper),
+                Packrat.throwIfNotDecreasingOrEqualBy(mapper),
+                Packrat.throwIfNotIncreasingBy(mapper, IllegalArgumentException::new),
+                Packrat.throwIfNotIncreasingOrEqualBy(mapper, IllegalArgumentException::new),
+                Packrat.throwIfNotDecreasingBy(mapper, IllegalArgumentException::new),
+                Packrat.throwIfNotDecreasingOrEqualBy(mapper, IllegalArgumentException::new));
+    }
+
+    @Test
+    void nullElementWithNonNullMappedValueIsSupported() {
+        var result = Stream.of((Integer) null)
+                .gather(Packrat.throwIfNotIncreasingBy(i -> i == null ? 0 : i))
+                .toList();
+
+        assertEquals(1, result.size());
+        assertNull(result.getFirst());
+    }
 
     @Test
     void orderedIntegersPassThrough() {
@@ -182,8 +249,8 @@ class ThrowIfNotOrderedTest {
     }
 
     @Test
-    void nullMappedFirstElementSkipsDecreasingValidation() {
-        assertThrows(Exception.class, () ->
+    void nullMappedFirstElementThrowsForDecreasingValidation() {
+        assertThrows(NullPointerException.class, () ->
                 Stream.of(1, 2)
                         .gather(Packrat.throwIfNotDecreasingBy(
                                 i -> i == 1 ? null : i,
@@ -193,8 +260,8 @@ class ThrowIfNotOrderedTest {
     }
 
     @Test
-    void nullMappedFirstElementSkipsIncreasingValidation() {
-        assertThrows(Exception.class, () ->
+    void nullMappedFirstElementThrowsForIncreasingValidation() {
+        assertThrows(NullPointerException.class, () ->
                 Stream.of(5, 3)
                         .gather(Packrat.throwIfNotIncreasingBy(
                                 i -> i == 5 ? null : i,
