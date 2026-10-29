@@ -17,10 +17,10 @@ import org.jspecify.annotations.NonNull;
  * This gatherer underpins the public APIs {@code Packrat.last(n)}, {@code Packrat.lastUnique(n)}
  * and {@code Packrat.lastUniqueBy(n, mapper)}:
  * <p>
- * If {@code n == 0}, no elements are emitted. For {@code n > 0}, the gatherer greedily consumes
- * the entire upstream before producing any output in its {@linkplain #finisher() finisher}.
+ * The public factories handle {@code n == 0} separately. This gatherer requires a positive
+ * count and consumes the entire upstream before producing output in its {@linkplain #finisher() finisher}.
  * <p>
- * Null mappers are not permitted. A negative {@code n} results in an
+ * Null mappers are not permitted. A non-positive {@code n} results in an
  * {@link IllegalArgumentException}.
  *
  * @param <T> element type
@@ -40,8 +40,8 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
     }
 
     LastingGatherer(long n, boolean unique, @NonNull Function<? super T, ?> mapper) {
-        if (n < 0) {
-            throw new IllegalArgumentException("n must be a non-negative number");
+        if (n <= 0) {
+            throw new IllegalArgumentException("n must be a positive number");
         }
 
         Objects.requireNonNull(mapper, "mapper cannot be null");
@@ -58,10 +58,6 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
 
     @Override
     public Integrator<State<T>, T, T> integrator() {
-        if (n == 0) {
-            return Integrator.of((_, _, _) -> false);
-        }
-
         return Integrator.ofGreedy((state, element, downstream) -> {
             state.addElement(element, n);
 
@@ -87,7 +83,7 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
         final Function<? super T, ?> mapper;
 
         State(long n, boolean unique, Function<? super T, ?> mapper) {
-            this.buffer = unique ? null : new RingBuffer<>(Math.max(n, 1));
+            this.buffer = unique ? null : new RingBuffer<>(n);
             this.lastByKey = unique ? new LinkedHashMap<>() : null;
             this.unique = unique;
             this.mapper = mapper;

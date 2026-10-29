@@ -1,22 +1,56 @@
 package io.github.jhspetersson.packrat;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.stream.Gatherer;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static io.github.jhspetersson.packrat.TestUtils.getEmployees;
 import static io.github.jhspetersson.packrat.TestUtils.isOrderedSequence;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LastNTest {
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("zeroCountGatherers")
+    void zeroCountGatherersShouldAvoidStateAndShortCircuit(String name, Gatherer<Integer, ?, Integer> gatherer) {
+        assertNull(gatherer.initializer().get(), "Zero-count gatherers should not allocate state");
+        assertTrue(Stream.<Integer>empty().gather(gatherer).toList().isEmpty());
+
+        var consumed = new AtomicInteger();
+        var result = Stream.iterate(0, i -> i + 1)
+                // Fail on overconsumption instead of hanging if short-circuiting regresses.
+                .peek(_ -> assertEquals(1, consumed.incrementAndGet(), "Only one input should be consumed"))
+                .gather(gatherer)
+                .toList();
+
+        assertTrue(result.isEmpty());
+        assertEquals(1, consumed.get());
+    }
+
+    static Stream<Arguments> zeroCountGatherers() {
+        return Stream.of(
+                Arguments.of("last(0)", Packrat.<Integer>last(0)),
+                Arguments.of("lastUnique(0)", Packrat.<Integer>lastUnique(0)),
+                Arguments.of("lastUniqueBy(0)", Packrat.<Integer, Integer>lastUniqueBy(0, _ -> {
+                    throw new AssertionError("The mapper should not be invoked for zero elements");
+                }))
+        );
+    }
+
     @Test
     void lastUniqueByReusesEntryForRepeatedKey() {
         var gatherer = new LastingGatherer<String>(2, true, String::length);
@@ -147,8 +181,14 @@ public class LastNTest {
     }
 
     @Test
-    public void negativeNThrows() {
+    public void invalidNThrows() {
         assertThrows(IllegalArgumentException.class, () -> new LastingGatherer<Integer>(-1));
+        assertThrows(IllegalArgumentException.class, () -> new LastingGatherer<Integer>(0));
+        assertThrows(IllegalArgumentException.class, () -> new LastingGatherer<Integer>(0, true));
+        assertThrows(IllegalArgumentException.class, () -> new LastingGatherer<Integer>(0, true, Function.identity()));
+        assertThrows(IllegalArgumentException.class, () -> Packrat.last(-1));
+        assertThrows(IllegalArgumentException.class, () -> Packrat.lastUnique(-1));
+        assertThrows(IllegalArgumentException.class, () -> Packrat.lastUniqueBy(-1, Function.identity()));
     }
 
     @Test
@@ -187,6 +227,8 @@ public class LastNTest {
     @Test
     public void nullMapperThrows() {
         assertThrows(NullPointerException.class, () -> new LastingGatherer<Employee>(3, true, null));
+        assertThrows(NullPointerException.class, () -> Packrat.lastUniqueBy(0, null));
+        assertThrows(NullPointerException.class, () -> Packrat.lastUniqueBy(3, null));
     }
 
     @Test

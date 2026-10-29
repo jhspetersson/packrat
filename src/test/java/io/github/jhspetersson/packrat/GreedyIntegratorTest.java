@@ -63,6 +63,8 @@ public class GreedyIntegratorTest {
         assertInstanceOf(Gatherer.Integrator.Greedy.class,
                 new SamplingGatherer<Integer>(2).integrator());
         assertInstanceOf(Gatherer.Integrator.Greedy.class,
+                new LastingGatherer<Integer>(3).integrator());
+        assertInstanceOf(Gatherer.Integrator.Greedy.class,
                 new EqualChunksGatherer<Integer, Integer>(Function.identity()).integrator());
         assertInstanceOf(Gatherer.Integrator.Greedy.class,
                 new IncreasingDecreasingGatherer<Integer>(Comparator.naturalOrder(), result -> result < 0).integrator());
@@ -84,7 +86,11 @@ public class GreedyIntegratorTest {
         assertFalse(new ZipGatherer<Integer, Integer, Integer>(List.of(1, 2, 3), (a, b) -> a).integrator()
                 instanceof Gatherer.Integrator.Greedy);
         // last(0) cancels upstream immediately
-        assertFalse(new LastingGatherer<Integer>(0).integrator()
+        assertFalse(Packrat.<Integer>last(0).integrator()
+                instanceof Gatherer.Integrator.Greedy);
+        assertFalse(Packrat.<Integer>lastUnique(0).integrator()
+                instanceof Gatherer.Integrator.Greedy);
+        assertFalse(Packrat.<Integer, Integer>lastUniqueBy(0, Function.identity()).integrator()
                 instanceof Gatherer.Integrator.Greedy);
     }
 }

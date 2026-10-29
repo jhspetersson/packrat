@@ -3,13 +3,29 @@ package io.github.jhspetersson.packrat;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Gatherer;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DropNthGathererTest {
+    @Test
+    public void dropNthOneShouldShortCircuitUnboundedStream() {
+        var consumed = new AtomicInteger();
+
+        var result = Stream.iterate(0, i -> i + 1)
+                // Fail on overconsumption instead of hanging if short-circuiting regresses.
+                .peek(_ -> assertEquals(1, consumed.incrementAndGet(), "Only one input should be consumed"))
+                .gather(Packrat.dropNth(1))
+                .toList();
+
+        assertEquals(List.of(), result);
+        assertEquals(1, consumed.get());
+    }
+
     @Test
     public void dropNthShouldKeepCadenceBeyondMaxIntElements() {
         var n = 5;

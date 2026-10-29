@@ -1382,6 +1382,9 @@ public final class Packrat {
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> randomFilter(double probability) {
+        if (probability == 0.0) {
+            return empty();
+        }
         return new RandomFilterGatherer<>(probability);
     }
 
@@ -1408,6 +1411,9 @@ public final class Packrat {
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> dropNth(int n) {
+        if (n == 1) {
+            return empty();
+        }
         return new DropNthGatherer<>(n);
     }
 
@@ -1468,6 +1474,9 @@ public final class Packrat {
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> last(long n) {
+        if (n == 0) {
+            return empty();
+        }
         return new LastingGatherer<>(n);
     }
 
@@ -1481,6 +1490,9 @@ public final class Packrat {
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> lastUnique(long n) {
+        if (n == 0) {
+            return empty();
+        }
         return new LastingGatherer<>(n, true);
     }
 
@@ -1500,6 +1512,10 @@ public final class Packrat {
      */
     @NonNull
     public static <T, U> Gatherer<T, ?, T> lastUniqueBy(long n, @NonNull Function<? super T, ? extends U> mapper) {
+        if (n == 0) {
+            Objects.requireNonNull(mapper, "mapper cannot be null");
+            return empty();
+        }
         return new LastingGatherer<>(n, true, mapper);
     }
 

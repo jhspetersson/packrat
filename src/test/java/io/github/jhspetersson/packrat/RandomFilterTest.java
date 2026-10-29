@@ -1,7 +1,10 @@
 package io.github.jhspetersson.packrat;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -9,6 +12,21 @@ import static io.github.jhspetersson.packrat.TestUtils.isOrdered;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RandomFilterTest {
+    @ParameterizedTest
+    @ValueSource(doubles = {0.0, -0.0})
+    void zeroProbabilityShouldShortCircuitUnboundedStream(double probability) {
+        var consumed = new AtomicInteger();
+
+        var result = Stream.generate(() -> 42)
+                // Fail on overconsumption instead of hanging if short-circuiting regresses.
+                .peek(_ -> assertEquals(1, consumed.incrementAndGet(), "Only one input should be consumed"))
+                .gather(Packrat.randomFilter(probability))
+                .toList();
+
+        assertTrue(result.isEmpty());
+        assertEquals(1, consumed.get());
+    }
+
     @Test
     void emptyStreamTest() {
         var result = Stream.<Integer>of().gather(Packrat.randomFilter(0.5)).toList();
