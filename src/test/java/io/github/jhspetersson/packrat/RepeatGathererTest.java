@@ -52,4 +52,12 @@ public class RepeatGathererTest {
         var result = numbers.gather(Packrat.repeat(5)).toList();
         assertTrue(result.isEmpty());
     }
+
+    @Test
+    public void repeatEmptyStreamWithMaxRepetitionsShouldTerminate() {
+        var result = org.junit.jupiter.api.Assertions.assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
+                Stream.<Integer>empty().gather(Packrat.repeat(Long.MAX_VALUE)).toList());
+
+        assertTrue(result.isEmpty());
+    }
 }

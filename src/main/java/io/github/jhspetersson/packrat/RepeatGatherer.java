@@ -44,6 +44,10 @@ class RepeatGatherer<T> implements Gatherer<T, List<T>, T> {
     @Override
     public BiConsumer<List<T>, Gatherer.Downstream<? super T>> finisher() {
         return (state, downstream) -> {
+            if (state.isEmpty()) {
+                return;
+            }
+
             for (var i = 0L; i < n; i++) {
                 for (T element : state) {
                     if (!downstream.push(element)) {
