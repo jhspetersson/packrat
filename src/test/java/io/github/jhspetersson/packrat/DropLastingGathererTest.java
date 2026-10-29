@@ -1,9 +1,12 @@
 package io.github.jhspetersson.packrat;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Gatherer;
 import java.util.stream.Stream;
 
 import static io.github.jhspetersson.packrat.TestUtils.getEmployees;
@@ -12,6 +15,59 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DropLastingGathererTest {
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    public void shouldRetainMetadataForOnlyLastUniqueKeys(boolean dropAllOccurrences) {
+        var gatherer = new DropLastingGatherer<Integer>(3, dropAllOccurrences, Function.identity());
+        var state = gatherer.initializer().get();
+        var integrator = gatherer.integrator();
+        Gatherer.Downstream<Integer> downstream = _ -> true;
+
+        for (var i = 0; i < 10_000; i++) {
+            assertTrue(integrator.integrate(state, i, downstream));
+            assertEquals(Math.min(i + 1, 3), state.lastIndexByKey.size());
+        }
+
+        assertEquals(List.of(9_997, 9_998, 9_999), List.copyOf(state.lastIndexByKey.keySet()));
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    public void shouldSupportLongMaxValueCapacity(boolean dropAllOccurrences) {
+        var result = Stream.of(1, 2, 1, 2)
+                .gather(new DropLastingGatherer<>(Long.MAX_VALUE, dropAllOccurrences, Function.identity()))
+                .toList();
+
+        assertEquals(dropAllOccurrences ? List.of() : List.of(1, 2), result);
+    }
+
+    @Test
+    public void dropLastUniqueShouldHandleEvictedKeysReturning() {
+        var result = Stream.of(1, 2, 1, 3, 2, 4)
+                .gather(Packrat.dropLastUnique(2))
+                .toList();
+
+        assertEquals(List.of(1, 2, 1, 3), result);
+    }
+
+    @Test
+    public void dropLastUniqueByShouldHandleEvictedNullKeysReturning() {
+        var result = Stream.of("a1", "b1", "a2", "c1", "b2", "d1")
+                .gather(Packrat.dropLastUniqueBy(2, s -> s.startsWith("b") ? null : s.charAt(0)))
+                .toList();
+
+        assertEquals(List.of("a1", "b1", "a2", "c1"), result);
+    }
+
+    @Test
+    public void dropLastByShouldHandleEvictedNullKeysReturning() {
+        var result = Stream.of("a1", "b1", "a2", "c1", "b2", "d1")
+                .gather(Packrat.dropLastBy(2, s -> s.startsWith("b") ? null : s.charAt(0)))
+                .toList();
+
+        assertEquals(List.of("a1", "a2", "c1"), result);
+    }
 
     @Test
     public void dropLastUniqueTest() {

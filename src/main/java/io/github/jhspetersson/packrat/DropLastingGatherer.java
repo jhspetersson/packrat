@@ -62,8 +62,10 @@ class DropLastingGatherer<T> implements Gatherer<T, DropLastingGatherer.State<T>
             if (dropAllOccurrences) {
                 state.keys.add(key);
             }
-            state.lastIndexByKey.remove(key);
-            state.lastIndexByKey.put(key, state.elements.size() - 1);
+            state.lastIndexByKey.putLast(key, state.elements.size() - 1);
+            if (state.lastIndexByKey.size() > n) {
+                state.lastIndexByKey.pollFirstEntry();
+            }
             return !downstream.isRejecting();
         });
     }
@@ -75,19 +77,9 @@ class DropLastingGatherer<T> implements Gatherer<T, DropLastingGatherer.State<T>
                 return;
             }
 
-            var entries = new ArrayList<>(state.lastIndexByKey.entrySet());
-            var fromIndex = Math.max(0, entries.size() - (int) Math.min(n, entries.size()));
-            var lastEntries = entries.subList(fromIndex, entries.size());
-
             if (dropAllOccurrences) {
-                var dropKeys = new HashSet<>();
-
-                for (var e : lastEntries) {
-                    dropKeys.add(e.getKey());
-                }
-
                 for (var i = 0; i < state.elements.size(); i++) {
-                    if (dropKeys.contains(state.keys.get(i))) {
+                    if (state.lastIndexByKey.containsKey(state.keys.get(i))) {
                         continue;
                     }
 
@@ -96,11 +88,7 @@ class DropLastingGatherer<T> implements Gatherer<T, DropLastingGatherer.State<T>
                     }
                 }
             } else {
-                var dropIndices = new HashSet<>();
-
-                for (var e : lastEntries) {
-                    dropIndices.add(e.getValue());
-                }
+                var dropIndices = new HashSet<>(state.lastIndexByKey.values());
 
                 for (var i = 0; i < state.elements.size(); i++) {
                     if (dropIndices.contains(i)) {
