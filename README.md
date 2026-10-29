@@ -267,6 +267,9 @@ implementation("io.github.jhspetersson:packrat:0.2.3")
 
 `flatMapIf(mapper, predicate)` - optionally flattens elements mapped to streams depending on the supplied predicate
 
+On JDK 25, parallel evaluation buffers results before a downstream `limit`, so infinite inner streams may not terminate.
+Use `sequential()` or `flatMap(x -> predicate.test(x) ? mapper.apply(x) : Stream.of(x))` when short-circuiting is needed.
+
 ```java
   import static io.github.jhspetersson.packrat.Packrat.flatMapIf;
   var strings = Stream.of("A", "BC", "DEF");

@@ -662,6 +662,10 @@ public final class Packrat {
 
     /**
      * Optionally flattens elements mapped to streams depending on the supplied predicate.
+     * <p>On JDK 25, parallel evaluation buffers results before a downstream {@code limit},
+     * so infinite inner streams may not terminate. Use {@code sequential()} or
+     * {@code flatMap(x -> predicate.test(x) ? mapper.apply(x) : Stream.of(x))}
+     * when short-circuiting is needed.
      *
      * @param mapper mapping function, usually calls <code>element::stream</code> method
      * @param predicate deciding predicate when to call the mapping function
