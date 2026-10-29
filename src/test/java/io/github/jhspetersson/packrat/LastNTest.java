@@ -56,6 +56,25 @@ public class LastNTest {
     }
 
     @Test
+    void lastPreservesOrderAfterBufferGrowthAndWraparound() {
+        var result = IntStream.range(0, 200).boxed()
+                .gather(Packrat.last(33))
+                .toList();
+
+        assertEquals(IntStream.range(167, 200).boxed().toList(), result);
+    }
+
+    @Test
+    void lastWithMaxLimitPreservesShortInput() {
+        var input = Arrays.asList("a", null, "b");
+        var result = input.stream()
+                .gather(Packrat.last(Long.MAX_VALUE))
+                .toList();
+
+        assertEquals(input, result);
+    }
+
+    @Test
     public void lastZeroTest() {
         var before = new ArrayList<Integer>();
         IntStream.range(0, 100).forEach(before::add);

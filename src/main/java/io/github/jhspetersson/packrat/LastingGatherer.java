@@ -1,9 +1,7 @@
 package io.github.jhspetersson.packrat;
 
-import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -55,7 +53,7 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
 
     @Override
     public Supplier<State<T>> initializer() {
-        return () -> new State<>(unique, mapper);
+        return () -> new State<>(n, unique, mapper);
     }
 
     @Override
@@ -83,13 +81,13 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
     }
 
     static class State<T> implements Iterable<T> {
-        final Deque<T> deque;
+        final RingBuffer<T> buffer;
         final LinkedHashMap<Object, T> lastByKey;
         final boolean unique;
         final Function<? super T, ?> mapper;
 
-        State(boolean unique, Function<? super T, ?> mapper) {
-            this.deque = unique ? null : new LinkedList<>();
+        State(long n, boolean unique, Function<? super T, ?> mapper) {
+            this.buffer = unique ? null : new RingBuffer<>(Math.max(n, 1));
             this.lastByKey = unique ? new LinkedHashMap<>() : null;
             this.unique = unique;
             this.mapper = mapper;
@@ -104,16 +102,16 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
                     lastByKey.pollFirstEntry();
                 }
             } else {
-                if (deque.size() == n) {
-                    deque.removeFirst();
+                if (buffer.isFull()) {
+                    buffer.removeFirst();
                 }
-                deque.add(element);
+                buffer.add(element);
             }
         }
 
         @Override
         public Iterator<T> iterator() {
-            return unique ? lastByKey.values().iterator() : deque.iterator();
+            return unique ? lastByKey.values().iterator() : buffer.iterator();
         }
     }
 }
