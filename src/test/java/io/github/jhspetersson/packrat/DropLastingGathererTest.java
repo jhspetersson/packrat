@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -41,6 +43,52 @@ public class DropLastingGathererTest {
                 .toList();
 
         assertEquals(dropAllOccurrences ? List.of() : List.of(1, 2), result);
+    }
+
+    @Test
+    public void dropLastUniqueShouldDropOnlyFinalOccurrencesWithNulls() {
+        var result = Stream.of(null, 1, null, 2, null, 2, 2)
+                .gather(Packrat.dropLastUnique(3))
+                .toList();
+
+        assertEquals(Arrays.asList(null, null, 2, 2), result);
+    }
+
+    @Test
+    public void dropLastUniqueByShouldDropOnlyFinalOccurrencesWithNullKeys() {
+        var result = Stream.of("a1", "n1", "a2", "b1", "a3", "b2", "b3")
+                .gather(Packrat.dropLastUniqueBy(3, s -> s.startsWith("n") ? null : s.charAt(0)))
+                .toList();
+
+        assertEquals(List.of("a1", "a2", "b1", "b2"), result);
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {3, Long.MAX_VALUE})
+    public void dropLastUniqueShouldDropAllDistinctElements(long n) {
+        var result = Stream.of(1, 2, 3)
+                .gather(Packrat.dropLastUnique(n))
+                .toList();
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void dropLastUniqueFinisherShouldStopWhenDownstreamRejects() {
+        var gatherer = new DropLastingGatherer<Integer>(3, false, Function.identity());
+        var state = gatherer.initializer().get();
+        var integrator = gatherer.integrator();
+        for (var element : List.of(1, 2, 3, 2, 3, 2)) {
+            integrator.integrate(state, element, _ -> true);
+        }
+
+        var pushed = new ArrayList<Integer>();
+        gatherer.finisher().accept(state, element -> {
+            pushed.add(element);
+            return false;
+        });
+
+        assertEquals(List.of(2), pushed);
     }
 
     @Test

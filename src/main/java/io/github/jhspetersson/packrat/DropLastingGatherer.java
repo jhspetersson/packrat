@@ -1,7 +1,6 @@
 package io.github.jhspetersson.packrat;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
@@ -88,10 +87,13 @@ class DropLastingGatherer<T> implements Gatherer<T, DropLastingGatherer.State<T>
                     }
                 }
             } else {
-                var dropIndices = new HashSet<>(state.lastIndexByKey.values());
+                // putLast keeps the last-occurrence indices in ascending order.
+                var dropIndices = state.lastIndexByKey.values().iterator();
+                var nextDropIndex = dropIndices.hasNext() ? dropIndices.next() : -1;
 
                 for (var i = 0; i < state.elements.size(); i++) {
-                    if (dropIndices.contains(i)) {
+                    if (i == nextDropIndex) {
+                        nextDropIndex = dropIndices.hasNext() ? dropIndices.next() : -1;
                         continue;
                     }
 
