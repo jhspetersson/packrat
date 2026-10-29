@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Gatherer;
 import java.util.stream.Stream;
@@ -85,6 +86,35 @@ public class DropLastingGathererTest {
                 .toList();
 
         assertEquals(List.of(1, 2, 3), result);
+    }
+
+    @Test
+    public void dropLastUniqueOneShouldShortCircuitUnboundedStream() {
+        var consumed = new AtomicInteger();
+
+        var result = Stream.iterate(0, i -> i + 1)
+                // Fail on overconsumption instead of hanging if short-circuiting regresses.
+                .peek(_ -> assertTrue(consumed.incrementAndGet() <= 2, "Only two inputs should be consumed"))
+                .gather(Packrat.dropLastUnique(1))
+                .limit(1)
+                .toList();
+
+        assertEquals(List.of(0), result);
+        assertEquals(2, consumed.get());
+    }
+
+    @Test
+    public void dropLastUniqueByOneShouldShortCircuitUnboundedStream() {
+        var consumed = new AtomicInteger();
+
+        var result = Stream.iterate(0, i -> i + 1)
+                .peek(_ -> assertTrue(consumed.incrementAndGet() <= 2, "Only two inputs should be consumed"))
+                .gather(Packrat.dropLastUniqueBy(1, i -> i % 2))
+                .limit(1)
+                .toList();
+
+        assertEquals(List.of(0), result);
+        assertEquals(2, consumed.get());
     }
 
     @Test
@@ -219,6 +249,7 @@ public class DropLastingGathererTest {
 
     @Test
     public void nullMapperThrows() {
+        assertThrows(NullPointerException.class, () -> Packrat.dropLastUniqueBy(1, null));
         assertThrows(NullPointerException.class, () -> Packrat.dropLastUniqueBy(3, null));
         assertThrows(NullPointerException.class, () -> Packrat.dropLastBy(3, null));
     }

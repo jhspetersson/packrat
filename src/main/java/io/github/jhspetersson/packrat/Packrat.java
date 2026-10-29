@@ -1539,6 +1539,9 @@ public final class Packrat {
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> dropLastUnique(long n) {
+        if (n == 1) {
+            return dropLast(1);
+        }
         return new DropLastingGatherer<>(n, false, Function.identity());
     }
 
@@ -1559,6 +1562,10 @@ public final class Packrat {
      */
     @NonNull
     public static <T, U> Gatherer<T, ?, T> dropLastUniqueBy(long n, @NonNull Function<? super T, ? extends U> mapper) {
+        if (n == 1) {
+            Objects.requireNonNull(mapper, "mapper cannot be null");
+            return dropLast(1);
+        }
         return new DropLastingGatherer<>(n, false, mapper);
     }
 
