@@ -1,6 +1,8 @@
 package io.github.jhspetersson.packrat;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +15,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RingBufferTest {
+    @ParameterizedTest
+    @CsvSource({
+            "0, 0, 1, 0",
+            "2, 1, 5, 3",
+            "4, 4, 5, 3",
+            "1000000000, 1147483647, 1500000000, 647483647",
+            "1000000000, 1147483648, 1500000000, 647483648",
+            "1000000000, 1499999999, 1500000000, 999999999",
+            "2147483638, 2147483638, 2147483639, 2147483637",
+            "2147483638, 1, 2147483639, 0"
+    })
+    void physicalIndexShouldAvoidOverflow(int head, int offset, int capacity, int expected) {
+        // Exercise large logical capacities without allocating their backing arrays.
+        assertEquals(expected, RingBuffer.physicalIndex(head, offset, capacity));
+    }
+
     @Test
     void addAndRemoveInFifoOrder() {
         var buffer = new RingBuffer<Integer>(3);
@@ -38,6 +56,10 @@ public class RingBufferTest {
         }
 
         assertEquals(List.of(97, 98, 99), buffer.toList());
+
+        var collected = new ArrayList<Integer>();
+        buffer.forEach(collected::add);
+        assertEquals(List.of(97, 98, 99), collected);
     }
 
     @Test

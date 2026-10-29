@@ -43,6 +43,10 @@ class RingBuffer<E> implements Iterable<E> {
         return size;
     }
 
+    static int physicalIndex(int head, int offset, int capacity) {
+        return (int) (((long) head + offset) % capacity);
+    }
+
     /**
      * Appends an element to the end of the buffer.
      * The caller must remove the first element beforehand when the buffer is full.
@@ -51,7 +55,7 @@ class RingBuffer<E> implements Iterable<E> {
         if (size == elements.length) {
             grow();
         }
-        elements[(head + size) % elements.length] = element;
+        elements[physicalIndex(head, size, elements.length)] = element;
         size++;
     }
 
@@ -62,7 +66,7 @@ class RingBuffer<E> implements Iterable<E> {
         }
         var element = (E) elements[head];
         elements[head] = null;
-        head = (head + 1) % elements.length;
+        head = physicalIndex(head, 1, elements.length);
         size--;
         return element;
     }
@@ -71,7 +75,7 @@ class RingBuffer<E> implements Iterable<E> {
     List<E> toList() {
         var list = new ArrayList<E>(size);
         for (var i = 0; i < size; i++) {
-            list.add((E) elements[(head + i) % elements.length]);
+            list.add((E) elements[physicalIndex(head, i, elements.length)]);
         }
         return list;
     }
@@ -106,7 +110,7 @@ class RingBuffer<E> implements Iterable<E> {
                 if (position >= size) {
                     throw new NoSuchElementException();
                 }
-                return (E) elements[(head + position++) % elements.length];
+                return (E) elements[physicalIndex(head, position++, elements.length)];
             }
         };
     }
