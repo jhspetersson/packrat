@@ -1,15 +1,41 @@
 package io.github.jhspetersson.packrat;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Gatherer;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class IncreasingDecreasingTest {
+    private record Value(int value) {}
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("nonComparableFilters")
+    void customComparatorSupportsNonComparableElements(String name, Gatherer<Value, ?, Value> gatherer,
+                                                       List<Integer> expected) {
+        var result = Stream.of(2, 2, 3, 1, 1, 4).map(Value::new)
+                .gather(gatherer).map(Value::value).toList();
+
+        assertEquals(expected, result);
+    }
+
+    static Stream<Arguments> nonComparableFilters() {
+        var comparator = Comparator.comparingInt(Value::value);
+        return Stream.of(
+                Arguments.of("increasing", Packrat.<Value>increasing(comparator), List.of(2, 3, 4)),
+                Arguments.of("increasingOrEqual", Packrat.<Value>increasingOrEqual(comparator), List.of(2, 2, 3, 4)),
+                Arguments.of("decreasing", Packrat.<Value>decreasing(comparator), List.of(2, 1)),
+                Arguments.of("decreasingOrEqual", Packrat.<Value>decreasingOrEqual(comparator), List.of(2, 2, 1, 1))
+        );
+    }
+
     @Test
     void increasingTest() {
         var numbers = Stream.of(1, 2, 2, 5, 4, 2, 6, 9, 3, 11, 0, 1, 20);

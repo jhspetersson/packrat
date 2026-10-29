@@ -1,15 +1,45 @@
 package io.github.jhspetersson.packrat;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Gatherer;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class IncreasingDecreasingChunksTest {
+    private record Value(int value) {}
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("nonComparableChunks")
+    void customComparatorSupportsNonComparableElements(String name, Gatherer<Value, ?, List<Value>> gatherer,
+                                                       List<List<Integer>> expected) {
+        var result = Stream.of(2, 2, 3, 1, 1, 4).map(Value::new)
+                .gather(gatherer).map(chunk -> chunk.stream().map(Value::value).toList()).toList();
+
+        assertEquals(expected, result);
+    }
+
+    static Stream<Arguments> nonComparableChunks() {
+        var comparator = Comparator.comparingInt(Value::value);
+        return Stream.of(
+                Arguments.of("increasingChunks", Packrat.<Value>increasingChunks(comparator),
+                        List.of(List.of(2), List.of(2, 3), List.of(1), List.of(1, 4))),
+                Arguments.of("increasingOrEqualChunks", Packrat.<Value>increasingOrEqualChunks(comparator),
+                        List.of(List.of(2, 2, 3), List.of(1, 1, 4))),
+                Arguments.of("decreasingChunks", Packrat.<Value>decreasingChunks(comparator),
+                        List.of(List.of(2), List.of(2), List.of(3, 1), List.of(1), List.of(4))),
+                Arguments.of("decreasingOrEqualChunks", Packrat.<Value>decreasingOrEqualChunks(comparator),
+                        List.of(List.of(2, 2), List.of(3, 1, 1), List.of(4)))
+        );
+    }
+
     @Test
     void increasingChunksTest() {
         var numbers = Stream.of(1, 2, 2, 5, 4, 2, 6, 9, 3, 11, 0, 1, 20);

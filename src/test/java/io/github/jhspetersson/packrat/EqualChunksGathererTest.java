@@ -12,6 +12,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class EqualChunksGathererTest {
     @Test
+    void equalChunksSupportsNonComparableElements() {
+        record Value(int value) {}
+
+        var result = Stream.of(new Value(1), new Value(1), new Value(2), new Value(1))
+                .gather(Packrat.equalChunks()).toList();
+
+        assertEquals(List.of(List.of(new Value(1), new Value(1)), List.of(new Value(2)), List.of(new Value(1))), result);
+    }
+
+    @Test
     void nullComparatorShouldThrow() {
         assertThrows(NullPointerException.class, () -> Packrat.equalChunks((java.util.Comparator<String>) null));
         assertThrows(NullPointerException.class, () -> Packrat.equalChunksBy(Function.identity(), null));

@@ -251,7 +251,7 @@ public final class Packrat {
      * @throws NullPointerException if the comparator is null
      */
     @NonNull
-    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> increasing(@NonNull Comparator<? super T> comparator) {
+    public static <T> Gatherer<T, ?, T> increasing(@NonNull Comparator<? super T> comparator) {
         return new IncreasingDecreasingGatherer<>(comparator, cmp -> cmp < 0);
     }
 
@@ -278,7 +278,7 @@ public final class Packrat {
      * @throws NullPointerException if the comparator is null
      */
     @NonNull
-    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> increasingOrEqual(@NonNull Comparator<? super T> comparator) {
+    public static <T> Gatherer<T, ?, T> increasingOrEqual(@NonNull Comparator<? super T> comparator) {
         return new IncreasingDecreasingGatherer<>(comparator, cmp -> cmp <= 0);
     }
 
@@ -304,7 +304,7 @@ public final class Packrat {
      * @throws NullPointerException if the comparator is null
      */
     @NonNull
-    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> decreasing(@NonNull Comparator<? super T> comparator) {
+    public static <T> Gatherer<T, ?, T> decreasing(@NonNull Comparator<? super T> comparator) {
         return new IncreasingDecreasingGatherer<>(comparator, cmp -> cmp > 0);
     }
 
@@ -331,7 +331,7 @@ public final class Packrat {
      * @throws NullPointerException if the comparator is null
      */
     @NonNull
-    public static <T extends Comparable<? super T>> Gatherer<T, ?, T> decreasingOrEqual(@NonNull Comparator<? super T> comparator) {
+    public static <T> Gatherer<T, ?, T> decreasingOrEqual(@NonNull Comparator<? super T> comparator) {
         return new IncreasingDecreasingGatherer<>(comparator, cmp -> cmp >= 0);
     }
 
@@ -358,7 +358,7 @@ public final class Packrat {
      * @throws NullPointerException if the comparator is null
      */
     @NonNull
-    public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingChunks(@NonNull Comparator<? super T> comparator) {
+    public static <T> Gatherer<T, ?, List<T>> increasingChunks(@NonNull Comparator<? super T> comparator) {
         return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp < 0);
     }
 
@@ -385,7 +385,7 @@ public final class Packrat {
      * @throws NullPointerException if the comparator is null
      */
     @NonNull
-    public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> increasingOrEqualChunks(@NonNull Comparator<? super T> comparator) {
+    public static <T> Gatherer<T, ?, List<T>> increasingOrEqualChunks(@NonNull Comparator<? super T> comparator) {
         return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp <= 0);
     }
 
@@ -396,7 +396,7 @@ public final class Packrat {
      * @return a gatherer that groups elements into lists where all elements are equal
      */
     @NonNull
-    public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> equalChunks() {
+    public static <T> Gatherer<T, ?, List<T>> equalChunks() {
         return equalChunksBy(Function.identity());
     }
 
@@ -474,7 +474,7 @@ public final class Packrat {
      * @throws NullPointerException if the comparator is null
      */
     @NonNull
-    public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingChunks(@NonNull Comparator<? super T> comparator) {
+    public static <T> Gatherer<T, ?, List<T>> decreasingChunks(@NonNull Comparator<? super T> comparator) {
         return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp > 0);
     }
 
@@ -501,7 +501,7 @@ public final class Packrat {
      * @throws NullPointerException if the comparator is null
      */
     @NonNull
-    public static <T extends Comparable<? super T>> Gatherer<T, ?, List<T>> decreasingOrEqualChunks(@NonNull Comparator<? super T> comparator) {
+    public static <T> Gatherer<T, ?, List<T>> decreasingOrEqualChunks(@NonNull Comparator<? super T> comparator) {
         return new IncreasingDecreasingChunksGatherer<>(comparator, cmp -> cmp >= 0);
     }
 
