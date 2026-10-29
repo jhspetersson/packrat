@@ -21,6 +21,8 @@ import org.jspecify.annotations.NonNull;
  * @author jhspetersson
  */
 class EqualChunksGatherer<T, U> implements Gatherer<T, EqualChunksGatherer.State<T, U>, List<T>> {
+    private static final int MAX_RETAINED_CHUNK_SIZE = 4_096;
+
     private final Function<? super T, ? extends U> mapper;
     private final Comparator<? super U> comparator;
 
@@ -61,7 +63,12 @@ class EqualChunksGatherer<T, U> implements Gatherer<T, EqualChunksGatherer.State
                     state.chunk.add(element);
                 } else {
                     var chunk = Collections.unmodifiableList(new ArrayList<>(state.chunk));
-                    state.chunk.clear();
+                    // Reuse ordinary buffers without retaining unusually large backing arrays.
+                    if (state.chunk.size() > MAX_RETAINED_CHUNK_SIZE) {
+                        state.chunk = new ArrayList<>();
+                    } else {
+                        state.chunk.clear();
+                    }
                     state.chunk.add(element);
                     state.currentValue = mappedValue;
                     return downstream.push(chunk);
@@ -83,7 +90,7 @@ class EqualChunksGatherer<T, U> implements Gatherer<T, EqualChunksGatherer.State
     }
 
     static class State<T, U> {
-        final List<T> chunk = new ArrayList<>();
+        List<T> chunk = new ArrayList<>();
         U currentValue;
         boolean first = true;
     }

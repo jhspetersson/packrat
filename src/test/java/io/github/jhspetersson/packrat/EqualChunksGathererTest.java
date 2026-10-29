@@ -1,16 +1,52 @@
 package io.github.jhspetersson.packrat;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class EqualChunksGathererTest {
+    @ParameterizedTest
+    @CsvSource({"1, true", "64, true", "4096, true", "4097, false", "65536, false"})
+    void shouldReleaseLargeBuffersAndReuseSmallOnes(int chunkSize, boolean reuseBuffer) {
+        var gatherer = new EqualChunksGatherer<Integer, Integer>(Function.identity());
+        var state = gatherer.initializer().get();
+        var buffer = state.chunk;
+        var integrator = gatherer.integrator();
+        var chunks = new ArrayList<List<Integer>>();
+
+        for (var i = 0; i < chunkSize; i++) {
+            integrator.integrate(state, null, chunks::add);
+        }
+        integrator.integrate(state, 1, chunks::add);
+
+        if (reuseBuffer) {
+            assertSame(buffer, state.chunk);
+        } else {
+            assertNotSame(buffer, state.chunk);
+        }
+        assertEquals(List.of(1), state.chunk);
+
+        var smallBuffer = state.chunk;
+        integrator.integrate(state, 2, chunks::add);
+        assertSame(smallBuffer, state.chunk);
+        gatherer.finisher().accept(state, chunks::add);
+
+        assertEquals(List.of(Collections.nCopies(chunkSize, null), List.of(1), List.of(2)), chunks);
+        assertThrows(UnsupportedOperationException.class, () -> chunks.getFirst().set(0, 42));
+    }
+
     @Test
     void equalChunksSupportsNonComparableElements() {
         record Value(int value) {}

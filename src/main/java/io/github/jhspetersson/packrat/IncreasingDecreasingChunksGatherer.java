@@ -21,6 +21,8 @@ import org.jspecify.annotations.NonNull;
  * @author jhspetersson
  */
 class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, IncreasingDecreasingChunksGatherer.State<T>, List<T>> {
+    private static final int MAX_RETAINED_CHUNK_SIZE = 4_096;
+
     private final Comparator<? super T> comparator;
     private final IntPredicate predicate;
 
@@ -52,7 +54,12 @@ class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, IncreasingDec
                     state.chunk.add(element);
                 } else {
                     var chunk = Collections.unmodifiableList(new ArrayList<>(state.chunk));
-                    state.chunk.clear();
+                    // Reuse ordinary buffers without retaining unusually large backing arrays.
+                    if (state.chunk.size() > MAX_RETAINED_CHUNK_SIZE) {
+                        state.chunk = new ArrayList<>();
+                    } else {
+                        state.chunk.clear();
+                    }
                     state.chunk.add(element);
                     return downstream.push(chunk);
                 }
@@ -73,7 +80,7 @@ class IncreasingDecreasingChunksGatherer<T> implements Gatherer<T, IncreasingDec
     }
 
     static class State<T> {
-        final List<T> chunk = new ArrayList<>();
+        List<T> chunk = new ArrayList<>();
         T value;
         boolean first = true;
     }

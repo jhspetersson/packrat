@@ -3,18 +3,54 @@ package io.github.jhspetersson.packrat;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Gatherer;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class IncreasingDecreasingChunksTest {
     private record Value(int value) {}
+
+    @ParameterizedTest
+    @CsvSource({"1, true", "64, true", "4096, true", "4097, false", "65536, false"})
+    void shouldReleaseLargeBuffersAndReuseSmallOnes(int chunkSize, boolean reuseBuffer) {
+        var gatherer = new IncreasingDecreasingChunksGatherer<Integer>(Comparator.naturalOrder(), result -> result < 0);
+        var state = gatherer.initializer().get();
+        var buffer = state.chunk;
+        var integrator = gatherer.integrator();
+        var chunks = new ArrayList<List<Integer>>();
+
+        for (var i = 0; i < chunkSize; i++) {
+            integrator.integrate(state, i, chunks::add);
+        }
+        integrator.integrate(state, -1, chunks::add);
+
+        if (reuseBuffer) {
+            assertSame(buffer, state.chunk);
+        } else {
+            assertNotSame(buffer, state.chunk);
+        }
+        assertEquals(List.of(-1), state.chunk);
+
+        var smallBuffer = state.chunk;
+        integrator.integrate(state, -2, chunks::add);
+        assertSame(smallBuffer, state.chunk);
+        gatherer.finisher().accept(state, chunks::add);
+
+        assertEquals(List.of(IntStream.range(0, chunkSize).boxed().toList(), List.of(-1), List.of(-2)), chunks);
+        assertThrows(UnsupportedOperationException.class, () -> chunks.getFirst().set(0, 42));
+    }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("nonComparableChunks")
