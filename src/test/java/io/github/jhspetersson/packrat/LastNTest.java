@@ -11,11 +11,53 @@ import java.util.stream.Stream;
 import static io.github.jhspetersson.packrat.TestUtils.getEmployees;
 import static io.github.jhspetersson.packrat.TestUtils.isOrderedSequence;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LastNTest {
+    @Test
+    void lastUniqueByReusesEntryForRepeatedKey() {
+        var gatherer = new LastingGatherer<String>(2, true, String::length);
+        var state = gatherer.initializer().get();
+        state.addElement("a", 2);
+        var entry = state.lastByKey.entrySet().iterator().next();
+
+        state.addElement("bb", 2);
+        state.addElement("c", 2);
+
+        assertSame(entry, new ArrayList<>(state.lastByKey.entrySet()).getLast());
+        assertEquals("c", entry.getValue());
+    }
+
+    @Test
+    void lastUniqueUpdatesRecencyBeforeEviction() {
+        var result = Stream.of("a", "b", "a", "c")
+                .gather(Packrat.lastUnique(2)).toList();
+
+        assertEquals(List.of("a", "c"), result);
+    }
+
+    @Test
+    void lastUniqueUpdatesRecencyForNullElement() {
+        var result = Stream.of(null, "a", null, "b")
+                .gather(Packrat.lastUnique(2)).toList();
+
+        assertEquals(Arrays.asList(null, "b"), result);
+    }
+
+    @Test
+    void lastUniqueByUpdatesValuesAndRecencyForRepeatedKeys() {
+        record Item(String key, int version) {}
+
+        var result = Stream.of(new Item("a", 1), new Item(null, 1), new Item("b", 1),
+                        new Item(null, 2), new Item("a", 2), new Item("c", 1))
+                .gather(Packrat.lastUniqueBy(3, Item::key)).toList();
+
+        assertEquals(List.of(new Item(null, 2), new Item("a", 2), new Item("c", 1)), result);
+    }
+
     @Test
     public void lastUniqueShouldNotBeQuadratic() {
         var result = assertTimeoutPreemptively(java.time.Duration.ofSeconds(10), () ->

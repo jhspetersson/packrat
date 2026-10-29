@@ -96,8 +96,7 @@ class LastingGatherer<T> implements Gatherer<T, LastingGatherer.State<T>, T> {
         void addElement(T element, long n) {
             if (unique) {
                 var mappedElement = mapper.apply(element);
-                lastByKey.remove(mappedElement);
-                lastByKey.put(mappedElement, element);
+                lastByKey.putLast(mappedElement, element);
                 if (lastByKey.size() > n) {
                     lastByKey.pollFirstEntry();
                 }
