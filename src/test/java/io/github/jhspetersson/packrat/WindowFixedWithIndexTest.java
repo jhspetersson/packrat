@@ -110,6 +110,17 @@ public class WindowFixedWithIndexTest {
     }
     
     @Test
+    public void windowFixedWithIndexMaxSizeOnSingleElementTest() {
+        var result = Stream.of(42)
+                .gather(Packrat.windowFixedWithIndex(Integer.MAX_VALUE))
+                .toList();
+
+        assertEquals(1, result.size());
+        assertEquals(0L, result.getFirst().getKey());
+        assertEquals(List.of(42), result.getFirst().getValue());
+    }
+
+    @Test
     public void windowFixedWithIndexInvalidWindowSizeTest() {
         assertThrows(IllegalArgumentException.class, () -> Packrat.windowFixedWithIndex(0));
         assertThrows(IllegalArgumentException.class, () -> Packrat.windowFixedWithIndex(-1));

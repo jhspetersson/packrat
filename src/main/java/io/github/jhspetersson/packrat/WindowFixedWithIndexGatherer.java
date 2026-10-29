@@ -46,7 +46,7 @@ class WindowFixedWithIndexGatherer<T, R> implements Gatherer<T, WindowFixedWithI
 
     @Override
     public Supplier<State<T>> initializer() {
-        return () -> new State<>(windowSize, startIndex);
+        return () -> new State<>(startIndex);
     }
 
     @Override
@@ -85,8 +85,8 @@ class WindowFixedWithIndexGatherer<T, R> implements Gatherer<T, WindowFixedWithI
         private final List<T> window;
         private long index;
 
-        State(int windowSize, long startIndex) {
-            this.window = new ArrayList<>(windowSize);
+        State(long startIndex) {
+            this.window = new ArrayList<>();
             this.index = startIndex;
         }
     }
