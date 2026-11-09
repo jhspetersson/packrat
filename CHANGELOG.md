@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.2.4] - 2026-11-09
+
 ### Changed
 
 - Enable parallel stateless, text, and min/max gatherers.
