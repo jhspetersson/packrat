@@ -214,7 +214,7 @@ implementation("io.github.jhspetersson:packrat:0.2.4")
   var ageDivisibleByThree = getEmployees().gather(removeBy(emp -> emp.age() % 3, 0, (i, value) -> !Objects.equals(i, value))).toList();
   System.out.println(ageDivisibleByThree);
 ```
-> [Employee[name=Mark Bloom, age=21], Employee[name=Rebecca Schneider, age=24]]
+> [Employee[name=Mark Bloom, age=21], Employee[name=Rebecca Schneider, age=24], Employee[name=Luke Norman, age=21]]
 
 #### removeEntries
 
@@ -250,6 +250,7 @@ implementation("io.github.jhspetersson:packrat:0.2.4")
 
 ```java
   import static io.github.jhspetersson.packrat.Packrat.removeDuplicatesBy;
+  record Person(String name, int age) {}
   var people = List.of(
       new Person("John", 25),
       new Person("Alice", 30),
@@ -508,9 +509,9 @@ However, resulting list contains an original element of type `String`;
 `equalChunksBy(mapper)` - returns lists ("chunks") of elements, where all elements in a chunk have equal values after applying the mapper function
 
 ```java
-  import static io.github.jhspetersson.packrat.Packrat.equalChunks;
+  import static io.github.jhspetersson.packrat.Packrat.equalChunksBy;
   var strings = Stream.of("apple", "apricot", "banana", "blueberry", "cherry", "date");
-  var result = strings.gather(equalChunks(s -> s.charAt(0))).toList();
+  var result = strings.gather(equalChunksBy(s -> s.charAt(0))).toList();
   System.out.println(result);
 ```
 
@@ -531,7 +532,7 @@ However, resulting list contains an original element of type `String`;
 `equalChunksBy(mapper, comparator)` - returns lists ("chunks") of elements, where all elements in a chunk have equal values after applying the mapper function, with equality determined by the supplied comparator
 
 ```java
-  import static io.github.jhspetersson.packrat.Packrat.equalChunks;
+  import static io.github.jhspetersson.packrat.Packrat.equalChunksBy;
   record Person(String name, String id) {}
 
   // Group people by the first letter of their ID, case-insensitive
@@ -544,7 +545,7 @@ However, resulting list contains an original element of type `String`;
       new Person("Eve", "c678")
   );
 
-  var result = people.gather(equalChunks(
+  var result = people.gather(equalChunksBy(
       p -> p.id().substring(0, 1),  // Map to first letter of ID
       String.CASE_INSENSITIVE_ORDER  // Compare case-insensitive
   )).toList();
@@ -634,6 +635,7 @@ However, resulting list contains an original element of type `String`;
 
 ```java
   import static io.github.jhspetersson.packrat.Packrat.zip;
+  record User(String name, int age) {}
   var names = List.of("Anna", "Mike", "Sandra");
   var ages = Stream.of(20, 30, 40, 50, 60, 70, 80, 90);
   var users = names.stream().gather(zip(ages, User::new)).toList();
@@ -683,8 +685,10 @@ However, resulting list contains an original element of type `String`;
 
 ```java
   import static io.github.jhspetersson.packrat.Packrat.zipWithIndex;
+  record User(long index, String name) {}
   var names = List.of("Anna", "Mike", "Sandra");
   var users = names.stream().gather(zipWithIndex(User::new)).toList();
+  System.out.println(users);
 ```
 
 > [User[index=0, name=Anna], User[index=1, name=Mike], User[index=2, name=Sandra]]
@@ -693,8 +697,10 @@ However, resulting list contains an original element of type `String`;
 
 ```java
   import static io.github.jhspetersson.packrat.Packrat.zipWithIndex;
+  record User(long index, String name) {}
   var names = List.of("Anna", "Mike", "Sandra");
   var users = names.stream().gather(zipWithIndex(User::new, 10)).toList();
+  System.out.println(users);
 ```
 
 > [User[index=10, name=Anna], User[index=11, name=Mike], User[index=12, name=Sandra]]
