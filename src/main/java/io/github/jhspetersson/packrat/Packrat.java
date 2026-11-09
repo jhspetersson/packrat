@@ -178,7 +178,7 @@ public final class Packrat {
      * @throws NullPointerException if the mapper is null
      */
     @NonNull
-    public static <T, U extends Comparable<U>> Gatherer<T, ?, T> minBy(@NonNull Function<? super T, ? extends U> mapper) {
+    public static <T, U extends Comparable<? super U>> Gatherer<T, ?, T> minBy(@NonNull Function<? super T, ? extends U> mapper) {
         return minBy(mapper, Comparator.naturalOrder());
     }
 
@@ -209,7 +209,7 @@ public final class Packrat {
      * @throws NullPointerException if the mapper is null
      */
     @NonNull
-    public static <T, U extends Comparable<U>> Gatherer<T, ?, T> maxBy(@NonNull Function<? super T, ? extends U> mapper) {
+    public static <T, U extends Comparable<? super U>> Gatherer<T, ?, T> maxBy(@NonNull Function<? super T, ? extends U> mapper) {
         return maxBy(mapper, Comparator.naturalOrder());
     }
 
@@ -762,6 +762,9 @@ public final class Packrat {
      * Returns map entries from elements of the stream mapped ("zipped") with the values from some other iterator.
      * <p>Null elements are not supported by this overload, since {@link java.util.Map#entry(Object, Object)}
      * rejects nulls; use an overload with a mapper for null-friendly zipping.
+     * <p>The supplied iterator is consumed lazily and shared by every use of the returned gatherer,
+     * so a second pipeline continues from where the previous one stopped. Create a new gatherer
+     * for each pipeline, or use the {@link Iterable} overload, when the input must be re-read.
      *
      * @param iterator iterator
      * @param <T> element type
@@ -777,6 +780,9 @@ public final class Packrat {
 
     /**
      * Returns elements mapped ("zipped") with the values from some other iterator.
+     * <p>The supplied iterator is consumed lazily and shared by every use of the returned gatherer,
+     * so a second pipeline continues from where the previous one stopped. Create a new gatherer
+     * for each pipeline, or use the {@link Iterable} overload, when the input must be re-read.
      *
      * @param iterator iterator
      * @param mapper zipping function

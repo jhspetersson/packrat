@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Relax generic bounds for `minBy` and `maxBy` mappers.
+- Document that `zip(Iterator)` shares the iterator across pipelines.
+
 ## [0.2.4] - 2026-11-09
 
 ### Changed

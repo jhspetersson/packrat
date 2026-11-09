@@ -159,4 +159,16 @@ public class ZipTest {
         var result2 = Stream.of(4, 5, 6).gather(gatherer).toList();
         assertEquals(List.of(14, 25, 36), result2);
     }
+
+    @Test
+    void zipWithIteratorSharesTheIteratorAcrossPipelines() {
+        var gatherer = Packrat.<Integer, Integer, Integer>zip(List.of(10, 20, 30, 40).iterator(), Integer::sum);
+
+        var result1 = Stream.of(1, 2).gather(gatherer).toList();
+        assertEquals(List.of(11, 22), result1);
+
+        // the second pipeline continues from where the first one stopped
+        var result2 = Stream.of(3, 4, 5).gather(gatherer).toList();
+        assertEquals(List.of(33, 44), result2);
+    }
 }

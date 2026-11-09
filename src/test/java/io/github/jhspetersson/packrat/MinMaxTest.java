@@ -139,5 +139,50 @@ public class MinMaxTest {
         assertNull(result.getFirst());
     }
 
+    @Test
+    void minByAcceptsMapperReturningSubclassOfComparable() {
+        var result = Stream.of(new Derived(3), new Derived(1), new Derived(2))
+                .gather(Packrat.minBy(Function.<Derived>identity()))
+                .toList();
+        assertEquals(List.of(new Derived(1)), result);
+    }
+
+    @Test
+    void maxByAcceptsMapperReturningSubclassOfComparable() {
+        var result = Stream.of("ccc", "a", "bb")
+                .gather(Packrat.maxBy(s -> new Derived(s.length())))
+                .toList();
+        assertEquals(List.of("ccc"), result);
+    }
+
     private record Length(int value) {}
+
+    private static class Base implements Comparable<Base> {
+        final int value;
+
+        Base(int value) {
+            this.value = value;
+        }
+
+        @Override
+        public int compareTo(Base other) {
+            return Integer.compare(value, other.value);
+        }
+    }
+
+    private static final class Derived extends Base {
+        Derived(int value) {
+            super(value);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof Derived d && d.value == value;
+        }
+
+        @Override
+        public int hashCode() {
+            return value;
+        }
+    }
 }
