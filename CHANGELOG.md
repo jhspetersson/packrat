@@ -9,6 +9,7 @@
 - Return concrete `Map.Entry<T, U>` and `Map.Entry<Long, T>` from `zip` and `zipWithIndex` instead of wildcard entries.
 - Stream the first copy in `repeat` lazily, so a short-circuiting downstream stops the upstream early.
 - Optimize `lastUnique(1)` and `lastUniqueBy(1, mapper)`, the mapper is no longer invoked for `n == 1`.
+- Stop retaining a mapped key per buffered element in `atLeast`/`atLeastBy`.
 
 ## [0.2.4] - 2026-11-09
 

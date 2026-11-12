@@ -41,9 +41,9 @@ class AtLeastGatherer<T, U> implements Gatherer<T, AtLeastGatherer.State<T, U>, 
     @Override
     public Integrator<State<T, U>, T, T> integrator() {
         return Integrator.ofGreedy((state, element, downstream) -> {
-            var mappedValue = mapper.apply(element);
-            state.elements.add(new Entry<>(element, mappedValue));
-            state.counts.computeIfAbsent(mappedValue, _ -> new long[1])[0]++;
+            var counter = state.counts.computeIfAbsent(mapper.apply(element), _ -> new long[1]);
+            counter[0]++;
+            state.elements.add(new Entry<>(element, counter));
             return !downstream.isRejecting();
         });
     }
@@ -52,7 +52,7 @@ class AtLeastGatherer<T, U> implements Gatherer<T, AtLeastGatherer.State<T, U>, 
     public BiConsumer<State<T, U>, Downstream<? super T>> finisher() {
         return (state, downstream) -> {
             for (var entry : state.elements) {
-                if (state.counts.get(entry.mappedValue())[0] >= atLeast) {
+                if (entry.counter()[0] >= atLeast) {
                     if (!downstream.push(entry.element())) {
                         return;
                     }
@@ -61,10 +61,13 @@ class AtLeastGatherer<T, U> implements Gatherer<T, AtLeastGatherer.State<T, U>, 
         };
     }
 
-    record Entry<T, U>(T element, U mappedValue) {}
+    /**
+     * Buffered element with the counter shared by all the elements having the same mapped value.
+     */
+    record Entry<T>(T element, long[] counter) {}
 
     static class State<T, U> {
-        final List<Entry<T, U>> elements = new ArrayList<>();
+        final List<Entry<T>> elements = new ArrayList<>();
         final Map<U, long[]> counts = new HashMap<>();
     }
 }
