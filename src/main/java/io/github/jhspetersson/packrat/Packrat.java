@@ -529,11 +529,14 @@ public final class Packrat {
     }
 
     /**
-     * Collects the whole stream and repeats it <code>n</code> times.
+     * Repeats the whole stream <code>n</code> times.
+     * <p>
+     * The first copy is passed downstream as the elements arrive, the remaining copies are replayed from a buffer
+     * once the stream is exhausted. The stream is buffered in memory unless <code>n</code> is less than two.
      *
      * @param n how many times to repeat the stream, value equal to zero effectively empties the stream
      * @param <T> element type
-     * @return a gatherer that collects the whole stream and repeats it <code>n</code> times
+     * @return a gatherer that repeats the whole stream <code>n</code> times
      * @throws IllegalArgumentException if <code>n</code> is negative
      */
     @NonNull

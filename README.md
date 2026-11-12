@@ -85,7 +85,7 @@ implementation("io.github.jhspetersson:packrat:0.2.4")
 | [decreasingChunks](#decreasingchunks)                          | Lists of decreasing values                                                        |
 | [decreasingOrEqualChunks](#decreasingorequalchunks)            | Lists of decreasing or equal values                                               |
 | [nCopies](#ncopies)                                            | Copies every element __n__ times                                                  |
-| [repeat](#repeat)                                              | Collects the whole stream and repeats it __n__ times                              |
+| [repeat](#repeat)                                              | Repeats the whole stream __n__ times                                              |
 | [atLeast](#atleast)                                            | All occurrences of values that appear at least __n__ times                                  |
 | [atMost](#atmost)                                              | All occurrences of values that appear at most __n__ times                         |
 
@@ -577,7 +577,7 @@ However, resulting list contains an original element of type `String`;
 
 #### repeat
 
-`repeat(n)` - collects the whole stream and repeats it __n__ times, __n__ equal to zero effectively empties the stream
+`repeat(n)` - repeats the whole stream __n__ times, __n__ equal to zero effectively empties the stream. The first copy is emitted as elements arrive, the remaining copies are replayed from an in-memory buffer
 
 ```java
   import static io.github.jhspetersson.packrat.Packrat.repeat;

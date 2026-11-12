@@ -7,7 +7,10 @@ import java.util.function.Supplier;
 import java.util.stream.Gatherer;
 
 /**
- * Collects the whole stream and repeats it <code>n</code> times.
+ * Repeats the whole stream <code>n</code> times.
+ * <p>
+ * The first copy is passed downstream as the elements arrive, while they are buffered for the remaining copies,
+ * which are replayed once the upstream is exhausted. A short-circuiting downstream thus stops the upstream early.
  *
  * @param <T> element type
  * @author jhspetersson
@@ -35,20 +38,24 @@ class RepeatGatherer<T> implements Gatherer<T, List<T>, T> {
 
     @Override
     public Integrator<List<T>, T, T> integrator() {
+        if (n == 0) {
+            return (_, _, _) -> false;
+        }
+
         return Integrator.ofGreedy((state, element, downstream) -> {
             state.add(element);
-            return !downstream.isRejecting();
+            return downstream.push(element);
         });
     }
 
     @Override
     public BiConsumer<List<T>, Gatherer.Downstream<? super T>> finisher() {
         return (state, downstream) -> {
-            if (state.isEmpty()) {
+            if (state.isEmpty() || downstream.isRejecting()) {
                 return;
             }
 
-            for (var i = 0L; i < n; i++) {
+            for (var i = 1L; i < n; i++) {
                 for (T element : state) {
                     if (!downstream.push(element)) {
                         return;

@@ -7,6 +7,7 @@
 - Relax generic bounds for `minBy` and `maxBy` mappers.
 - Document that `zip(Iterator)` shares the iterator across pipelines.
 - Return concrete `Map.Entry<T, U>` and `Map.Entry<Long, T>` from `zip` and `zipWithIndex` instead of wildcard entries.
+- Stream the first copy in `repeat` lazily, so a short-circuiting downstream stops the upstream early.
 
 ## [0.2.4] - 2026-11-09
 
