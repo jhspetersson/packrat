@@ -1502,6 +1502,11 @@ public final class Packrat {
         if (n == 0) {
             return empty();
         }
+
+        if (n == 1) {
+            return last(1);
+        }
+
         return new LastingGatherer<>(n, true);
     }
 
@@ -1509,6 +1514,8 @@ public final class Packrat {
      * Returns last <code>n</code> unique elements determined by the supplied mapper.
      * Uniqueness is calculated based on the mapped key values, while the original
      * elements are emitted in the order of their last occurrence.
+     * <p>
+     * The mapper is not invoked when <code>n</code> is less than two, as the result does not depend on the keys.
      *
      * @param n count of last unique elements to return
      * @param mapper mapping function used to determine uniqueness
@@ -1525,6 +1532,12 @@ public final class Packrat {
             Objects.requireNonNull(mapper, "mapper cannot be null");
             return empty();
         }
+
+        if (n == 1) {
+            Objects.requireNonNull(mapper, "mapper cannot be null");
+            return last(1);
+        }
+
         return new LastingGatherer<>(n, true, mapper);
     }
 

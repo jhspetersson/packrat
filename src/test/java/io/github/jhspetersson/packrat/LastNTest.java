@@ -266,4 +266,19 @@ public class LastNTest {
 
         assertEquals(List.of(2, 1, 3), result);
     }
+
+    @Test
+    void lastUniqueOneReturnsFinalElement() {
+        assertEquals(List.of(2), Stream.of(1, 2, 3, 2).gather(Packrat.lastUnique(1)).toList());
+        assertEquals(List.of(), Stream.<Integer>empty().gather(Packrat.lastUnique(1)).toList());
+        assertEquals(java.util.Collections.singletonList(null),
+                Stream.of(1, null).gather(Packrat.lastUnique(1)).toList());
+    }
+
+    @Test
+    void lastUniqueByOneReturnsFinalElement() {
+        assertEquals(List.of("bb"), Stream.of("a", "bbb", "cc", "bb").gather(Packrat.lastUniqueBy(1, String::length)).toList());
+        assertEquals(List.of(), Stream.<String>empty().gather(Packrat.lastUniqueBy(1, String::length)).toList());
+        assertThrows(NullPointerException.class, () -> Packrat.lastUniqueBy(1, null));
+    }
 }
