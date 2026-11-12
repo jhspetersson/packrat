@@ -74,4 +74,37 @@ public class IdentityGathererTest {
 
         assertEquals(original, result);
     }
+
+    @Test
+    void noOpFactoriesReturnIdentity() {
+        java.util.function.Function<Integer, Integer> mapper = _ -> {
+            throw new AssertionError("mapper must not be invoked");
+        };
+        var gatherers = java.util.List.<java.util.stream.Gatherer<Integer, ?, Integer>>of(
+                Packrat.nth(1),
+                Packrat.dropLast(0),
+                Packrat.dropLastUnique(0),
+                Packrat.dropLastUniqueBy(0, mapper),
+                Packrat.dropLastBy(0, mapper),
+                Packrat.mapN(0, mapper),
+                Packrat.skipAndMapN(5, 0, mapper));
+        var expected = IntStream.range(0, 100).boxed().toList();
+
+        for (var gatherer : gatherers) {
+            assertTrue(gatherer instanceof IdentityGatherer<?>);
+            assertEquals(expected, expected.stream().gather(gatherer).toList());
+            assertEquals(expected, expected.parallelStream().gather(gatherer).toList());
+        }
+    }
+
+    @Test
+    void noOpFactoriesStillValidateArguments() {
+        org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () -> Packrat.dropLastUniqueBy(0, null));
+        org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () -> Packrat.dropLastBy(0, null));
+        org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () -> Packrat.mapN(0, null));
+        org.junit.jupiter.api.Assertions.assertThrows(NullPointerException.class, () -> Packrat.skipAndMapN(5, 0, null));
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> Packrat.skipAndMapN(-1, 0, _ -> 0));
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> Packrat.nth(0));
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> Packrat.dropLast(-1));
+    }
 }

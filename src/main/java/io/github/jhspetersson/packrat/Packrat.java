@@ -627,6 +627,10 @@ public final class Packrat {
         if (mapN < 0) {
             throw new IllegalArgumentException("mapN must be a non-negative number");
         }
+        if (mapN == 0) {
+            Objects.requireNonNull(mapper, "mapper cannot be null");
+            return identity();
+        }
 
         return new MappingGatherer<>(skipN, mapN, mapper);
     }
@@ -1407,6 +1411,9 @@ public final class Packrat {
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> nth(int n) {
+        if (n == 1) {
+            return identity();
+        }
         return new NthGatherer<>(n);
     }
 
@@ -1562,6 +1569,9 @@ public final class Packrat {
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> dropLast(long n) {
+        if (n == 0) {
+            return identity();
+        }
         return new DropLastNGatherer<>(n);
     }
 
@@ -1577,6 +1587,9 @@ public final class Packrat {
      */
     @NonNull
     public static <T> Gatherer<T, ?, T> dropLastUnique(long n) {
+        if (n == 0) {
+            return identity();
+        }
         if (n == 1) {
             return dropLast(1);
         }
@@ -1600,6 +1613,10 @@ public final class Packrat {
      */
     @NonNull
     public static <T, U> Gatherer<T, ?, T> dropLastUniqueBy(long n, @NonNull Function<? super T, ? extends U> mapper) {
+        if (n == 0) {
+            Objects.requireNonNull(mapper, "mapper cannot be null");
+            return identity();
+        }
         if (n == 1) {
             Objects.requireNonNull(mapper, "mapper cannot be null");
             return dropLast(1);
@@ -1623,6 +1640,10 @@ public final class Packrat {
      */
     @NonNull
     public static <T, U> Gatherer<T, ?, T> dropLastBy(long n, @NonNull Function<? super T, ? extends U> mapper) {
+        if (n == 0) {
+            Objects.requireNonNull(mapper, "mapper cannot be null");
+            return identity();
+        }
         return new DropLastingGatherer<>(n, true, mapper);
     }
 
