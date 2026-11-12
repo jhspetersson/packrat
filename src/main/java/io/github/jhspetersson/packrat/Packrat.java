@@ -691,7 +691,7 @@ public final class Packrat {
      * @see java.util.Map.Entry
      */
     @NonNull
-    public static <T, U> Gatherer<T, ?, Map.Entry<T, ? extends U>> zip(@NonNull Iterable<? extends U> input) {
+    public static <T, U> Gatherer<T, ?, Map.Entry<T, U>> zip(@NonNull Iterable<? extends U> input) {
         return zip(input, Map::entry);
     }
 
@@ -731,7 +731,7 @@ public final class Packrat {
      * @see java.util.Map.Entry
      */
     @NonNull
-    public static <T, U> Gatherer<T, ?, Map.Entry<T, ? extends U>> zip(@NonNull Stream<? extends U> input) {
+    public static <T, U> Gatherer<T, ?, Map.Entry<T, U>> zip(@NonNull Stream<? extends U> input) {
         return zip(input, Map::entry);
     }
 
@@ -774,7 +774,7 @@ public final class Packrat {
      * @see java.util.Map.Entry
      */
     @NonNull
-    public static <T, U> Gatherer<T, ?, Map.Entry<T, ? extends U>> zip(@NonNull Iterator<? extends U> iterator) {
+    public static <T, U> Gatherer<T, ?, Map.Entry<T, U>> zip(@NonNull Iterator<? extends U> iterator) {
         return zip(iterator, Map::entry);
     }
 
@@ -808,7 +808,7 @@ public final class Packrat {
      * @see java.util.Map.Entry
      */
     @NonNull
-    public static <T> Gatherer<T, ?, Map.Entry<Long, ? extends T>> zipWithIndex() {
+    public static <T> Gatherer<T, ?, Map.Entry<Long, T>> zipWithIndex() {
         return zipWithIndex(Map::entry);
     }
 
@@ -824,7 +824,7 @@ public final class Packrat {
      * @see java.util.Map.Entry
      */
     @NonNull
-    public static <T> Gatherer<T, ?, Map.Entry<Long, ? extends T>> zipWithIndex(long startIndex) {
+    public static <T> Gatherer<T, ?, Map.Entry<Long, T>> zipWithIndex(long startIndex) {
         return zipWithIndex(Map::entry, startIndex);
     }
 

@@ -78,6 +78,19 @@ public class ZipTest {
         assertEquals(new User("Sandra", 40), users.getLast());
     }
 
+    @Test
+    public void concreteEntryTypeTest() {
+        var expected = List.of(Map.entry("a", 1), Map.entry("b", 2));
+
+        List<Map.Entry<String, Integer>> fromIterable = Stream.of("a", "b").gather(Packrat.zip(List.of(1, 2))).toList();
+        List<Map.Entry<String, Integer>> fromStream = Stream.of("a", "b").gather(Packrat.zip(Stream.of(1, 2))).toList();
+        List<Map.Entry<String, Integer>> fromIterator = Stream.of("a", "b").gather(Packrat.zip(List.of(1, 2).iterator())).toList();
+
+        assertEquals(expected, fromIterable);
+        assertEquals(expected, fromStream);
+        assertEquals(expected, fromIterator);
+    }
+
     record User(String name, int age) {}
 
     @Test

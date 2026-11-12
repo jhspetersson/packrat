@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -52,6 +53,15 @@ public class ZipWithIndexTest {
         assertEquals(names.size(), users.size());
         assertEquals(new User(10L, "Anna"), users.getFirst());
         assertEquals(new User(14L, "Monica"), users.getLast());
+    }
+
+    @Test
+    public void concreteEntryTypeTest() {
+        List<Map.Entry<Long, String>> fromZero = Stream.of("a", "b").gather(Packrat.zipWithIndex()).toList();
+        List<Map.Entry<Long, String>> fromTen = Stream.of("a", "b").gather(Packrat.zipWithIndex(10)).toList();
+
+        assertEquals(List.of(Map.entry(0L, "a"), Map.entry(1L, "b")), fromZero);
+        assertEquals(List.of(Map.entry(10L, "a"), Map.entry(11L, "b")), fromTen);
     }
 
     record User(long index, String name) {}
