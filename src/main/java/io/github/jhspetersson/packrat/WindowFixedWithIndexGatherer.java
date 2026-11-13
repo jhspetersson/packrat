@@ -23,7 +23,7 @@ import org.jspecify.annotations.NonNull;
  */
 class WindowFixedWithIndexGatherer<T, R> implements Gatherer<T, WindowFixedWithIndexGatherer.State<T>, R> {
     private final int windowSize;
-    private final BiFunction<Long, List<T>, ? extends R> mapper;
+    private final BiFunction<? super Long, ? super List<T>, ? extends R> mapper;
     private final long startIndex;
 
     /**
@@ -33,7 +33,7 @@ class WindowFixedWithIndexGatherer<T, R> implements Gatherer<T, WindowFixedWithI
      * @param mapper the function to map each window with its index to a result
      * @param startIndex the starting index
      */
-    WindowFixedWithIndexGatherer(int windowSize, @NonNull BiFunction<Long, List<T>, ? extends R> mapper, long startIndex) {
+    WindowFixedWithIndexGatherer(int windowSize, @NonNull BiFunction<? super Long, ? super List<T>, ? extends R> mapper, long startIndex) {
         if (windowSize <= 0) {
             throw new IllegalArgumentException("windowSize must be greater than zero");
         }

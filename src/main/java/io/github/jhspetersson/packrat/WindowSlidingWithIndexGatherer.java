@@ -22,7 +22,7 @@ import org.jspecify.annotations.NonNull;
  */
 class WindowSlidingWithIndexGatherer<T, R> implements Gatherer<T, WindowSlidingWithIndexGatherer.State<T>, R> {
     private final int windowSize;
-    private final BiFunction<Long, List<T>, ? extends R> mapper;
+    private final BiFunction<? super Long, ? super List<T>, ? extends R> mapper;
     private final long startIndex;
 
     /**
@@ -32,7 +32,7 @@ class WindowSlidingWithIndexGatherer<T, R> implements Gatherer<T, WindowSlidingW
      * @param mapper the function to map each window with its index to a result
      * @param startIndex the starting index
      */
-    WindowSlidingWithIndexGatherer(int windowSize, @NonNull BiFunction<Long, List<T>, ? extends R> mapper, long startIndex) {
+    WindowSlidingWithIndexGatherer(int windowSize, @NonNull BiFunction<? super Long, ? super List<T>, ? extends R> mapper, long startIndex) {
         if (windowSize <= 0) {
             throw new IllegalArgumentException("windowSize must be positive");
         }

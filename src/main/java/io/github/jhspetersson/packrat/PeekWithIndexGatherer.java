@@ -14,10 +14,10 @@ import org.jspecify.annotations.NonNull;
  * @author jhspetersson
  */
 class PeekWithIndexGatherer<T> implements Gatherer<T, long[], T> {
-    private final BiConsumer<Long, ? super T> consumer;
+    private final BiConsumer<? super Long, ? super T> consumer;
     private final long startIndex;
 
-    PeekWithIndexGatherer(@NonNull BiConsumer<Long, ? super T> consumer, long startIndex) {
+    PeekWithIndexGatherer(@NonNull BiConsumer<? super Long, ? super T> consumer, long startIndex) {
         Objects.requireNonNull(consumer, "consumer cannot be null");
 
         this.consumer = consumer;

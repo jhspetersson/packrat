@@ -15,10 +15,10 @@ import org.jspecify.annotations.NonNull;
  * @author jhspetersson
  */
 class ZipWithIndexGatherer<T, U> implements Gatherer<T, long[], U> {
-    private final BiFunction<Long, ? super T, ? extends U> mapper;
+    private final BiFunction<? super Long, ? super T, ? extends U> mapper;
     private final long startIndex;
 
-    ZipWithIndexGatherer(@NonNull BiFunction<Long, ? super T, ? extends U> mapper, long startIndex) {
+    ZipWithIndexGatherer(@NonNull BiFunction<? super Long, ? super T, ? extends U> mapper, long startIndex) {
         Objects.requireNonNull(mapper, "mapper cannot be null");
 
         this.mapper = mapper;

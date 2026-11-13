@@ -65,4 +65,23 @@ public class ZipWithIndexTest {
     }
 
     record User(long index, String name) {}
+
+    @Test
+    public void relaxedIndexedCallbackBoundsTest() {
+        java.util.function.BiFunction<Number, Object, String> mapper = (index, element) -> index + ":" + element;
+        java.util.function.BiPredicate<Number, Object> predicate = (index, _) -> index.longValue() > 0;
+        java.util.function.BiFunction<Number, java.util.Collection<String>, Integer> windowMapper =
+                (index, window) -> index.intValue() + window.size();
+        var peeked = new java.util.ArrayList<String>();
+        java.util.function.BiConsumer<Number, Object> consumer = (index, element) -> peeked.add(index + ":" + element);
+
+        assertEquals(List.of("0:a", "1:b"), Stream.of("a", "b").gather(Packrat.zipWithIndex(mapper)).toList());
+        assertEquals(List.of("5:a", "6:b"), Stream.of("a", "b").gather(Packrat.mapWithIndex(mapper, 5)).toList());
+        assertEquals(List.of("b"), Stream.of("a", "b").gather(Packrat.filterWithIndex(predicate)).toList());
+        assertEquals(List.of("a"), Stream.of("a", "b").gather(Packrat.removeWithIndex(predicate)).toList());
+        assertEquals(List.of("a", "b"), Stream.of("a", "b").gather(Packrat.peekWithIndex(consumer)).toList());
+        assertEquals(List.of("0:a", "1:b"), peeked);
+        assertEquals(List.of(2, 3), Stream.of("a", "b", "c").gather(Packrat.windowSlidingWithIndex(2, windowMapper)).toList());
+        assertEquals(List.of(2, 2), Stream.of("a", "b", "c").gather(Packrat.windowFixedWithIndex(2, windowMapper)).toList());
+    }
 }

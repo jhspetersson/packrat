@@ -846,7 +846,7 @@ public final class Packrat {
      * @throws NullPointerException if the mapper is null
      */
     @NonNull
-    public static <T, U> Gatherer<T, ?, U> zipWithIndex(@NonNull BiFunction<Long, ? super T, ? extends U> mapper) {
+    public static <T, U> Gatherer<T, ?, U> zipWithIndex(@NonNull BiFunction<? super Long, ? super T, ? extends U> mapper) {
         return zipWithIndex(mapper, 0L);
     }
 
@@ -864,7 +864,7 @@ public final class Packrat {
      * @throws NullPointerException if the mapper is null
      */
     @NonNull
-    public static <T, U> Gatherer<T, ?, U> zipWithIndex(@NonNull BiFunction<Long, ? super T, ? extends U> mapper, long startIndex) {
+    public static <T, U> Gatherer<T, ?, U> zipWithIndex(@NonNull BiFunction<? super Long, ? super T, ? extends U> mapper, long startIndex) {
         return new ZipWithIndexGatherer<>(mapper, startIndex);
     }
 
@@ -880,7 +880,7 @@ public final class Packrat {
      * @throws NullPointerException if the mapper is null
      */
     @NonNull
-    public static <T, U> Gatherer<T, ?, U> mapWithIndex(@NonNull BiFunction<Long, ? super T, ? extends U> mapper) {
+    public static <T, U> Gatherer<T, ?, U> mapWithIndex(@NonNull BiFunction<? super Long, ? super T, ? extends U> mapper) {
         return zipWithIndex(mapper);
     }
 
@@ -899,7 +899,7 @@ public final class Packrat {
      * @throws NullPointerException if the mapper is null
      */
     @NonNull
-    public static <T, U> Gatherer<T, ?, U> mapWithIndex(@NonNull BiFunction<Long, ? super T, ? extends U> mapper, long startIndex) {
+    public static <T, U> Gatherer<T, ?, U> mapWithIndex(@NonNull BiFunction<? super Long, ? super T, ? extends U> mapper, long startIndex) {
         return zipWithIndex(mapper, startIndex);
     }
 
@@ -951,7 +951,7 @@ public final class Packrat {
      * @throws NullPointerException if the mapper is null
      */
     @NonNull
-    public static <T, R> Gatherer<T, ?, R> windowSlidingWithIndex(int windowSize, @NonNull BiFunction<Long, List<T>, ? extends R> mapper) {
+    public static <T, R> Gatherer<T, ?, R> windowSlidingWithIndex(int windowSize, @NonNull BiFunction<? super Long, ? super List<T>, ? extends R> mapper) {
         return windowSlidingWithIndex(windowSize, mapper, 0);
     }
 
@@ -972,7 +972,7 @@ public final class Packrat {
      * @throws NullPointerException if the mapper is null
      */
     @NonNull
-    public static <T, R> Gatherer<T, ?, R> windowSlidingWithIndex(int windowSize, @NonNull BiFunction<Long, List<T>, ? extends R> mapper, long startIndex) {
+    public static <T, R> Gatherer<T, ?, R> windowSlidingWithIndex(int windowSize, @NonNull BiFunction<? super Long, ? super List<T>, ? extends R> mapper, long startIndex) {
         return new WindowSlidingWithIndexGatherer<>(windowSize, mapper, startIndex);
     }
 
@@ -1028,7 +1028,7 @@ public final class Packrat {
      * @throws NullPointerException if the mapper is null
      */
     @NonNull
-    public static <T, R> Gatherer<T, ?, R> windowFixedWithIndex(int windowSize, @NonNull BiFunction<Long, List<T>, ? extends R> mapper) {
+    public static <T, R> Gatherer<T, ?, R> windowFixedWithIndex(int windowSize, @NonNull BiFunction<? super Long, ? super List<T>, ? extends R> mapper) {
         return windowFixedWithIndex(windowSize, mapper, 0);
     }
 
@@ -1049,7 +1049,7 @@ public final class Packrat {
      * @throws NullPointerException if the mapper is null
      */
     @NonNull
-    public static <T, R> Gatherer<T, ?, R> windowFixedWithIndex(int windowSize, @NonNull BiFunction<Long, List<T>, ? extends R> mapper, long startIndex) {
+    public static <T, R> Gatherer<T, ?, R> windowFixedWithIndex(int windowSize, @NonNull BiFunction<? super Long, ? super List<T>, ? extends R> mapper, long startIndex) {
         return new WindowFixedWithIndexGatherer<>(windowSize, mapper, startIndex);
     }
 
@@ -1135,7 +1135,7 @@ public final class Packrat {
      * @throws NullPointerException if the consumer is null
      */
     @NonNull
-    public static <T> Gatherer<T, ?, T> peekWithIndex(@NonNull BiConsumer<Long, ? super T> consumer) {
+    public static <T> Gatherer<T, ?, T> peekWithIndex(@NonNull BiConsumer<? super Long, ? super T> consumer) {
         return peekWithIndex(consumer, 0);
     }
 
@@ -1150,7 +1150,7 @@ public final class Packrat {
      * @throws NullPointerException if the consumer is null
      */
     @NonNull
-    public static <T> Gatherer<T, ?, T> peekWithIndex(@NonNull BiConsumer<Long, ? super T> consumer, long startIndex) {
+    public static <T> Gatherer<T, ?, T> peekWithIndex(@NonNull BiConsumer<? super Long, ? super T> consumer, long startIndex) {
         return new PeekWithIndexGatherer<>(consumer, startIndex);
     }
 
@@ -1164,7 +1164,7 @@ public final class Packrat {
      * @throws NullPointerException if the predicate is null
      */
     @NonNull
-    public static <T> Gatherer<T, ?, T> filterWithIndex(@NonNull BiPredicate<Long, ? super T> predicate) {
+    public static <T> Gatherer<T, ?, T> filterWithIndex(@NonNull BiPredicate<? super Long, ? super T> predicate) {
         return filterWithIndex(predicate, 0);
     }
 
@@ -1178,7 +1178,7 @@ public final class Packrat {
      * @throws NullPointerException if the predicate is null
      */
     @NonNull
-    public static <T> Gatherer<T, ?, T> filterWithIndex(@NonNull BiPredicate<Long, ? super T> predicate, long startIndex) {
+    public static <T> Gatherer<T, ?, T> filterWithIndex(@NonNull BiPredicate<? super Long, ? super T> predicate, long startIndex) {
         return new FilteringWithIndexGatherer<>(predicate, startIndex);
     }
 
@@ -1192,7 +1192,7 @@ public final class Packrat {
      * @throws NullPointerException if the predicate is null
      */
     @NonNull
-    public static <T> Gatherer<T, ?, T> removeWithIndex(@NonNull BiPredicate<Long, ? super T> predicate) {
+    public static <T> Gatherer<T, ?, T> removeWithIndex(@NonNull BiPredicate<? super Long, ? super T> predicate) {
         return removeWithIndex(predicate, 0);
     }
 
@@ -1206,7 +1206,7 @@ public final class Packrat {
      * @throws NullPointerException if the predicate is null
      */
     @NonNull
-    public static <T> Gatherer<T, ?, T> removeWithIndex(@NonNull BiPredicate<Long, ? super T> predicate, long startIndex) {
+    public static <T> Gatherer<T, ?, T> removeWithIndex(@NonNull BiPredicate<? super Long, ? super T> predicate, long startIndex) {
         return new FilteringWithIndexGatherer<>(predicate, startIndex, true);
     }
 

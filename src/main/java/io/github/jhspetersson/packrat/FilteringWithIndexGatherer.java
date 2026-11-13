@@ -14,15 +14,15 @@ import org.jspecify.annotations.NonNull;
  * @author jhspetersson
  */
 class FilteringWithIndexGatherer<T> implements Gatherer<T, long[], T> {
-    private final BiPredicate<Long, ? super T> predicate;
+    private final BiPredicate<? super Long, ? super T> predicate;
     private final long startIndex;
     private final boolean invert;
 
-    FilteringWithIndexGatherer(@NonNull BiPredicate<Long, ? super T> predicate, long startIndex) {
+    FilteringWithIndexGatherer(@NonNull BiPredicate<? super Long, ? super T> predicate, long startIndex) {
         this(predicate, startIndex, false);
     }
 
-    FilteringWithIndexGatherer(@NonNull BiPredicate<Long, ? super T> predicate, long startIndex, boolean invert) {
+    FilteringWithIndexGatherer(@NonNull BiPredicate<? super Long, ? super T> predicate, long startIndex, boolean invert) {
         Objects.requireNonNull(predicate, "predicate cannot be null");
 
         this.predicate = predicate;
