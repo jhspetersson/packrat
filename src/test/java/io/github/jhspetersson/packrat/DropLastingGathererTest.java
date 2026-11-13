@@ -301,4 +301,69 @@ public class DropLastingGathererTest {
         assertThrows(NullPointerException.class, () -> Packrat.dropLastUniqueBy(3, null));
         assertThrows(NullPointerException.class, () -> Packrat.dropLastBy(3, null));
     }
+
+    @Test
+    public void dropLastUniqueShouldStreamLazily() {
+        var consumed = new AtomicInteger();
+        var result = Stream.iterate(0, i -> i + 1).limit(100_000)
+                .peek(_ -> consumed.incrementAndGet())
+                .gather(Packrat.dropLastUnique(2))
+                .limit(1)
+                .toList();
+
+        assertEquals(List.of(0), result);
+        assertEquals(3, consumed.get());
+    }
+
+    @Test
+    public void dropLastUniqueByShouldShortCircuitUnboundedStream() {
+        var result = org.junit.jupiter.api.Assertions.assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
+                Stream.iterate(0, i -> i + 1).gather(Packrat.dropLastUniqueBy(3, i -> i / 2)).limit(4).toList());
+
+        assertEquals(List.of(0, 1, 2, 3), result);
+    }
+
+    @Test
+    public void dropLastUniqueShouldKeepBufferBoundedForDistinctElements() {
+        var gatherer = new DropLastingGatherer<Integer>(3, false, Function.identity());
+        var state = gatherer.initializer().get();
+        var integrator = gatherer.integrator();
+
+        for (var i = 0; i < 100_000; i++) {
+            assertTrue(integrator.integrate(state, i, _ -> true));
+            assertTrue(state.elements.size() <= 2 * 1024 + 3);
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {1, 2, 3, 5, 50})
+    public void dropLastUniqueLazyResultShouldMatchReference(long n) {
+        var random = new java.util.Random(42);
+        for (var round = 0; round < 200; round++) {
+            var input = new ArrayList<Integer>();
+            var size = random.nextInt(60);
+            for (var i = 0; i < size; i++) {
+                input.add(random.nextInt(8) == 0 ? null : random.nextInt(6));
+            }
+
+            // reference: drop the final occurrence of each of the last n unique elements
+            var lastIndexByKey = new java.util.LinkedHashMap<Integer, Integer>();
+            for (var i = 0; i < input.size(); i++) {
+                lastIndexByKey.putLast(input.get(i), i);
+            }
+            var dropped = new java.util.HashSet<>(lastIndexByKey.sequencedValues().reversed().stream().limit(n).toList());
+            var expected = new ArrayList<Integer>();
+            for (var i = 0; i < input.size(); i++) {
+                if (!dropped.contains(i)) {
+                    expected.add(input.get(i));
+                }
+            }
+
+            assertEquals(expected, input.stream().gather(new DropLastingGatherer<>(n, false, Function.identity())).toList());
+            for (var limit = 0; limit <= expected.size(); limit++) {
+                assertEquals(expected.subList(0, limit),
+                        input.stream().gather(new DropLastingGatherer<>(n, false, Function.identity())).limit(limit).toList());
+            }
+        }
+    }
 }

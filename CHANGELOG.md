@@ -12,6 +12,7 @@
 - Stop retaining a mapped key per buffered element in `atLeast`/`atLeastBy`.
 - Make no-op `nth(1)`, zero-count `dropLast*`, and zero-count `mapN`/`skipAndMapN` stateless and parallelizable.
 - Relax generic bounds for index and window callbacks in `*WithIndex` gatherers.
+- Stream `dropLastUnique` and `dropLastUniqueBy` lazily, releasing elements as soon as they can no longer be dropped.
 
 ## [0.2.4] - 2026-11-09
 
