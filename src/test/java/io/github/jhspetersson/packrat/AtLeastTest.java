@@ -19,6 +19,40 @@ public class AtLeastTest {
     }
 
     @Test
+    void atLeastShouldEmitQualifyingPrefixEarly() {
+        var consumed = new AtomicInteger();
+        var result = org.junit.jupiter.api.Assertions.assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
+                Stream.generate(() -> 1)
+                        .peek(_ -> consumed.incrementAndGet())
+                        .gather(Packrat.atLeast(2))
+                        .limit(1)
+                        .toList());
+
+        assertEquals(List.of(1), result);
+        assertEquals(2, consumed.get());
+    }
+
+    @Test
+    void atLeastShouldStreamElementsOfQualifiedKeys() {
+        var result = org.junit.jupiter.api.Assertions.assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
+                Stream.iterate(0, i -> i + 1)
+                        .map(i -> i % 2)
+                        .gather(Packrat.atLeast(2))
+                        .limit(5)
+                        .toList());
+
+        assertEquals(List.of(0, 1, 0, 1, 0), result);
+    }
+
+    @Test
+    void atLeastShouldKeepOrderWhenHeadQualifiesLate() {
+        var result = Stream.of(1, 2, 2, 3, 2, 1, 4)
+                .gather(Packrat.atLeast(2))
+                .toList();
+        assertEquals(List.of(1, 2, 2, 2, 1), result);
+    }
+
+    @Test
     public void atLeastTest() {
         var numbers = Stream.of(1, 2, 3, 3, 3, 4, 5, 5, 6, 7, 8, 8, 8, 8, 9, 10);
         var result = numbers.gather(Packrat.atLeast(3)).toList();

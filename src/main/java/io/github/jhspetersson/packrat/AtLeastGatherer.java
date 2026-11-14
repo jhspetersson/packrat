@@ -1,8 +1,7 @@
 package io.github.jhspetersson.packrat;
 
-import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -40,11 +39,22 @@ class AtLeastGatherer<T, U> implements Gatherer<T, AtLeastGatherer.State<T, U>, 
 
     @Override
     public Integrator<State<T, U>, T, T> integrator() {
-        return Integrator.ofGreedy((state, element, downstream) -> {
+        return Integrator.of((state, element, downstream) -> {
             var counter = state.counts.computeIfAbsent(mapper.apply(element), _ -> new long[1]);
             counter[0]++;
-            state.elements.add(new Entry<>(element, counter));
-            return !downstream.isRejecting();
+            var elements = state.elements;
+            if (elements.isEmpty() && counter[0] >= atLeast) {
+                return downstream.push(element);
+            }
+            elements.addLast(new Entry<>(element, counter));
+            Entry<T> head;
+            while ((head = elements.peekFirst()) != null && head.counter()[0] >= atLeast) {
+                elements.pollFirst();
+                if (!downstream.push(head.element())) {
+                    return false;
+                }
+            }
+            return true;
         });
     }
 
@@ -67,7 +77,7 @@ class AtLeastGatherer<T, U> implements Gatherer<T, AtLeastGatherer.State<T, U>, 
     record Entry<T>(T element, long[] counter) {}
 
     static class State<T, U> {
-        final List<Entry<T>> elements = new ArrayList<>();
+        final ArrayDeque<Entry<T>> elements = new ArrayDeque<>();
         final Map<U, long[]> counts = new HashMap<>();
     }
 }
